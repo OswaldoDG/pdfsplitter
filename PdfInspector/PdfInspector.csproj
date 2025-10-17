@@ -215,7 +215,7 @@
       <Name>PdfInspector.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\PdfInspector.Infraestructure\PdfInspector.Infraestructure.csproj">
-      <Project>{2528568a-097a-4cd7-b13f-767963ac52b3}</Project>
+      <Project>{2528568A-097A-4CD7-B13F-767963AC52B3}</Project>
       <Name>PdfInspector.Infraestructure</Name>
     </ProjectReference>
   </ItemGroup>

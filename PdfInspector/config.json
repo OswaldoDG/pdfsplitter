@@ -9,7 +9,8 @@
       "BaseUrl": "https://localhost:7272",
       "DescargarPorId": "revision/pdf/{id}",
       "Siguiente": "revision/siguiente",
-      "FinalizarPorId": "revision/finalizar/{id}"
+      "FinalizarPorId": "revision/finalizar/{id}",
+      "ObtieneTipoDocumentos": "revision/tiposDocumento"
     }
   }
 }

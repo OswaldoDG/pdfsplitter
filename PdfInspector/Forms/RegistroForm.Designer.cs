@@ -2,15 +2,8 @@
 {
     partial class RegistroForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
@@ -70,7 +59,7 @@
             this.txtPassword.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtPassword.Location = new System.Drawing.Point(0, 0);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(209, 20);
+            this.txtPassword.Size = new System.Drawing.Size(173, 20);
             this.txtPassword.TabIndex = 3;
             // 
             // btnRegistro
@@ -89,7 +78,7 @@
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(100, 23);
             this.btnLogin.TabIndex = 5;
-            this.btnLogin.Text = "Iniciar Sesión";
+            this.btnLogin.Text = "Volver a Login";
             this.btnLogin.UseVisualStyleBackColor = true;
             this.btnLogin.Click += new System.EventHandler(this.btnVolverLogin_Click);
             // 
@@ -116,6 +105,7 @@
             // btnMostrarPassword
             // 
             this.btnMostrarPassword.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnMostrarPassword.FlatAppearance.BorderSize = 0;
             this.btnMostrarPassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMostrarPassword.Location = new System.Drawing.Point(173, 0);
             this.btnMostrarPassword.Name = "btnMostrarPassword";
@@ -139,7 +129,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "RegistroForm";
-            this.Text = "RegistroForm";
+            this.Text = "Registro de Usuario";
             this.Load += new System.EventHandler(this.RegistroForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

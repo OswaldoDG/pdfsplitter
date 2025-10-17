@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using PdfInspector.App.CasosUso.Auth;
+using PdfInspector.Application.CasosUso.Pdf;
 using PdfInspector.Domain.Abstractions.Auth;
 using PdfInspector.Domain.Abstractions.Pdf;
+using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Forms;
 using PdfInspector.Infraestructure.Config;
 using PdfInspector.Infraestructure.Services.Auth;
@@ -9,6 +11,9 @@ using PdfInspector.Infraestructure.Services.Pdf;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
 using System;
+using System.Linq;
+using System.Net.Http;
+using System.Windows.Forms;
 
 namespace PdfInspector
 {
@@ -16,31 +21,34 @@ namespace PdfInspector
     {
         public static Container Configure()
         {
-            var container = new Container();
 
+            var container = new Container();
+            container.Options.EnableAutoVerification = false;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("config.json");
-
+                .AddJsonFile("config.json", optional: false, reloadOnChange: true);
             var configuration = builder.Build();
 
             var settings = new EndpointConfig();
             configuration.GetSection("Endpoints").Bind(settings);
 
-
             container.RegisterInstance(settings);
-            container.RegisterSingleton<IAuthService>(() => new AuthService(settings));
-            container.RegisterSingleton<IPdfServiceFactory>(() => new PdfServiceFactory(settings));
 
-            container.Register<LoginCasoUso>(Lifestyle.Singleton);
-            container.Register<RegistroCasoUso>(Lifestyle.Singleton);
+            container.RegisterSingleton<UsuarioSesion>();
 
-            container.Register<LoginForm>(Lifestyle.Singleton);
-            container.Register<RegistroForm>(Lifestyle.Singleton);
+            container.RegisterSingleton<HttpClient>(() => new HttpClient());
 
-            container.Options.SuppressLifestyleMismatchVerification = true;
+            container.RegisterSingleton<IAuthService, AuthService>();
+            container.RegisterSingleton<IPdfService, PdfService>();
 
-            container.Verify();
+            container.Register<LoginCasoUso>();
+            container.Register<RegistroCasoUso>();
+            container.Register<ObtieneTipoDocumentosPdfCasoUso>();
+            container.Register<DescargarPdfCasoUso>();
+
+            container.Register<LoginForm>();
+            container.Register<RegistroForm>();
+            container.Register<Form1>();
             return container;
         }
     }

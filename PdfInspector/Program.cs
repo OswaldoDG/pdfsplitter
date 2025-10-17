@@ -1,4 +1,5 @@
-﻿using PdfInspector.Forms;
+﻿using PdfInspector.Domain.Models.Auth;
+using PdfInspector.Forms;
 using System;
 using System.Windows.Forms;
 
@@ -6,17 +7,38 @@ namespace PdfInspector
 {
     internal static class Program
     {
-        /// <summary>
-        /// Punto de entrada principal para la aplicación.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+
             var container = DI.Configure();
-            var loginForm = container.GetInstance<LoginForm>();
-            Application.Run(loginForm);
+
+            while (true)
+            {
+                using (var loginForm = container.GetInstance<LoginForm>())
+                {
+                    if (loginForm.ShowDialog() != DialogResult.OK)
+                    {
+                        break;
+                    }
+                }
+                using (var appForm = container.GetInstance<Form1>())
+                {
+                    System.Windows.Forms.Application.Run(appForm);
+
+                    if (appForm.IsLoggingOut)
+                    {
+                        container.GetInstance<UsuarioSesion>().Clear();
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
         }
     }
 }

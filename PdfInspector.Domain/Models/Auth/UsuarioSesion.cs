@@ -1,31 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PdfInspector.Domain.Models.Auth
 {
     public class UsuarioSesion
     {
-        public string AccesToken { get; set; }
-        public string RefreshToken { get; set; }
-        public DateTime Expiration { get; set; }
-        
-        public void SetExpirationFromExpireIn(int expiresIn)
-        {
-            Expiration = DateTime.UtcNow.AddSeconds(expiresIn);
-        }
+        public string Token { get; private set; }
+        public DateTime Expiration { get; private set; }
 
-        public bool TokenValido()
+        public bool IsAuthenticated => !string.IsNullOrEmpty(Token) && DateTime.UtcNow < Expiration;
+
+        public void Create(string token, int expiresInSeconds)
         {
-            return DateTime.UtcNow < Expiration.AddMinutes(-2);
+            Token = token;
+            Expiration = DateTime.UtcNow.AddSeconds(expiresInSeconds - 60);
         }
 
         public void Clear()
         {
-            AccesToken = null;
-            RefreshToken = null;
+            Token = null;
             Expiration = DateTime.MinValue;
         }
     }

@@ -1,4 +1,5 @@
-﻿using PdfInspector.Domain.Abstractions.Auth;
+﻿using PdfInspector.App.CasosUso.Auth;
+using PdfInspector.Domain.Abstractions.Auth;
 using PdfInspector.Domain.Abstractions.Pdf;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,15 @@ namespace PdfInspector.Forms
 {
     public partial class LoginForm : Form
     {
-        private readonly IAuthService _authService;
-        private IPdfServiceFactory _pdfServiceFactory;
+        private readonly LoginCasoUso _loginCasoUso;
+        private readonly RegistroForm _registroForm;
         private bool _passwordVisible = false;
 
-
-        public LoginForm(IAuthService authService, IPdfServiceFactory pdfServiceFactory)
+        public LoginForm(LoginCasoUso loginCasoUso, RegistroForm registroForm)
         {
             InitializeComponent();
-            _authService = authService;
-            _pdfServiceFactory = pdfServiceFactory;
+            _loginCasoUso = loginCasoUso;
+            _registroForm = registroForm;
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
@@ -45,13 +45,12 @@ namespace PdfInspector.Forms
 
             try
             {
-                var token = await _authService.LoginAsync(username, password);
+                var token = await _loginCasoUso.Ejecutar(username, password);
 
                 if (token != null)
                 {
-                    var mainForm = new Form1(token.access_token, _pdfServiceFactory);
-                    mainForm.Show();
-                    this.Hide();
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
                 else
                 {
@@ -73,10 +72,9 @@ namespace PdfInspector.Forms
 
         private void btnRegistro_Click(object sender, EventArgs e)
         {
-            var registroForm = new RegistroForm(_authService, _pdfServiceFactory);
             this.Hide();
-            registroForm.ShowDialog();
-            this.Close();
+            _registroForm.ShowDialog();
+            this.Show();
         }
 
         private bool EsPasswordValido(string password)

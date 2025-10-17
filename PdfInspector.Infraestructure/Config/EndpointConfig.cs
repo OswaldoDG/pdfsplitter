@@ -20,5 +20,6 @@
         public string DescargarPorId { get; set; }
         public string Siguiente { get; set; }
         public string FinalizarPorId { get; set; }
+        public string ObtieneTipoDocumentos { get; set; }
     }
 }

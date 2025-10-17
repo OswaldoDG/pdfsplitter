@@ -9,9 +9,11 @@ namespace PdfInspector.Domain.Abstractions.Pdf
 {
     public interface IPdfService
     {
-        Task<string> DescargarPdfPorId(int id);
-        Task<bool> Siguiente();
+        Task<byte[]> DescargarPdfPorIdAsync(int id);
+        Task<bool> SiguienteAsync();
 
-        Task<bool> FinalizarPorId(int id, DtoFinalizar dtoFinalizar);
+        Task<bool> FinalizarPorIdAsync(int id, DtoFinalizar dtoFinalizar);
+
+        Task<List<DtoTipoDoc>> ObtieneTipoDocumentosAsync(List<int> ids);
     }
 }

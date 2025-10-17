@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using PdfInspector.Domain.Abstractions.Pdf;
+using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Domain.Models.Pdf;
 using PdfInspector.Infraestructure.Config;
 using System;
@@ -7,7 +8,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Policy;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PdfInspector.Infraestructure.Services.Pdf
@@ -16,42 +20,53 @@ namespace PdfInspector.Infraestructure.Services.Pdf
     {
         private readonly HttpClient _httpClient;
         private readonly EndpointConfig _config;
+        private readonly UsuarioSesion _sesion;
 
-        public PdfService(EndpointConfig config, string token)
+        public PdfService(EndpointConfig config, HttpClient httpClient, UsuarioSesion sesion)
         {
             _config = config;
-            _httpClient = new HttpClient { BaseAddress = new Uri(_config.AuthApi.BaseUrl) };
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer");
+            _httpClient = httpClient;
+            _sesion = sesion;
         }
 
-        public async Task<string> DescargarPdfPorId(int id)
+        public async Task<byte[]> DescargarPdfPorIdAsync(int id)
         {
             var endpoint = _config.PdfApi.DescargarPorId.Replace("{id}", id.ToString());
-            var url = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint).ToString();
-            var response = await _httpClient.GetAsync(url);
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint));
 
-            if (!response.IsSuccessStatusCode)
-                throw new Exception("No se pudo descargar el PDF");
-            var bytes = await response.Content.ReadAsByteArrayAsync();
-
-            var fileName = $"archivo_{id}.pdf";
-            if (response.Content.Headers.ContentDisposition != null)
+            if (_sesion.IsAuthenticated)
             {
-                fileName = response.Content.Headers.ContentDisposition.FileName?.Trim('\"') ?? fileName;
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
             }
 
-            var carpetaDestino = @"C:\medica\repositorio";
-            if (!Directory.Exists(carpetaDestino))
-                Directory.CreateDirectory(carpetaDestino);
-
-            var ruta = Path.Combine(carpetaDestino, fileName);
-            if(!Directory.Exists(ruta))
-                File.WriteAllBytes(ruta, bytes);
-
-            return ruta;
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsByteArrayAsync();
         }
 
-        public async Task<bool> Siguiente()
+        public async Task<List<DtoTipoDoc>> ObtieneTipoDocumentosAsync(List<int> ids)
+        {
+            var endpoint = _config.PdfApi.ObtieneTipoDocumentos;
+            var fullUrl = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint);
+            var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+
+            if (_sesion.IsAuthenticated)
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
+            }
+
+            var bodyObject = new { Ids = ids };
+            var jsonBody = JsonConvert.SerializeObject(bodyObject);
+            request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<DtoTipoDoc>>(jsonResponse) ?? new List<DtoTipoDoc>();
+        }
+
+        public async Task<bool> SiguienteAsync()
         {
             var endpoint = _config.PdfApi.Siguiente;
             var url = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint).ToString();
@@ -61,7 +76,7 @@ namespace PdfInspector.Infraestructure.Services.Pdf
 
         }
 
-        public async Task<bool> FinalizarPorId(int id, DtoFinalizar dto)
+        public async Task<bool> FinalizarPorIdAsync(int id, DtoFinalizar dto)
         {
             var endpoint = _config.PdfApi.FinalizarPorId.Replace("{id}", id.ToString());
             var url = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint).ToString();
@@ -73,6 +88,5 @@ namespace PdfInspector.Infraestructure.Services.Pdf
 
             return response.IsSuccessStatusCode;
         }
-
     }
 }
