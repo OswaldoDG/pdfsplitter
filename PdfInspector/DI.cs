@@ -44,7 +44,8 @@ namespace PdfInspector
             container.Register<LoginCasoUso>();
             container.Register<RegistroCasoUso>();
             container.Register<ObtieneTipoDocumentosPdfCasoUso>();
-            container.Register<DescargarPdfCasoUso>();
+            container.Register<CompletarCasoUso>();
+            container.Register<SiguientePendienteCasoUso>();
 
             container.Register<LoginForm>();
             container.Register<RegistroForm>();

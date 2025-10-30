@@ -149,6 +149,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controles\BotonDocumento.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controles\BotonDocumento.Designer.cs">
+      <DependentUpon>BotonDocumento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controles\InfoDocumentoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controles\InfoDocumentoControl.Designer.cs">
+      <DependentUpon>InfoDocumentoControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DI.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
@@ -170,6 +182,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controles\BotonDocumento.resx">
+      <DependentUpon>BotonDocumento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controles\InfoDocumentoControl.resx">
+      <DependentUpon>InfoDocumentoControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

@@ -46,10 +46,12 @@
   <ItemGroup>
     <Compile Include="CasosUso\Auth\LoginCasoUso.cs" />
     <Compile Include="CasosUso\Auth\RegistroCasoUso.cs" />
-    <Compile Include="CasosUso\Pdf\DescargarPdfCasoUso.cs" />
-    <Compile Include="CasosUso\Pdf\ObtieneTipoDocumentosPdfCasoUso.cs" />
+    <Compile Include="CasosUso\Pdf\CompletarCasoUso.cs" />
+    <Compile Include="CasosUso\Pdf\SiguientePendienteCasoUso.cs" />
+    <Compile Include="CasosUso\Pdf\ObtieneTiposDocumentoCasoUso.cs" />
     <Compile Include="DTOs\Auth\LoginRequest.cs" />
     <Compile Include="DTOs\Auth\RegistroRequest.cs" />
+    <Compile Include="DTOs\PDF\TablaDocumento.cs" />
     <Compile Include="Helpers\JwtParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

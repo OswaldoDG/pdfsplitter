@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PdfInspector.Domain.Models.Pdf
+﻿namespace PdfInspector.Domain.Models.Pdf
 {
 
     /// <summary>
     /// Representa una parte documental asociada a un PDF.
     /// </summary>
-    public class ParteDocumental
+    public class DtoParteDocumental
     {
         /// <summary>
         /// Identificador unico de la parte documental.

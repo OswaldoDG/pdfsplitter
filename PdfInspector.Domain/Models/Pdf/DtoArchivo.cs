@@ -11,8 +11,13 @@
         public int Id { get; set; }
 
         /// <summary>
-        /// Nombre del archivo.
+        /// Nombre del archivo (blob).
         /// </summary>
         public string Nombre { get; set; }
+
+        /// <summary>
+        /// TokenSAS del contenedor.
+        /// </summary>
+        public string TokenSAS { get; set; }
     }
 }

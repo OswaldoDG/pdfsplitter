@@ -14,7 +14,7 @@ namespace PdfInspector.Domain.Models.Pdf
         /// <summary>
         /// Lista de partes documentales que componen el PDF.
         /// </summary>
-        public List<ParteDocumental> Partes { get; set; }
+        public List<DtoParteDocumental> Partes { get; set; }
 
         /// <summary>
         /// Total de paginas del PDF que se esta separando.

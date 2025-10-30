@@ -29,7 +29,7 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             _sesion = sesion;
         }
 
-        public async Task<byte[]> DescargarPdfPorIdAsync(int id)
+        public async Task<DtoArchivo> SiguientePorId(int id)
         {
             var endpoint = _config.PdfApi.DescargarPorId.Replace("{id}", id.ToString());
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint));
@@ -41,23 +41,20 @@ namespace PdfInspector.Infraestructure.Services.Pdf
 
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsByteArrayAsync();
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<DtoArchivo>(jsonResponse);
         }
 
-        public async Task<List<DtoTipoDoc>> ObtieneTipoDocumentosAsync(List<int> ids)
+        public async Task<List<DtoTipoDoc>> ObtieneTipoDocumentosAsync()
         {
             var endpoint = _config.PdfApi.ObtieneTipoDocumentos;
             var fullUrl = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint);
-            var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+            var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
 
             if (_sesion.IsAuthenticated)
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
             }
-
-            var bodyObject = new { Ids = ids };
-            var jsonBody = JsonConvert.SerializeObject(bodyObject);
-            request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -66,27 +63,53 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             return JsonConvert.DeserializeObject<List<DtoTipoDoc>>(jsonResponse) ?? new List<DtoTipoDoc>();
         }
 
-        public async Task<bool> SiguienteAsync()
-        {
-            var endpoint = _config.PdfApi.Siguiente;
-            var url = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint).ToString();
-            var response = await _httpClient.GetAsync(url);
-
-            return response.IsSuccessStatusCode;
-
-        }
-
         public async Task<bool> FinalizarPorIdAsync(int id, DtoFinalizar dto)
         {
             var endpoint = _config.PdfApi.FinalizarPorId.Replace("{id}", id.ToString());
-            var url = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint).ToString();
+            var requestUri = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
+
+            if (_sesion.IsAuthenticated)
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
+            }
 
             var json = JsonConvert.SerializeObject(dto);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(url, content);
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error al finalizar PDF (ID: {id}): {errorMessage}");
+            }
 
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<DtoArchivo> SiguientePendiente()
+        {
+            var endpoint = _config.PdfApi.Siguiente;
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint));
+
+            if (_sesion.IsAuthenticated)
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<DtoArchivo>(jsonResponse);
         }
     }
 }

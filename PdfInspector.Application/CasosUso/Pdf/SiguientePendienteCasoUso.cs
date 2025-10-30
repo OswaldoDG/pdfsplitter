@@ -1,22 +1,21 @@
 ﻿using PdfInspector.Domain.Abstractions.Pdf;
 using PdfInspector.Domain.Models.Pdf;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PdfInspector.Application.CasosUso.Pdf
 {
-    public class DescargarPdfCasoUso
+    public class SiguientePendienteCasoUso
     {
         private readonly IPdfService _pdfService;
 
-        public DescargarPdfCasoUso(IPdfService pdfService)
+        public SiguientePendienteCasoUso(IPdfService pdfService)
         {
             _pdfService = pdfService;
         }
 
-        public async Task<byte[]> ExecuteAsync(int id)
+        public async Task<DtoArchivo> SiguientePendiente()
         {
-            return await _pdfService.DescargarPdfPorIdAsync(id);
+            return await _pdfService.SiguientePendiente();
         }
     }
 }
