@@ -1,0 +1,16 @@
+{
+  "Endpoints": {
+    "AuthApi": {
+      "BaseUrl": "https://localhost:7001/",
+      "Login": "connect/token",
+      "Register": "usuario/registro"
+    },
+    "PdfApi": {
+      "BaseUrl": "https://localhost:7272",
+      "DescargarPorId": "revision/pdf/{id}",
+      "Siguiente": "revision/siguiente",
+      "FinalizarPorId": "revision/finalizar/{id}",
+      "ObtieneTipoDocumentos": "revision/tiposDocumento"
+    }
+  }
+}
