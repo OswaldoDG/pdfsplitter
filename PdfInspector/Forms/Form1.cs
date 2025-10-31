@@ -51,6 +51,7 @@ namespace PdfInspector
             pdfVisor.Scroll += PdfVisor_Scroll;
             pdfVisor.MouseEnter += PdfVisor_MouseEnter;
             pdfVisor.Renderer.DisplayRectangleChanged += Renderer_DisplayRectangleChanged;
+            this.timerNotificacion.Tick += new System.EventHandler(this.timerNotificacion_Tick);
         }
 
         private void Renderer_DisplayRectangleChanged(object sender, EventArgs e)
@@ -85,7 +86,7 @@ namespace PdfInspector
 
             if (paginaNueva != _paginaActualMostrada)
             {
-                infoDocControl.PaginaActual= paginaNueva;
+                infoDocControl.PaginaActual = paginaNueva;
                 _paginaActualMostrada = paginaNueva;
             }
         }
@@ -111,7 +112,7 @@ namespace PdfInspector
             }
             catch (Exception ex)
             {
-                MessageBox.Show("No se pudieron cargar los documentos: " + ex.Message, "Error de Red", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarNotificacion("No se pudieron cargar los documentos: " + ex.Message, "Error");
             }
             finally
             {
@@ -154,7 +155,7 @@ namespace PdfInspector
 
             if (_archivoPdf == null)
             {
-                MessageBox.Show("Primero debe cargar un documento con 'Siguiente'.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MostrarNotificacion("Primero debe cargar un documento con 'Siguiente'.", "Warning");
                 return;
             }
 
@@ -171,12 +172,9 @@ namespace PdfInspector
                     {
                         return;
                     }
-
-                    MessageBox.Show(
-                        "Ya está capturando un documento. Debe 'Finalizar' o 'Cancelar' la captura actual antes de seleccionar otra.",
-                        "Captura en Progreso",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    MostrarNotificacion(
+                        "Ya está capturando un documento. 'Finalice' o 'Cancele' la captura actual.",
+                        "Warning");
 
                     return;
                 }
@@ -210,7 +208,7 @@ namespace PdfInspector
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al procesar el documento: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarNotificacion("Error al procesar el documento: " + ex.Message, "Error");
             }
             finally
             {
@@ -282,9 +280,7 @@ namespace PdfInspector
         {
             if (_tempParteTemporal == null)
             {
-                MessageBox.Show("No ha iniciado la captura de ningún documento. " +
-                                "Haga clic en un tipo de archivo primero.",
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MostrarNotificacion("No ha iniciado la captura. Haga clic en un tipo de archivo primero.", "Warning");
                 return;
             }
 
@@ -293,11 +289,9 @@ namespace PdfInspector
 
             if (paginaFinalActual < paginaInicial)
             {
-                MessageBox.Show(
-                    $"Error: La página final ({paginaFinalActual}) no puede ser menor que la página inicial ({paginaInicial}).\n\nLa captura será cancelada.",
-                    "Error de Paginación",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarNotificacion(
+                    $"Error: La página final ({paginaFinalActual}) no puede ser menor que la inicial ({paginaInicial}). Captura cancelada.",
+                    "Error");
 
                 _tempParteTemporal = null;
                 _tempDocumentoTabla = null;
@@ -325,7 +319,7 @@ namespace PdfInspector
                 _tempDocumentoTabla = null;
                 infoDocControl.ActualizarInfo("Captura Guardada", _paginaInicioTemporal, paginaFinalActual);
 
-                MessageBox.Show("Captura realizada", "Captura", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MostrarNotificacion("Captura realizada", "Success");
             }
             finally
             {
@@ -337,17 +331,21 @@ namespace PdfInspector
         {
             if (_archivoPdf == null)
             {
-                MessageBox.Show("No hay documento cargado para completar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MostrarNotificacion("No hay documento/partes de documento para completar.", "Warning");
                 return;
             }
 
             if (_tempParteTemporal != null)
             {
-                MessageBox.Show(
-                    "Ha iniciado una captura que no ha sido finalizada. Por favor, 'Finalice' o 'Cancele' la captura actual antes de completar el documento.",
-                    "Captura en Progreso",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MostrarNotificacion(
+                    "Tiene una captura sin finalizar. 'Finalice' o 'Cancele' la captura actual.",
+                    "Warning");
+                return;
+            }
+
+            if (_listaPartes.Count == 0)
+            {
+                MostrarNotificacion("Necesita registrar al menos una parte para poder completar.", "Warning");
                 return;
             }
 
@@ -370,22 +368,25 @@ namespace PdfInspector
                 listViewPartes.Items.Clear();
                 infoDocControl.ActualizarInfo("Completado", 0, 0);
                 this.Text = "Visor de Documentos";
-
-                if (pdfVisor.Document != null)
-                {
-                    pdfVisor.Document.Dispose();
-                    pdfVisor.Document = null;
-                }
-
+                pdfVisor.Visible = false;
 
                 if (!completar)
-                    MessageBox.Show("Ocurrió un problema con el documento, intente más tarde.", "Documentación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                {
+                    MostrarNotificacion("Ocurrió un problema con el documento, intente más tarde.", "Error");
+                }
                 else
-                    MessageBox.Show("Separación realizada correctamente.", "Documentación", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                {
+                    MostrarNotificacion("Separación realizada correctamente.", "Success");
+                    if (checkAuto.Checked)
+                    {
+                        await Task.Delay(500);
+                        await SiguienteAccion();
+                    }
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al procesar el documento: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarNotificacion($"Error al procesar el documento: {ex.Message}", "Error");
             }
             finally
             {
@@ -395,17 +396,31 @@ namespace PdfInspector
 
         private async Task CancelarAccion()
         {
+            if (_tempParteTemporal == null)
+            {
+                MostrarNotificacion("No puedes cancelar porque no tienes una captura iniciada.", "Warning");
+                return;
+            }
+
             try
             {
                 Cursor = Cursors.WaitCursor;
                 _tempParteTemporal = null;
                 _tempDocumentoTabla = null;
-                infoDocControl.ActualizarInfo("Cancelado", _paginaInicioTemporal, pdfVisor.Renderer.Page + 1);
-                MessageBox.Show("Captura cancelada", "Cancelación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                int paginaActual = _paginaInicioTemporal;
+                if (pdfVisor.Document != null && pdfVisor.Renderer != null)
+                {
+                    paginaActual = pdfVisor.Renderer.Page + 1;
+                }
+
+                infoDocControl.ActualizarInfo("Cancelado", _paginaInicioTemporal, paginaActual);
+
+                MostrarNotificacion("Captura cancelada", "Info");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al procesar el documento: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarNotificacion("Error al procesar el documento: " + ex.Message, "Error");
             }
             finally
             {
@@ -442,13 +457,13 @@ namespace PdfInspector
 
                 if (pdfPendiente == null)
                 {
-                    MessageBox.Show("No hay más documentos pendientes de revisión.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MostrarNotificacion("No hay más documentos pendientes de revisión.", "Info");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(pdfPendiente.TokenSAS))
                 {
-                    MessageBox.Show("Se asignó un documento pero no se recibió una URL de acceso.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MostrarNotificacion("Se asignó un documento pero no se recibió una URL de acceso.", "Warning");
                     return;
                 }
 
@@ -459,12 +474,7 @@ namespace PdfInspector
 
                     if (encryptedStream == null || encryptedStream.Length == 0)
                     {
-                        MessageBox.Show(
-                            "La descarga fue exitosa, pero el archivo no tiene contenido.",
-                            "Error de Contenido",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
-                        );
+                        MostrarNotificacion("La descarga fue exitosa, pero el archivo no tiene contenido.", "Warning");
                         return;
                     }
 
@@ -474,6 +484,7 @@ namespace PdfInspector
                         pdfVisor.Document.Dispose();
 
                     pdfVisor.Document = PdfDocument.Load(decryptedStream);
+                    pdfVisor.Visible = true;
                     _paginaActualMostrada = 1;
                     _paginaInicioTemporal = 1;
                     infoDocControl.ActualizarInfo("Sin Asignar", 1, 1);
@@ -504,7 +515,7 @@ namespace PdfInspector
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al descargar el archivo: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarNotificacion("Error al descargar el archivo: " + ex.Message, "Error");
             }
             finally
             {
@@ -537,7 +548,7 @@ namespace PdfInspector
         {
             if (listViewPartes.SelectedItems.Count == 0)
             {
-                MessageBox.Show("Por favor, selecciona un elemento para eliminar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MostrarNotificacion("Por favor, selecciona un elemento para eliminar.", "Info");
                 return;
             }
             ListViewItem seleccionado = listViewPartes.SelectedItems[0];
@@ -587,6 +598,48 @@ namespace PdfInspector
                     return decryptedStream;
                 }
             }
+        }
+        private void timerNotificacion_Tick(object sender, EventArgs e)
+        {
+            timerNotificacion.Stop();
+            lblNotificacion.Visible = false;
+        }
+
+        private void MostrarNotificacion(string mensaje, string tipo = "Warning")
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => MostrarNotificacion(mensaje, tipo)));
+                return;
+            }
+
+            switch (tipo.ToLower())
+            {
+                case "error":
+                    lblNotificacion.BackColor = Color.FromArgb(192, 57, 43);
+                    lblNotificacion.ForeColor = Color.White;
+                    break;
+                case "success":
+                    lblNotificacion.BackColor = Color.FromArgb(39, 174, 96); 
+                    lblNotificacion.ForeColor = Color.White;
+                    break;
+                case "info":
+                    lblNotificacion.BackColor = Color.FromArgb(41, 128, 185);
+                    lblNotificacion.ForeColor = Color.White;
+                    break;
+                case "warning":
+                default:
+                    lblNotificacion.BackColor = Color.FromArgb(243, 156, 18); 
+                    lblNotificacion.ForeColor = Color.Black;
+                    break;
+            }
+
+
+            lblNotificacion.Text = mensaje;
+            lblNotificacion.Visible = true;
+            lblNotificacion.BringToFront();
+            timerNotificacion.Stop();
+            timerNotificacion.Start();
         }
     }
 }
