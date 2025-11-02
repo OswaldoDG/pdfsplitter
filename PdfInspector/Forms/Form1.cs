@@ -5,14 +5,12 @@ using PdfInspector.Domain.Models.Pdf;
 using PdfiumViewer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PdfInspector
 {
@@ -47,12 +45,23 @@ namespace PdfInspector
             btnCancel.BotonPresionado += BotonDocumento_Click;
             btnComplete.BotonPresionado += BotonDocumento_Click;
             _listaPartes = new List<DtoParteDocumental>();
-            pdfVisor.MouseWheel += PdfVisor_MouseWheel;
-            pdfVisor.Scroll += PdfVisor_Scroll;
-            pdfVisor.MouseEnter += PdfVisor_MouseEnter;
+
+      
+
+            pdfVisor.ZoomMode = PdfViewerZoomMode.FitWidth;
+            //pdfVisor.MouseWheel += PdfVisor_MouseWheel;
+            //pdfVisor.Scroll += PdfVisor_Scroll;
+            //pdfVisor.MouseEnter += PdfVisor_MouseEnter;
+            
             pdfVisor.Renderer.DisplayRectangleChanged += Renderer_DisplayRectangleChanged;
+
+            //pdfVisor.ZoomMode = PdfViewerZoomMode.FitHeight;
+            //pdfVisor.DefaultPrintMode = PdfPrintMode.ShrinkToMargin;
+
+
             this.timerNotificacion.Tick += new System.EventHandler(this.timerNotificacion_Tick);
         }
+
 
         private void Renderer_DisplayRectangleChanged(object sender, EventArgs e)
         {
@@ -430,6 +439,19 @@ namespace PdfInspector
 
         private async Task SiguienteAccion()
         {
+            // pdfVisor.Document;
+
+            pdfVisor.Document = PdfDocument.Load("C:\\Users\\oswaldo\\Desktop\\muestra\\CAJA 18_146.pdf");
+            
+            pdfVisor.Visible = true;
+            _paginaActualMostrada = 1;
+            _paginaInicioTemporal = 1;
+            infoDocControl.ActualizarInfo("Sin Asignar", 1, 1);
+            Text = $"Visor de Documentos - aaa";
+            pdfVisor.Focus();
+
+            return;
+
             if (_listaPartes.Any() || _tempParteTemporal != null)
             {
                 var result = MessageBox.Show(
@@ -544,7 +566,7 @@ namespace PdfInspector
             return null;
         }
 
-        private void btnEliminarTabla_Click(object sender, EventArgs e)
+        private void EliminaElemento()
         {
             if (listViewPartes.SelectedItems.Count == 0)
             {
@@ -567,6 +589,7 @@ namespace PdfInspector
                 listViewPartes.Items.Remove(seleccionado);
             }
         }
+
 
         private Stream DesencriptarStream(Stream encryptedStream)
         {
@@ -602,7 +625,7 @@ namespace PdfInspector
         private void timerNotificacion_Tick(object sender, EventArgs e)
         {
             timerNotificacion.Stop();
-            lblNotificacion.Visible = false;
+            statusLabel.Text = string.Empty;
         }
 
         private void MostrarNotificacion(string mensaje, string tipo = "Warning")
@@ -616,30 +639,33 @@ namespace PdfInspector
             switch (tipo.ToLower())
             {
                 case "error":
-                    lblNotificacion.BackColor = Color.FromArgb(192, 57, 43);
-                    lblNotificacion.ForeColor = Color.White;
+                    statusLabel.BackColor = Color.Red;
                     break;
+
                 case "success":
-                    lblNotificacion.BackColor = Color.FromArgb(39, 174, 96); 
-                    lblNotificacion.ForeColor = Color.White;
+                    statusLabel.BackColor = Color.Green;
+
                     break;
                 case "info":
-                    lblNotificacion.BackColor = Color.FromArgb(41, 128, 185);
-                    lblNotificacion.ForeColor = Color.White;
+                    statusLabel.BackColor =  Color.LightGray;
+
                     break;
                 case "warning":
                 default:
-                    lblNotificacion.BackColor = Color.FromArgb(243, 156, 18); 
-                    lblNotificacion.ForeColor = Color.Black;
+                    statusLabel.BackColor = Color.Yellow;
                     break;
             }
 
-
-            lblNotificacion.Text = mensaje;
-            lblNotificacion.Visible = true;
-            lblNotificacion.BringToFront();
-            timerNotificacion.Stop();
-            timerNotificacion.Start();
+            statusLabel.Text = mensaje;
+;
         }
+
+   
+        private void tsbDel1_Click(object sender, EventArgs e)
+        {
+            this.EliminaElemento();
+        }
+
+     
     }
 }

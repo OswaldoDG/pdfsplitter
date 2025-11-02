@@ -87,17 +87,17 @@ namespace PdfInspector.Controles
 
 
 
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
+        //protected override void OnResize(EventArgs e)
+        //{
+        //    base.OnResize(e);
 
-            int margen = 10;
+        //    int margen = 10;
 
-            btnAccion.Size = new Size(this.Width - 60, this.Height - margen);
-            btnAccion.Location = new Point(0, 0);
+        //    btnAccion.Size = new Size(this.Width - 60, this.Height - margen);
+        //    btnAccion.Location = new Point(0, 0);
 
-            lbAtajo.Location = new Point(btnAccion.Right + 5, (this.Height - lbAtajo.Height) / 2);
-        }
+        //    lbAtajo.Location = new Point(btnAccion.Right + 5, (this.Height - lbAtajo.Height) / 2);
+        //}
 
         protected override bool IsInputKey(Keys keyData)
         {
@@ -120,5 +120,9 @@ namespace PdfInspector.Controles
             BtnAccion_Click(this, EventArgs.Empty);
         }
 
+        private void BotonDocumento_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

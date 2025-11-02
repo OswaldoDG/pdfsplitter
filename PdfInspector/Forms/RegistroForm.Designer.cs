@@ -17,6 +17,7 @@
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegistroForm));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtEmail = new System.Windows.Forms.TextBox();
@@ -24,135 +25,149 @@
             this.btnRegistro = new System.Windows.Forms.Button();
             this.btnLogin = new System.Windows.Forms.Button();
             this.progressBarSpinner = new System.Windows.Forms.ProgressBar();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.btnMostrarPassword = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtCodigo = new System.Windows.Forms.TextBox();
+            this.btnShowPass = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(31, 31);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(5, 28);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 24);
+            this.label1.Size = new System.Drawing.Size(51, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Email";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(31, 112);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(5, 81);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 24);
+            this.label2.Size = new System.Drawing.Size(95, 20);
             this.label2.TabIndex = 1;
             this.label2.Text = "Contraseña";
             // 
             // txtEmail
             // 
-            this.txtEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.Location = new System.Drawing.Point(34, 61);
+            this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmail.Location = new System.Drawing.Point(145, 28);
+            this.txtEmail.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(236, 29);
-            this.txtEmail.TabIndex = 2;
+            this.txtEmail.Size = new System.Drawing.Size(467, 23);
+            this.txtEmail.TabIndex = 0;
             // 
             // txtPassword
             // 
-            this.txtPassword.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPassword.Location = new System.Drawing.Point(0, 0);
+            this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPassword.Location = new System.Drawing.Point(148, 79);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(234, 29);
-            this.txtPassword.TabIndex = 3;
+            this.txtPassword.Size = new System.Drawing.Size(419, 23);
+            this.txtPassword.TabIndex = 1;
             // 
             // btnRegistro
             // 
-            this.btnRegistro.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRegistro.Location = new System.Drawing.Point(34, 193);
+            this.btnRegistro.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRegistro.Location = new System.Drawing.Point(401, 135);
+            this.btnRegistro.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnRegistro.Name = "btnRegistro";
-            this.btnRegistro.Size = new System.Drawing.Size(93, 34);
+            this.btnRegistro.Size = new System.Drawing.Size(211, 41);
             this.btnRegistro.TabIndex = 4;
-            this.btnRegistro.Text = "Registrar";
+            this.btnRegistro.Text = "Crear cuenta";
             this.btnRegistro.UseVisualStyleBackColor = true;
             this.btnRegistro.Click += new System.EventHandler(this.btnRegistrarse_Click);
             // 
             // btnLogin
             // 
-            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLogin.Location = new System.Drawing.Point(170, 193);
+            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogin.Location = new System.Drawing.Point(401, 183);
+            this.btnLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(100, 34);
+            this.btnLogin.Size = new System.Drawing.Size(211, 41);
             this.btnLogin.TabIndex = 5;
-            this.btnLogin.Text = "Login";
+            this.btnLogin.Text = "Ir Acceso";
             this.btnLogin.UseVisualStyleBackColor = true;
             this.btnLogin.Click += new System.EventHandler(this.btnVolverLogin_Click);
             // 
             // progressBarSpinner
             // 
-            this.progressBarSpinner.Location = new System.Drawing.Point(34, 242);
+            this.progressBarSpinner.Location = new System.Drawing.Point(145, 187);
+            this.progressBarSpinner.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.progressBarSpinner.MarqueeAnimationSpeed = 30;
             this.progressBarSpinner.Name = "progressBarSpinner";
-            this.progressBarSpinner.Size = new System.Drawing.Size(235, 23);
+            this.progressBarSpinner.Size = new System.Drawing.Size(231, 41);
             this.progressBarSpinner.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBarSpinner.TabIndex = 6;
             this.progressBarSpinner.Visible = false;
             // 
-            // panel1
+            // label3
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.btnMostrarPassword);
-            this.panel1.Controls.Add(this.txtPassword);
-            this.panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel1.Location = new System.Drawing.Point(34, 144);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(236, 29);
-            this.panel1.TabIndex = 7;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(5, 135);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 20);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Código";
             // 
-            // btnMostrarPassword
+            // txtCodigo
             // 
-            this.btnMostrarPassword.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnMostrarPassword.FlatAppearance.BorderSize = 0;
-            this.btnMostrarPassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMostrarPassword.Location = new System.Drawing.Point(198, 0);
-            this.btnMostrarPassword.Name = "btnMostrarPassword";
-            this.btnMostrarPassword.Size = new System.Drawing.Size(36, 27);
-            this.btnMostrarPassword.TabIndex = 4;
-            this.btnMostrarPassword.TabStop = false;
-            this.btnMostrarPassword.Text = "👁️";
-            this.btnMostrarPassword.UseVisualStyleBackColor = true;
-            this.btnMostrarPassword.Click += new System.EventHandler(this.btnMostrarPassword_Click);
+            this.txtCodigo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCodigo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCodigo.Location = new System.Drawing.Point(145, 132);
+            this.txtCodigo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtCodigo.Name = "txtCodigo";
+            this.txtCodigo.Size = new System.Drawing.Size(231, 23);
+            this.txtCodigo.TabIndex = 3;
             // 
-            // panel2
+            // btnShowPass
             // 
-            this.panel2.Controls.Add(this.btnLogin);
-            this.panel2.Controls.Add(this.panel1);
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.progressBarSpinner);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.txtEmail);
-            this.panel2.Controls.Add(this.btnRegistro);
-            this.panel2.Location = new System.Drawing.Point(241, 77);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(300, 297);
-            this.panel2.TabIndex = 8;
+            this.btnShowPass.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnShowPass.FlatAppearance.BorderSize = 0;
+            this.btnShowPass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShowPass.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnShowPass.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.btnShowPass.Location = new System.Drawing.Point(567, 76);
+            this.btnShowPass.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnShowPass.Name = "btnShowPass";
+            this.btnShowPass.Size = new System.Drawing.Size(32, 26);
+            this.btnShowPass.TabIndex = 9;
+            this.btnShowPass.TabStop = false;
+            this.btnShowPass.Text = "👁";
+            this.btnShowPass.UseVisualStyleBackColor = false;
+            this.btnShowPass.Click += new System.EventHandler(this.button1_Click);
             // 
             // RegistroForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.panel2);
+            this.AcceptButton = this.btnLogin;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(643, 250);
+            this.Controls.Add(this.btnShowPass);
+            this.Controls.Add(this.txtPassword);
+            this.Controls.Add(this.txtCodigo);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtEmail);
+            this.Controls.Add(this.btnLogin);
+            this.Controls.Add(this.btnRegistro);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.progressBarSpinner);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "RegistroForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Registro de Usuario";
+            this.Text = "PDFSplit - Registro";
             this.Load += new System.EventHandler(this.RegistroForm_Load);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -165,8 +180,8 @@
         private System.Windows.Forms.Button btnRegistro;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.ProgressBar progressBarSpinner;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnMostrarPassword;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtCodigo;
+        private System.Windows.Forms.Button btnShowPass;
     }
 }

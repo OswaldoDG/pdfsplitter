@@ -100,5 +100,10 @@ namespace PdfInspector.Forms
             btnMostrarPassword.FlatAppearance.BorderSize = 0;
             btnMostrarPassword.BackColor = txtPassword.BackColor;
         }
+
+        private void txtPassword_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

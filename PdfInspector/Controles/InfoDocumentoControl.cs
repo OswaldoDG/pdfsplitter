@@ -21,47 +21,64 @@ namespace PdfInspector.Controles
             InitializeComponent();
         }
 
-        [Category("Datos PDF")]
-        [Description("Tipo de documento que se está visualizando.")]
-        public string TipoDocumento
-        {
-            get => _tipoDocumento;
-            set
-            {
-                _tipoDocumento = value;
-                lbTipoDoc.Text = value;
-            }
-        }
+        private int _PaginaActual;
 
-        [Category("Datos PDF")]
-        [Description("Página donde inicia el documento.")]
-        public int PaginaInicio
-        {
-            get => _paginaInicio;
-            set
-            {
-                _paginaInicio = value;
-                lbPagInicio.Text = value.ToString();
-            }
-        }
-
-        [Category("Datos PDF")]
-        [Description("Página actual que se está visualizando.")]
         public int PaginaActual
         {
-            get => _paginaActual;
-            set
-            {
-                _paginaActual = value;
-                lbPagFinal.Text = value.ToString();
+            get { return _PaginaActual; }
+            set { 
+                _PaginaActual = value;
+                renderLabel();
             }
         }
+
+        private int _PaginaInicio;
+
+        public int PaginaInicio
+        {
+            get { return _PaginaInicio; }
+            set { _PaginaInicio = value; renderLabel(); }
+        }
+
+
+        private string _TipoDocumento;
+
+        public string TipoDocumento
+        {
+            get { return _TipoDocumento; }
+            set { _TipoDocumento = value; renderLabel(); }
+        }
+
 
         public void ActualizarInfo(string tipo, int paginaInicio, int paginaActual)
         {
-            TipoDocumento = tipo;
-            PaginaInicio = paginaInicio;
-            PaginaActual = paginaActual;
+            _tipoDocumento = tipo;
+            _paginaInicio = paginaInicio;   
+            _paginaActual = paginaActual;   
+            renderLabel();
+        }
+
+        private void renderLabel()
+        {
+            if (string.IsNullOrEmpty(_tipoDocumento))
+            {
+                this.lblDocInfo.Text = $"Pagina {_paginaActual}";
+            }
+            else
+            {
+
+                this.lblDocInfo.Text = $"Tipo: {_tipoDocumento} de {_paginaInicio} a {_paginaActual}";
+            }
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void InfoDocumentoControl_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

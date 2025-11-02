@@ -61,7 +61,7 @@ namespace PdfInspector.Forms
         private void RegistroForm_Load(object sender, EventArgs e)
         {
             txtPassword.UseSystemPasswordChar = true;
-            btnMostrarPassword.Font = new Font("Segoe UI Emoji", 8);
+            btnShowPass.Font = new Font("Segoe UI Emoji", 8);
         }
 
         private bool EsPasswordValido(string password)
@@ -72,9 +72,7 @@ namespace PdfInspector.Forms
 
         private void btnMostrarPassword_Click(object sender, EventArgs e)
         {
-            _passwordVisible = !_passwordVisible;
-            txtPassword.UseSystemPasswordChar = !_passwordVisible;
-            btnMostrarPassword.Text = _passwordVisible ? "🚫" : "👁️";
+            
         }
 
         private void ToggleControls(bool isEnabled)
@@ -83,6 +81,13 @@ namespace PdfInspector.Forms
             btnRegistro.Enabled = isEnabled;
             progressBarSpinner.Visible = !isEnabled;
             Cursor = isEnabled ? Cursors.Default : Cursors.WaitCursor;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _passwordVisible = !_passwordVisible;
+            txtPassword.UseSystemPasswordChar = !_passwordVisible;
+            btnShowPass.Text = _passwordVisible ? "🚫" : "👁️";
         }
     }
 }
