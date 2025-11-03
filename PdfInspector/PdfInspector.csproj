@@ -182,6 +182,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Hechiceroo-Mnemo-Pdf.ico" />
+    <Content Include="config.dev.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\deleteall-icon.png" />
     <None Include="Resources\delete-icon.png" />
     <EmbeddedResource Include="Controles\BotonDocumento.resx">

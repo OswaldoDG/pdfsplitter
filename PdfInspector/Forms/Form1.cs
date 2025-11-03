@@ -27,7 +27,7 @@ namespace PdfInspector
         private int _paginaInicioTemporal = 0;
         private int _paginaActualMostrada = -1;
         private bool _isProcessing = false;
-        private const string GDILIC = "REMPLAZAR";
+        private const string GDILIC = "411897669724499821116142492193218";
         private const string HardcodedEncryptionKey = "pruebademomensajeria12345";
         private const int IvSize = 16;
         private string _currentUserEmail = "";
