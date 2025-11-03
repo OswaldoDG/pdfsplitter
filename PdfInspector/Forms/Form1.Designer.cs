@@ -18,6 +18,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panelSuperior = new System.Windows.Forms.Panel();
+            this.btnSig = new PdfInspector.Controles.BotonDocumento();
             this.checkAuto = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanelArchivos = new System.Windows.Forms.FlowLayoutPanel();
             this.panelControl = new System.Windows.Forms.Panel();
@@ -30,17 +31,16 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbDel1 = new System.Windows.Forms.ToolStripButton();
             this.tsbDelAll = new System.Windows.Forms.ToolStripButton();
-            this.panelBotonera = new System.Windows.Forms.Panel();
-            this.pdfVisor = new PdfiumViewer.PdfViewer();
-            this.panelPdf = new System.Windows.Forms.Panel();
-            this.timerNotificacion = new System.Windows.Forms.Timer(this.components);
-            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
-            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.infoDocControl = new PdfInspector.Controles.InfoDocumentoControl();
-            this.btnSig = new PdfInspector.Controles.BotonDocumento();
             this.btnComplete = new PdfInspector.Controles.BotonDocumento();
             this.btnCancel = new PdfInspector.Controles.BotonDocumento();
             this.btnFin = new PdfInspector.Controles.BotonDocumento();
+            this.panelBotonera = new System.Windows.Forms.Panel();
+            this.panelPdf = new System.Windows.Forms.Panel();
+            this.gdViewer1 = new GdPicture.GdViewer();
+            this.infoDocControl = new PdfInspector.Controles.InfoDocumentoControl();
+            this.timerNotificacion = new System.Windows.Forms.Timer(this.components);
+            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.panelSuperior.SuspendLayout();
             this.panelControl.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -61,14 +61,27 @@
             this.panelSuperior.Size = new System.Drawing.Size(483, 50);
             this.panelSuperior.TabIndex = 0;
             // 
+            // btnSig
+            // 
+            this.btnSig.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSig.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSig.Location = new System.Drawing.Point(0, 0);
+            this.btnSig.Margin = new System.Windows.Forms.Padding(6);
+            this.btnSig.Name = "btnSig";
+            this.btnSig.Size = new System.Drawing.Size(374, 50);
+            this.btnSig.TabIndex = 4;
+            this.btnSig.Tag = "Siguiente";
+            this.btnSig.TeclaAtajo = System.Windows.Forms.Keys.Tab;
+            this.btnSig.Texto = "Siguiente";
+            // 
             // checkAuto
             // 
             this.checkAuto.AutoSize = true;
             this.checkAuto.Dock = System.Windows.Forms.DockStyle.Right;
             this.checkAuto.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkAuto.Location = new System.Drawing.Point(351, 0);
+            this.checkAuto.Location = new System.Drawing.Point(374, 0);
             this.checkAuto.Name = "checkAuto";
-            this.checkAuto.Size = new System.Drawing.Size(132, 50);
+            this.checkAuto.Size = new System.Drawing.Size(109, 50);
             this.checkAuto.TabIndex = 5;
             this.checkAuto.Text = "Automático";
             this.checkAuto.UseVisualStyleBackColor = true;
@@ -81,7 +94,7 @@
             this.flowLayoutPanelArchivos.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelArchivos.Location = new System.Drawing.Point(0, 50);
             this.flowLayoutPanelArchivos.Name = "flowLayoutPanelArchivos";
-            this.flowLayoutPanelArchivos.Size = new System.Drawing.Size(483, 220);
+            this.flowLayoutPanelArchivos.Size = new System.Drawing.Size(483, 224);
             this.flowLayoutPanelArchivos.TabIndex = 1;
             this.flowLayoutPanelArchivos.WrapContents = false;
             // 
@@ -93,7 +106,7 @@
             this.panelControl.Controls.Add(this.btnCancel);
             this.panelControl.Controls.Add(this.btnFin);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelControl.Location = new System.Drawing.Point(0, 270);
+            this.panelControl.Location = new System.Drawing.Point(0, 274);
             this.panelControl.Name = "panelControl";
             this.panelControl.Size = new System.Drawing.Size(483, 340);
             this.panelControl.TabIndex = 3;
@@ -123,9 +136,9 @@
             this.listViewPartes.GridLines = true;
             this.listViewPartes.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewPartes.HideSelection = false;
-            this.listViewPartes.Location = new System.Drawing.Point(0, 31);
+            this.listViewPartes.Location = new System.Drawing.Point(0, 27);
             this.listViewPartes.Name = "listViewPartes";
-            this.listViewPartes.Size = new System.Drawing.Size(483, 149);
+            this.listViewPartes.Size = new System.Drawing.Size(483, 153);
             this.listViewPartes.TabIndex = 7;
             this.listViewPartes.UseCompatibleStateImageBehavior = false;
             this.listViewPartes.View = System.Windows.Forms.View.Details;
@@ -162,7 +175,7 @@
             this.tsbDelAll});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(483, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(483, 27);
             this.toolStrip1.TabIndex = 8;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -172,7 +185,7 @@
             this.tsbDel1.Image = global::PdfInspector.Properties.Resources.delete_icon;
             this.tsbDel1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDel1.Name = "tsbDel1";
-            this.tsbDel1.Size = new System.Drawing.Size(29, 28);
+            this.tsbDel1.Size = new System.Drawing.Size(24, 24);
             this.tsbDel1.Text = "toolStripButton1";
             this.tsbDel1.ToolTipText = "Eliminar 1";
             this.tsbDel1.Click += new System.EventHandler(this.tsbDel1_Click);
@@ -183,95 +196,9 @@
             this.tsbDelAll.Image = global::PdfInspector.Properties.Resources.deleteall_icon;
             this.tsbDelAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDelAll.Name = "tsbDelAll";
-            this.tsbDelAll.Size = new System.Drawing.Size(29, 28);
+            this.tsbDelAll.Size = new System.Drawing.Size(24, 24);
             this.tsbDelAll.Text = "toolStripButton2";
             this.tsbDelAll.ToolTipText = "Eliminar todos";
-            // 
-            // panelBotonera
-            // 
-            this.panelBotonera.BackColor = System.Drawing.SystemColors.Window;
-            this.panelBotonera.Controls.Add(this.flowLayoutPanelArchivos);
-            this.panelBotonera.Controls.Add(this.panelSuperior);
-            this.panelBotonera.Controls.Add(this.panelControl);
-            this.panelBotonera.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelBotonera.Location = new System.Drawing.Point(0, 0);
-            this.panelBotonera.Name = "panelBotonera";
-            this.panelBotonera.Size = new System.Drawing.Size(483, 610);
-            this.panelBotonera.TabIndex = 8;
-            // 
-            // pdfVisor
-            // 
-            this.pdfVisor.BackColor = System.Drawing.SystemColors.Window;
-            this.pdfVisor.DefaultPrintMode = PdfiumViewer.PdfPrintMode.ShrinkToMargin;
-            this.pdfVisor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pdfVisor.Location = new System.Drawing.Point(0, 50);
-            this.pdfVisor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.pdfVisor.Name = "pdfVisor";
-            this.pdfVisor.ShowBookmarks = false;
-            this.pdfVisor.ShowToolbar = false;
-            this.pdfVisor.Size = new System.Drawing.Size(601, 560);
-            this.pdfVisor.TabIndex = 6;
-            this.pdfVisor.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitBest;
-            // 
-            // panelPdf
-            // 
-            this.panelPdf.BackColor = System.Drawing.SystemColors.Control;
-            this.panelPdf.Controls.Add(this.pdfVisor);
-            this.panelPdf.Controls.Add(this.infoDocControl);
-            this.panelPdf.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelPdf.Location = new System.Drawing.Point(483, 0);
-            this.panelPdf.Name = "panelPdf";
-            this.panelPdf.Size = new System.Drawing.Size(601, 610);
-            this.panelPdf.TabIndex = 7;
-            // 
-            // timerNotificacion
-            // 
-            this.timerNotificacion.Interval = 2500;
-            this.timerNotificacion.Tick += new System.EventHandler(this.timerNotificacion_Tick);
-            // 
-            // statusStrip2
-            // 
-            this.statusStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLabel});
-            this.statusStrip2.Location = new System.Drawing.Point(0, 610);
-            this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(1084, 26);
-            this.statusStrip2.TabIndex = 10;
-            this.statusStrip2.Text = "statusStrip2";
-            // 
-            // statusLabel
-            // 
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(114, 20);
-            this.statusLabel.Text = "Pdf Splitter V1.0";
-            // 
-            // infoDocControl
-            // 
-            this.infoDocControl.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.infoDocControl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.infoDocControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoDocControl.Location = new System.Drawing.Point(0, 0);
-            this.infoDocControl.Margin = new System.Windows.Forms.Padding(6);
-            this.infoDocControl.Name = "infoDocControl";
-            this.infoDocControl.PaginaActual = 0;
-            this.infoDocControl.PaginaInicio = 0;
-            this.infoDocControl.Size = new System.Drawing.Size(601, 50);
-            this.infoDocControl.TabIndex = 4;
-            this.infoDocControl.TipoDocumento = "";
-            // 
-            // btnSig
-            // 
-            this.btnSig.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSig.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSig.Location = new System.Drawing.Point(0, 0);
-            this.btnSig.Margin = new System.Windows.Forms.Padding(6);
-            this.btnSig.Name = "btnSig";
-            this.btnSig.Size = new System.Drawing.Size(351, 50);
-            this.btnSig.TabIndex = 4;
-            this.btnSig.Tag = "Siguiente";
-            this.btnSig.TeclaAtajo = System.Windows.Forms.Keys.Tab;
-            this.btnSig.Texto = "Siguiente";
             // 
             // btnComplete
             // 
@@ -298,7 +225,7 @@
             this.btnCancel.Size = new System.Drawing.Size(483, 45);
             this.btnCancel.TabIndex = 1;
             this.btnCancel.Tag = "Cancelar";
-            this.btnCancel.TeclaAtajo = System.Windows.Forms.Keys.Space;
+            this.btnCancel.TeclaAtajo = System.Windows.Forms.Keys.Escape;
             this.btnCancel.Texto = "Documento Cancelar";
             // 
             // btnFin
@@ -314,6 +241,118 @@
             this.btnFin.Tag = "Finalizar";
             this.btnFin.TeclaAtajo = System.Windows.Forms.Keys.Space;
             this.btnFin.Texto = "Documento Fin";
+            // 
+            // panelBotonera
+            // 
+            this.panelBotonera.BackColor = System.Drawing.SystemColors.Window;
+            this.panelBotonera.Controls.Add(this.flowLayoutPanelArchivos);
+            this.panelBotonera.Controls.Add(this.panelSuperior);
+            this.panelBotonera.Controls.Add(this.panelControl);
+            this.panelBotonera.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelBotonera.Location = new System.Drawing.Point(0, 0);
+            this.panelBotonera.Name = "panelBotonera";
+            this.panelBotonera.Size = new System.Drawing.Size(483, 614);
+            this.panelBotonera.TabIndex = 8;
+            // 
+            // panelPdf
+            // 
+            this.panelPdf.BackColor = System.Drawing.SystemColors.Control;
+            this.panelPdf.Controls.Add(this.gdViewer1);
+            this.panelPdf.Controls.Add(this.infoDocControl);
+            this.panelPdf.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelPdf.Location = new System.Drawing.Point(483, 0);
+            this.panelPdf.Name = "panelPdf";
+            this.panelPdf.Size = new System.Drawing.Size(601, 614);
+            this.panelPdf.TabIndex = 7;
+            // 
+            // gdViewer1
+            // 
+            this.gdViewer1.AnimateGIF = false;
+            this.gdViewer1.BackColor = System.Drawing.Color.Black;
+            this.gdViewer1.BackgroundImage = null;
+            this.gdViewer1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.gdViewer1.ContinuousViewMode = true;
+            this.gdViewer1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.gdViewer1.DisplayQuality = GdPicture.DisplayQuality.DisplayQualityBicubicHQ;
+            this.gdViewer1.DisplayQualityAuto = false;
+            this.gdViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gdViewer1.DocumentAlignment = GdPicture.ViewerDocumentAlignment.DocumentAlignmentMiddleCenter;
+            this.gdViewer1.DocumentPosition = GdPicture.ViewerDocumentPosition.DocumentPositionMiddleCenter;
+            this.gdViewer1.EnabledProgressBar = true;
+            this.gdViewer1.EnableMenu = true;
+            this.gdViewer1.EnableMouseWheel = true;
+            this.gdViewer1.ForceScrollBars = false;
+            this.gdViewer1.ForceTemporaryModeForImage = false;
+            this.gdViewer1.ForceTemporaryModeForPDF = false;
+            this.gdViewer1.ForeColor = System.Drawing.Color.Black;
+            this.gdViewer1.Gamma = 1F;
+            this.gdViewer1.HQAnnotationRendering = true;
+            this.gdViewer1.IgnoreDocumentResolution = false;
+            this.gdViewer1.KeepDocumentPosition = false;
+            this.gdViewer1.Location = new System.Drawing.Point(0, 50);
+            this.gdViewer1.LockViewer = false;
+            this.gdViewer1.MagnifierHeight = 90;
+            this.gdViewer1.MagnifierWidth = 160;
+            this.gdViewer1.MagnifierZoomX = 2F;
+            this.gdViewer1.MagnifierZoomY = 2F;
+            this.gdViewer1.MouseButtonForMouseMode = GdPicture.MouseButton.MouseButtonLeft;
+            this.gdViewer1.MouseMode = GdPicture.ViewerMouseMode.MouseModePan;
+            this.gdViewer1.MouseWheelMode = GdPicture.ViewerMouseWheelMode.MouseWheelModeZoom;
+            this.gdViewer1.Name = "gdViewer1";
+            this.gdViewer1.OptimizeDrawingSpeed = false;
+            this.gdViewer1.PdfDisplayFormField = true;
+            this.gdViewer1.PdfEnableLinks = true;
+            this.gdViewer1.PDFShowDialogForPassword = true;
+            this.gdViewer1.RectBorderColor = System.Drawing.Color.Black;
+            this.gdViewer1.RectBorderSize = 1;
+            this.gdViewer1.RectIsEditable = true;
+            this.gdViewer1.RegionsAreEditable = true;
+            this.gdViewer1.ScrollBars = true;
+            this.gdViewer1.ScrollLargeChange = ((short)(50));
+            this.gdViewer1.ScrollSmallChange = ((short)(1));
+            this.gdViewer1.SilentMode = true;
+            this.gdViewer1.Size = new System.Drawing.Size(601, 564);
+            this.gdViewer1.TabIndex = 0;
+            this.gdViewer1.Zoom = 1D;
+            this.gdViewer1.ZoomCenterAtMousePosition = false;
+            this.gdViewer1.ZoomMode = GdPicture.ViewerZoomMode.ZoomMode100;
+            this.gdViewer1.ZoomStep = 25;
+            // 
+            // infoDocControl
+            // 
+            this.infoDocControl.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.infoDocControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.infoDocControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.infoDocControl.Location = new System.Drawing.Point(0, 0);
+            this.infoDocControl.Margin = new System.Windows.Forms.Padding(6);
+            this.infoDocControl.Name = "infoDocControl";
+            this.infoDocControl.PaginaActual = 0;
+            this.infoDocControl.PaginaInicio = 0;
+            this.infoDocControl.Size = new System.Drawing.Size(601, 50);
+            this.infoDocControl.TabIndex = 4;
+            this.infoDocControl.TipoDocumento = "";
+            // 
+            // timerNotificacion
+            // 
+            this.timerNotificacion.Interval = 2500;
+            this.timerNotificacion.Tick += new System.EventHandler(this.timerNotificacion_Tick);
+            // 
+            // statusStrip2
+            // 
+            this.statusStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLabel});
+            this.statusStrip2.Location = new System.Drawing.Point(0, 614);
+            this.statusStrip2.Name = "statusStrip2";
+            this.statusStrip2.Size = new System.Drawing.Size(1084, 22);
+            this.statusStrip2.TabIndex = 10;
+            this.statusStrip2.Text = "statusStrip2";
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(90, 17);
+            this.statusLabel.Text = "Pdf Splitter V1.0";
             // 
             // Form1
             // 
@@ -353,7 +392,6 @@
         private Controles.BotonDocumento btnComplete;
         private System.Windows.Forms.Panel panelBotonera;
         private Controles.InfoDocumentoControl infoDocControl;
-        private PdfiumViewer.PdfViewer pdfVisor;
         private System.Windows.Forms.ListView listViewPartes;
         private System.Windows.Forms.Panel panelPdf;
         private System.Windows.Forms.ColumnHeader colDoc;
@@ -368,5 +406,6 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsbDel1;
         private System.Windows.Forms.ToolStripButton tsbDelAll;
+        private GdPicture.GdViewer gdViewer1;
     }
 }

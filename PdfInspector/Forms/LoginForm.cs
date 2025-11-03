@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -49,6 +50,7 @@ namespace PdfInspector.Forms
 
                 if (token != null)
                 {
+                    GuardarUltimoUsuario(username);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
@@ -99,11 +101,54 @@ namespace PdfInspector.Forms
             btnMostrarPassword.FlatStyle = FlatStyle.Flat;
             btnMostrarPassword.FlatAppearance.BorderSize = 0;
             btnMostrarPassword.BackColor = txtPassword.BackColor;
+            CargarUltimoUsuario();
         }
 
         private void txtPassword_TextChanged(object sender, EventArgs e)
         {
 
         }
+        private string GetConfigPath()
+        {
+            string tempDir = Path.GetTempPath();
+            string appDir = "pdfsplitter";
+            string configFile = "config.txt";
+            return Path.Combine(tempDir, appDir, configFile);
+        }
+
+        private void GuardarUltimoUsuario(string email)
+        {
+            try
+            {
+                string configPath = GetConfigPath();
+                string configDir = Path.GetDirectoryName(configPath);
+                if (!Directory.Exists(configDir))
+                {
+                    Directory.CreateDirectory(configDir);
+                }
+                File.WriteAllText(configPath, email);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al guardar email: " + ex.Message);
+            }
+        }
+
+        private void CargarUltimoUsuario()
+        {
+            try
+            {
+                string configPath = GetConfigPath();
+                if (File.Exists(configPath))
+                {
+                    txtEmail.Text = File.ReadAllText(configPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al cargar email: " + ex.Message);
+            }
+        }
+
     }
 }

@@ -35,7 +35,7 @@
             this.label1.Location = new System.Drawing.Point(5, 28);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 20);
+            this.label1.Size = new System.Drawing.Size(42, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Email";
             // 
@@ -46,7 +46,7 @@
             this.label2.Location = new System.Drawing.Point(5, 81);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 20);
+            this.label2.Size = new System.Drawing.Size(81, 17);
             this.label2.TabIndex = 1;
             this.label2.Text = "Contraseña";
             // 
@@ -55,22 +55,20 @@
             this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.Location = new System.Drawing.Point(145, 28);
-            this.txtEmail.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtEmail.Margin = new System.Windows.Forms.Padding(4);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(467, 23);
+            this.txtEmail.Size = new System.Drawing.Size(467, 19);
             this.txtEmail.TabIndex = 0;
-            this.txtEmail.Text = "rulo@algo.com";
             // 
             // txtPassword
             // 
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPassword.Location = new System.Drawing.Point(145, 78);
-            this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(4);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(421, 23);
+            this.txtPassword.Size = new System.Drawing.Size(421, 19);
             this.txtPassword.TabIndex = 1;
-            this.txtPassword.Text = "Pa$$w0rd";
             this.txtPassword.UseSystemPasswordChar = true;
             this.txtPassword.TextChanged += new System.EventHandler(this.txtPassword_TextChanged);
             // 
@@ -79,7 +77,7 @@
             this.btnLogin.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogin.Location = new System.Drawing.Point(387, 127);
-            this.btnLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLogin.Margin = new System.Windows.Forms.Padding(4);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(211, 41);
             this.btnLogin.TabIndex = 3;
@@ -92,7 +90,7 @@
             this.btnRegistro.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnRegistro.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRegistro.Location = new System.Drawing.Point(387, 175);
-            this.btnRegistro.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnRegistro.Margin = new System.Windows.Forms.Padding(4);
             this.btnRegistro.Name = "btnRegistro";
             this.btnRegistro.Size = new System.Drawing.Size(211, 41);
             this.btnRegistro.TabIndex = 4;
@@ -103,7 +101,7 @@
             // progressBarSpinner
             // 
             this.progressBarSpinner.Location = new System.Drawing.Point(145, 176);
-            this.progressBarSpinner.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.progressBarSpinner.Margin = new System.Windows.Forms.Padding(4);
             this.progressBarSpinner.MarqueeAnimationSpeed = 30;
             this.progressBarSpinner.Name = "progressBarSpinner";
             this.progressBarSpinner.Size = new System.Drawing.Size(231, 41);
@@ -118,7 +116,7 @@
             this.btnMostrarPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMostrarPassword.ForeColor = System.Drawing.SystemColors.GrayText;
             this.btnMostrarPassword.Location = new System.Drawing.Point(567, 76);
-            this.btnMostrarPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnMostrarPassword.Margin = new System.Windows.Forms.Padding(4);
             this.btnMostrarPassword.Name = "btnMostrarPassword";
             this.btnMostrarPassword.Size = new System.Drawing.Size(32, 26);
             this.btnMostrarPassword.TabIndex = 2;
@@ -142,7 +140,7 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PDFSplit - Login";

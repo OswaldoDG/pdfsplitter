@@ -1,8 +1,8 @@
-﻿using PdfInspector.Application.CasosUso.Pdf;
+﻿using GdPicture;
+using PdfInspector.Application.CasosUso.Pdf;
 using PdfInspector.Application.DTOs.PDF;
 using PdfInspector.Controles;
 using PdfInspector.Domain.Models.Pdf;
-using PdfiumViewer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -27,9 +27,10 @@ namespace PdfInspector
         private int _paginaInicioTemporal = 0;
         private int _paginaActualMostrada = -1;
         private bool _isProcessing = false;
-
+        private const string GDILIC = "REMPLAZAR";
         private const string HardcodedEncryptionKey = "pruebademomensajeria12345";
         private const int IvSize = 16;
+        private string _currentUserEmail = "";
         public bool IsLoggingOut { get; private set; } = false;
         private static readonly HttpClient _httpClient = new HttpClient();
 
@@ -45,53 +46,20 @@ namespace PdfInspector
             btnCancel.BotonPresionado += BotonDocumento_Click;
             btnComplete.BotonPresionado += BotonDocumento_Click;
             _listaPartes = new List<DtoParteDocumental>();
+            this.gdViewer1.SetLicenseNumber(GDILIC);
 
-      
-
-            pdfVisor.ZoomMode = PdfViewerZoomMode.FitWidth;
-            //pdfVisor.MouseWheel += PdfVisor_MouseWheel;
-            //pdfVisor.Scroll += PdfVisor_Scroll;
-            //pdfVisor.MouseEnter += PdfVisor_MouseEnter;
-            
-            pdfVisor.Renderer.DisplayRectangleChanged += Renderer_DisplayRectangleChanged;
-
-            //pdfVisor.ZoomMode = PdfViewerZoomMode.FitHeight;
-            //pdfVisor.DefaultPrintMode = PdfPrintMode.ShrinkToMargin;
-
+            this.gdViewer1.MouseEnter += GdViewer_MouseEnter;
+            this.gdViewer1.PageChanged += GdViewer_PageChanged;
 
             this.timerNotificacion.Tick += new System.EventHandler(this.timerNotificacion_Tick);
         }
 
-
-        private void Renderer_DisplayRectangleChanged(object sender, EventArgs e)
+        private void GdViewer_PageChanged()
         {
-            pdfVisor.Focus();
-            ActualizarPaginaActual();
-        }
-
-        private void PdfVisor_MouseEnter(object sender, EventArgs e)
-        {
-            pdfVisor.Focus();
-        }
-
-        private void PdfVisor_Scroll(object sender, ScrollEventArgs e)
-        {
-            pdfVisor.Focus();
-            ActualizarPaginaActual();
-        }
-
-        private void PdfVisor_MouseWheel(object sender, MouseEventArgs e)
-        {
-            pdfVisor.Focus();
-            ActualizarPaginaActual();
-        }
-
-        private void ActualizarPaginaActual()
-        {
-            if (pdfVisor.Document == null)
+            if (this.gdViewer1.PageCount == 0)
                 return;
 
-            int paginaNueva = pdfVisor.Renderer.Page + 1;
+            int paginaNueva = this.gdViewer1.CurrentPage;
 
             if (paginaNueva != _paginaActualMostrada)
             {
@@ -100,13 +68,21 @@ namespace PdfInspector
             }
         }
 
+        private void GdViewer_MouseEnter(object sender, EventArgs e)
+        {
+            this.gdViewer1.Focus();
+        }
+
         private async void AppForm_Load(object sender, EventArgs e)
         {
+            this.gdViewer1.ZoomMode = GdPicture.ViewerZoomMode.ZoomModeFitToViewer;
             int anchoColumna = listViewPartes.ClientSize.Width / 4;
             foreach (ColumnHeader columna in listViewPartes.Columns)
             {
                 columna.Width = anchoColumna;
             }
+            CargarEmailUsuario();
+            this.Text = $"Visor de Documentos - {_currentUserEmail}";
             await CargarDatosDeArchivos();
             listViewPartes.Items.Clear();
         }
@@ -168,6 +144,12 @@ namespace PdfInspector
                 return;
             }
 
+            if (this.gdViewer1.PageCount == 0)
+            {
+                MostrarNotificacion("Documento no cargado.", "Warning");
+                return;
+            }
+
             try
             {
                 _isProcessing = true;
@@ -189,7 +171,7 @@ namespace PdfInspector
                 }
 
                 Cursor = Cursors.WaitCursor;
-                int paginaInicioActual = pdfVisor.Renderer.Page + 1;
+                int paginaInicioActual = this.gdViewer1.CurrentPage;
                 _tempParteTemporal = new DtoParteDocumental
                 {
                     Id = _listaPartes.Any() ? _listaPartes.Max(x => x.Id) + 1 : 1,
@@ -229,8 +211,21 @@ namespace PdfInspector
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            BotonDocumento botonConAtajo = FindBotonDocumentoByShortcut(this, keyData);
+            if (this.gdViewer1.PageCount > 0)
+            {
+                if (keyData == Keys.PageDown)
+                {
+                    this.gdViewer1.DisplayPreviousPage();
+                    return true;
+                }
+                if (keyData == Keys.PageUp)
+                {
+                    this.gdViewer1.DisplayNextPage();
+                    return true;
+                }
+            }
 
+            BotonDocumento botonConAtajo = FindBotonDocumentoByShortcut(this, keyData);
             if (botonConAtajo != null)
             {
                 botonConAtajo.PerformClick();
@@ -293,7 +288,7 @@ namespace PdfInspector
                 return;
             }
 
-            int paginaFinalActual = pdfVisor.Renderer.Page + 1;
+            int paginaFinalActual = this.gdViewer1.CurrentPage;
             int paginaInicial = _tempParteTemporal.PaginaInicio;
 
             if (paginaFinalActual < paginaInicial)
@@ -364,7 +359,7 @@ namespace PdfInspector
 
                 var dto = new DtoFinalizar
                 {
-                    TotalPaginas = pdfVisor.Document.PageCount,
+                    TotalPaginas = this.gdViewer1.PageCount,
                     Partes = _listaPartes
                 };
 
@@ -376,8 +371,8 @@ namespace PdfInspector
                 _paginaInicioTemporal = 0;
                 listViewPartes.Items.Clear();
                 infoDocControl.ActualizarInfo("Completado", 0, 0);
-                this.Text = "Visor de Documentos";
-                pdfVisor.Visible = false;
+                this.gdViewer1.CloseDocument();
+                this.gdViewer1.Visible = false;
 
                 if (!completar)
                 {
@@ -418,9 +413,9 @@ namespace PdfInspector
                 _tempDocumentoTabla = null;
 
                 int paginaActual = _paginaInicioTemporal;
-                if (pdfVisor.Document != null && pdfVisor.Renderer != null)
+                if (this.gdViewer1.PageCount > 0)
                 {
-                    paginaActual = pdfVisor.Renderer.Page + 1;
+                    paginaActual = this.gdViewer1.CurrentPage;
                 }
 
                 infoDocControl.ActualizarInfo("Cancelado", _paginaInicioTemporal, paginaActual);
@@ -439,19 +434,6 @@ namespace PdfInspector
 
         private async Task SiguienteAccion()
         {
-            // pdfVisor.Document;
-
-            pdfVisor.Document = PdfDocument.Load("C:\\Users\\oswaldo\\Desktop\\muestra\\CAJA 18_146.pdf");
-            
-            pdfVisor.Visible = true;
-            _paginaActualMostrada = 1;
-            _paginaInicioTemporal = 1;
-            infoDocControl.ActualizarInfo("Sin Asignar", 1, 1);
-            Text = $"Visor de Documentos - aaa";
-            pdfVisor.Focus();
-
-            return;
-
             if (_listaPartes.Any() || _tempParteTemporal != null)
             {
                 var result = MessageBox.Show(
@@ -474,6 +456,7 @@ namespace PdfInspector
                 _tempParteTemporal = null;
                 _paginaInicioTemporal = 0;
                 infoDocControl.ActualizarInfo("Cargando...", 0, 0);
+                this.gdViewer1.CloseDocument();
                 var pdfPendiente = await _siguientePendienteCasoUso.SiguientePendiente();
                 _archivoPdf = pdfPendiente;
 
@@ -501,17 +484,20 @@ namespace PdfInspector
                     }
 
                     var decryptedStream = DesencriptarStream(encryptedStream);
+                    var status = this.gdViewer1.DisplayFromStream(decryptedStream);
 
-                    if (pdfVisor.Document != null)
-                        pdfVisor.Document.Dispose();
+                    if (status != GdPictureStatus.OK)
+                    {
+                        MostrarNotificacion($"Error al cargar PDF en visor: {status}", "Error");
+                        return;
+                    }
 
-                    pdfVisor.Document = PdfDocument.Load(decryptedStream);
-                    pdfVisor.Visible = true;
+                    this.gdViewer1.Visible = true;
                     _paginaActualMostrada = 1;
                     _paginaInicioTemporal = 1;
                     infoDocControl.ActualizarInfo("Sin Asignar", 1, 1);
                     Text = $"Visor de Documentos - {pdfPendiente.Nombre}";
-                    pdfVisor.Focus();
+                    this.gdViewer1.Focus();
                 }
                 else
                 {
@@ -659,13 +645,35 @@ namespace PdfInspector
             statusLabel.Text = mensaje;
 ;
         }
-
    
         private void tsbDel1_Click(object sender, EventArgs e)
         {
             this.EliminaElemento();
         }
 
-     
+        private string GetConfigPath()
+        {
+            string tempDir = Path.GetTempPath();
+            string appDir = "pdfsplitter";
+            string configFile = "config.txt";
+            return Path.Combine(tempDir, appDir, configFile);
+        }
+
+        private void CargarEmailUsuario()
+        {
+            try
+            {
+                string configPath = GetConfigPath();
+                if (File.Exists(configPath))
+                {
+                    _currentUserEmail = File.ReadAllText(configPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                _currentUserEmail = "Error al cargar email";
+                Console.WriteLine("Error al cargar email: " + ex.Message);
+            }
+        }
     }
 }
