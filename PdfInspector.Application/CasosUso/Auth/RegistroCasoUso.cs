@@ -15,7 +15,7 @@ namespace PdfInspector.App.CasosUso.Auth
 
         public async Task<bool?> ExecuteAsync(RegistroRequest request)
         {
-            return await _registroService.RegistroAsync(request.Email, request.Password);
+            return await _registroService.RegistroAsync(request.Email, request.Password, request.Code);
         }
     }
 }

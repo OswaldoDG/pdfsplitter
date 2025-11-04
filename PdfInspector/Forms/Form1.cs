@@ -20,6 +20,7 @@ namespace PdfInspector
         private readonly ObtieneTipoDocumentosPdfCasoUso _obtieneTipoDocumentosCasoUso;
         private readonly CompletarCasoUso _completarCasoUso;
         private readonly SiguientePendienteCasoUso _siguientePendienteCasoUso;
+        private readonly MisEstadisticasCasoUso _misEstadisticasCasoUso;
         private List<DtoTipoDoc> _listaGlobalDeArchivos;
         private List<DtoParteDocumental> _listaPartes;
         private DtoArchivo _archivoPdf;
@@ -35,13 +36,14 @@ namespace PdfInspector
         public bool IsLoggingOut { get; private set; } = false;
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public Form1(ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso)
+        public Form1(ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso)
         {
             InitializeComponent();
             KeyPreview = true;
             _obtieneTipoDocumentosCasoUso = obtieneTipoDocumentosCasoUso;
             _completarCasoUso = completarCasoUso;
             _siguientePendienteCasoUso = siguientePendienteCasoUso;
+            _misEstadisticasCasoUso = misEstadisticasCasoUso;
             btnSig.BotonPresionado += BotonDocumento_Click;
             btnFin.BotonPresionado += BotonDocumento_Click;
             btnCancel.BotonPresionado += BotonDocumento_Click;
@@ -464,12 +466,14 @@ namespace PdfInspector
                 if (pdfPendiente == null)
                 {
                     MostrarNotificacion("No hay más documentos pendientes de revisión.", "Info");
+                    infoDocControl.ActualizarInfo("", 0, 0);
                     return;
                 }
 
                 if (string.IsNullOrEmpty(pdfPendiente.TokenSAS))
                 {
                     MostrarNotificacion("Se asignó un documento pero no se recibió una URL de acceso.", "Warning");
+                    infoDocControl.ActualizarInfo("", 0, 0);
                     return;
                 }
 
@@ -480,7 +484,8 @@ namespace PdfInspector
 
                     if (encryptedStream == null || encryptedStream.Length == 0)
                     {
-                        MostrarNotificacion("La descarga fue exitosa, pero el archivo no tiene contenido.", "Warning");
+                        MostrarNotificacion("No hay más documentos por procesar", "Warning");
+                        infoDocControl.ActualizarInfo("", 0, 0);
                         return;
                     }
 
@@ -677,30 +682,36 @@ namespace PdfInspector
             }
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private async void toolStripButton1_Click(object sender, EventArgs e)
         {
-            chart1.Series.Clear(); 
-            chart1.Series.Add("Estaditisca");
-            chart1.Legends[0].Enabled = false;
-            chart1.Series[0].IsValueShownAsLabel = true;
+            chart1.Series.Clear();
             chart1.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
             chart1.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
             chart1.ChartAreas[0].AxisX.MinorGrid.Enabled = false;
             chart1.ChartAreas[0].AxisY.MinorGrid.Enabled = false;
+            chart1.Legends[0].Enabled = false;
 
-            // Aqui v ala llamada a l bacend para obtener la estadistica
-
-
-            DateTime hoy = DateTime.Now;
-
-            for (int i= 0; i < 7; i++)
+            var serie = new Series("Estadística")
             {
-                
-                this.chart1.Series[0].Points.AddXY($"{hoy.AddDays((-1 * i)).ToString("d/M")}", new Random().Next(1, 100));    
+                ChartType = SeriesChartType.Column,
+                IsValueShownAsLabel = true,
+                Color = Color.SteelBlue
+            };
+            chart1.Series.Add(serie);
+
+            var estadisticasUsuario = await Task.Run(() => _misEstadisticasCasoUso.ExecuteAsync());
+
+            foreach (var estadistica in estadisticasUsuario.OrderBy(x => x.Fecha))
+            {
+                string etiqueta = estadistica.Fecha.ToString("dd/MM");
+                serie.Points.AddXY(etiqueta, estadistica.Conteo);
             }
 
-                
-
+            chart1.ChartAreas[0].AxisX.Interval = 1;
+            chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
+            chart1.ChartAreas[0].AxisX.Title = "Fecha";
+            chart1.ChartAreas[0].AxisY.Title = "Conteo";
         }
+
     }
 }

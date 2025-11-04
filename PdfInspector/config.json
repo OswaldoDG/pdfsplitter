@@ -10,7 +10,8 @@
       "DescargarPorId": "revision/pdf/{id}",
       "Siguiente": "revision/siguiente",
       "FinalizarPorId": "revision/finalizar/{id}",
-      "ObtieneTipoDocumentos": "revision/tiposDocumento"
+      "ObtieneTipoDocumentos": "revision/tiposDocumento",
+      "MisEstadisticas": "revision/misestadisticas"
     }
   }
 }

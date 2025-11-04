@@ -21,5 +21,6 @@
         public string Siguiente { get; set; }
         public string FinalizarPorId { get; set; }
         public string ObtieneTipoDocumentos { get; set; }
+        public string MisEstadisticas { get; set; }
     }
 }

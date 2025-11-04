@@ -61,7 +61,7 @@ namespace PdfInspector.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error de autenticación: {ex.Message}");
+                MessageBox.Show("Credenciales inválidas. Intente nuevamente.");
             }
             finally
             {

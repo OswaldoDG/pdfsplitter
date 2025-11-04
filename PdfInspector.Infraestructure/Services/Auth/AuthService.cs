@@ -47,9 +47,9 @@ namespace PdfInspector.Infraestructure.Services.Auth
             };
         }
 
-        public async Task<bool> RegistroAsync(string email, string password)
+        public async Task<bool> RegistroAsync(string email, string password, string code)
         {
-            var obj = new { Email = email, Password = password };
+            var obj = new { Email = email, Password = password, Code = code };
             var json = JsonConvert.SerializeObject(obj);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var respuesta = await _httpClient.PostAsync(_config.AuthApi.Register, content);

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
@@ -110,6 +111,30 @@ namespace PdfInspector.Infraestructure.Services.Pdf
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<DtoArchivo>(jsonResponse);
+        }
+
+        public async Task<List<DtoEstadisticasUsuario>> EstadisticasUsuarioAsync()
+        {
+            var endpoint = _config.PdfApi.MisEstadisticas;
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint));
+
+            if (_sesion.IsAuthenticated) 
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error al consultar las estadisticas del usuario: {errorMessage}");
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<DtoEstadisticasUsuario>>(jsonResponse);
         }
     }
 }
