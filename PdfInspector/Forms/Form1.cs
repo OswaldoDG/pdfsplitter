@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PdfInspector
 {
@@ -674,6 +675,32 @@ namespace PdfInspector
                 _currentUserEmail = "Error al cargar email";
                 Console.WriteLine("Error al cargar email: " + ex.Message);
             }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            chart1.Series.Clear(); 
+            chart1.Series.Add("Estaditisca");
+            chart1.Legends[0].Enabled = false;
+            chart1.Series[0].IsValueShownAsLabel = true;
+            chart1.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+            chart1.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+            chart1.ChartAreas[0].AxisX.MinorGrid.Enabled = false;
+            chart1.ChartAreas[0].AxisY.MinorGrid.Enabled = false;
+
+            // Aqui v ala llamada a l bacend para obtener la estadistica
+
+
+            DateTime hoy = DateTime.Now;
+
+            for (int i= 0; i < 7; i++)
+            {
+                
+                this.chart1.Series[0].Points.AddXY($"{hoy.AddDays((-1 * i)).ToString("d/M")}", new Random().Next(1, 100));    
+            }
+
+                
+
         }
     }
 }
