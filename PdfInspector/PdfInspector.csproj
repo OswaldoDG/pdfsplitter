@@ -185,6 +185,7 @@
     <Content Include="config.dev.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\stats-chart-sharp-icon.png" />
     <None Include="Resources\deleteall-icon.png" />
     <None Include="Resources\delete-icon.png" />
     <EmbeddedResource Include="Controles\BotonDocumento.resx">

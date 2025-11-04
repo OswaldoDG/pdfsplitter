@@ -41,6 +41,10 @@
             this.timerNotificacion = new System.Windows.Forms.Timer(this.components);
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.panelSuperior.SuspendLayout();
             this.panelControl.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -48,6 +52,8 @@
             this.panelBotonera.SuspendLayout();
             this.panelPdf.SuspendLayout();
             this.statusStrip2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSuperior
@@ -94,7 +100,7 @@
             this.flowLayoutPanelArchivos.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelArchivos.Location = new System.Drawing.Point(0, 50);
             this.flowLayoutPanelArchivos.Name = "flowLayoutPanelArchivos";
-            this.flowLayoutPanelArchivos.Size = new System.Drawing.Size(483, 224);
+            this.flowLayoutPanelArchivos.Size = new System.Drawing.Size(483, 204);
             this.flowLayoutPanelArchivos.TabIndex = 1;
             this.flowLayoutPanelArchivos.WrapContents = false;
             // 
@@ -106,17 +112,17 @@
             this.panelControl.Controls.Add(this.btnCancel);
             this.panelControl.Controls.Add(this.btnFin);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelControl.Location = new System.Drawing.Point(0, 274);
+            this.panelControl.Location = new System.Drawing.Point(0, 254);
             this.panelControl.Name = "panelControl";
-            this.panelControl.Size = new System.Drawing.Size(483, 340);
+            this.panelControl.Size = new System.Drawing.Size(483, 360);
             this.panelControl.TabIndex = 3;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.listViewPartes);
+            this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Controls.Add(this.toolStrip1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 160);
+            this.panel1.Location = new System.Drawing.Point(0, 180);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(483, 180);
             this.panel1.TabIndex = 8;
@@ -136,9 +142,9 @@
             this.listViewPartes.GridLines = true;
             this.listViewPartes.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewPartes.HideSelection = false;
-            this.listViewPartes.Location = new System.Drawing.Point(0, 27);
+            this.listViewPartes.Location = new System.Drawing.Point(3, 3);
             this.listViewPartes.Name = "listViewPartes";
-            this.listViewPartes.Size = new System.Drawing.Size(483, 153);
+            this.listViewPartes.Size = new System.Drawing.Size(469, 121);
             this.listViewPartes.TabIndex = 7;
             this.listViewPartes.UseCompatibleStateImageBehavior = false;
             this.listViewPartes.View = System.Windows.Forms.View.Details;
@@ -172,7 +178,8 @@
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbDel1,
-            this.tsbDelAll});
+            this.tsbDelAll,
+            this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(483, 27);
@@ -354,6 +361,47 @@
             this.statusLabel.Size = new System.Drawing.Size(90, 17);
             this.statusLabel.Text = "Pdf Splitter V1.0";
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 27);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(483, 153);
+            this.tabControl1.TabIndex = 9;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.listViewPartes);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(475, 127);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Identificacion";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(475, 127);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Estadísticas";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = global::PdfInspector.Properties.Resources.stats_chart_sharp_icon;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(24, 24);
+            this.toolStripButton1.Text = "toolStripButton1";
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -378,6 +426,8 @@
             this.panelPdf.ResumeLayout(false);
             this.statusStrip2.ResumeLayout(false);
             this.statusStrip2.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -407,5 +457,9 @@
         private System.Windows.Forms.ToolStripButton tsbDel1;
         private System.Windows.Forms.ToolStripButton tsbDelAll;
         private GdPicture.GdViewer gdViewer1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

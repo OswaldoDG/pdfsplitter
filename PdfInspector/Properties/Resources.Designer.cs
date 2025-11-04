@@ -79,5 +79,15 @@ namespace PdfInspector.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap stats_chart_sharp_icon {
+            get {
+                object obj = ResourceManager.GetObject("stats-chart-sharp-icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

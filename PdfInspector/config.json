@@ -1,12 +1,12 @@
 {
   "Endpoints": {
     "AuthApi": {
-      "BaseUrl": "https://pdfapi.contabee.mx/api/identity/",
+      "BaseUrl": "https://localhost:9001/",
       "Login": "connect/token",
       "Register": "usuario/registro"
     },
     "PdfApi": {
-      "BaseUrl": "https://pdfapi.contabee.mx/api/pdf/",
+      "BaseUrl": "https://localhost:9003",
       "DescargarPorId": "revision/pdf/{id}",
       "Siguiente": "revision/siguiente",
       "FinalizarPorId": "revision/finalizar/{id}",
