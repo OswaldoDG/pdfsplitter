@@ -11,6 +11,7 @@ using PdfInspector.Infraestructure.Services.Pdf;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
@@ -21,12 +22,17 @@ namespace PdfInspector
     {
         public static Container Configure()
         {
+            var settingsPath = Path.Combine(Path.GetTempPath(), "pdfsplitter", "config.json");
+            if (!File.Exists(settingsPath))
+            {
+                var sourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.prod.json");
+                File.Copy(sourcePath, settingsPath);
+            }
 
             var container = new Container();
             container.Options.EnableAutoVerification = false;
             var builder = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("config.json", optional: false, reloadOnChange: true);
+                .AddJsonFile(settingsPath, optional: false, reloadOnChange: true);
             var configuration = builder.Build();
 
             var settings = new EndpointConfig();

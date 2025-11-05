@@ -184,7 +184,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Hechiceroo-Mnemo-Pdf.ico" />
     <Content Include="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\stats-chart-sharp-icon.png" />
     <None Include="Resources\deleteall-icon.png" />
