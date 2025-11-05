@@ -51,7 +51,6 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "InfoDocumentoControl";
             this.Size = new System.Drawing.Size(150, 50);
-            this.Load += new System.EventHandler(this.InfoDocumentoControl_Load);
             this.ResumeLayout(false);
 
         }

@@ -21,10 +21,11 @@ namespace PdfInspector.Forms
         {
             var email = txtEmail.Text.Trim();
             var password = txtPassword.Text.Trim();
+            var code = txtCodigo.Text.Trim();
 
-            if (string.IsNullOrEmpty(email) || !EsPasswordValido(password))
+            if (string.IsNullOrEmpty(email) || !EsPasswordValido(password) || string.IsNullOrEmpty(code))
             {
-                MessageBox.Show("Por favor, ingrese un correo válido y una contraseña que cumpla con los requisitos.", "Datos Inválidos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, ingrese un correo válido, contraseña y código que cumpla con los requisitos.", "Datos Inválidos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -32,7 +33,7 @@ namespace PdfInspector.Forms
 
             try
             {
-                var registrado = await _registroCasoUso.ExecuteAsync(new App.DTOs.Auth.RegistroRequest() { Email = email, Password  = password});
+                var registrado = await _registroCasoUso.ExecuteAsync(new App.DTOs.Auth.RegistroRequest() { Email = email, Password  = password, Code = code});
                 if ((bool)registrado)
                 {
                     MessageBox.Show("Usuario registrado exitosamente. Ahora puede iniciar sesión.", "Registro Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -49,6 +50,9 @@ namespace PdfInspector.Forms
             }
             finally
             {
+                txtEmail.Text = null;
+                txtPassword.Text = null;
+                txtCodigo.Text = null;
                 ToggleControls(true);
             }
         }

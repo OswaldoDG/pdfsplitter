@@ -47,6 +47,7 @@
     <Compile Include="CasosUso\Auth\LoginCasoUso.cs" />
     <Compile Include="CasosUso\Auth\RegistroCasoUso.cs" />
     <Compile Include="CasosUso\Pdf\CompletarCasoUso.cs" />
+    <Compile Include="CasosUso\Pdf\MisEstadisticasCasoUso.cs" />
     <Compile Include="CasosUso\Pdf\SiguientePendienteCasoUso.cs" />
     <Compile Include="CasosUso\Pdf\ObtieneTiposDocumentoCasoUso.cs" />
     <Compile Include="DTOs\Auth\LoginRequest.cs" />

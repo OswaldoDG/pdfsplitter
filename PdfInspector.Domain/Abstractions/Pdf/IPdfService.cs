@@ -12,5 +12,7 @@ namespace PdfInspector.Domain.Abstractions.Pdf
         Task<List<DtoTipoDoc>> ObtieneTipoDocumentosAsync();
 
         Task<DtoArchivo> SiguientePendiente();
+
+        Task<List<DtoEstadisticasUsuario>> EstadisticasUsuarioAsync();
     }
 }

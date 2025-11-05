@@ -21,13 +21,11 @@ namespace PdfInspector.Controles
             InitializeComponent();
         }
 
-        private int _PaginaActual;
-
         public int PaginaActual
         {
-            get { return _PaginaActual; }
+            get { return _paginaActual; }
             set { 
-                _PaginaActual = value;
+                _paginaActual = value;
                 renderLabel();
             }
         }
@@ -69,16 +67,6 @@ namespace PdfInspector.Controles
 
                 this.lblDocInfo.Text = $"Tipo: {_tipoDocumento} de {_paginaInicio} a {_paginaActual}";
             }
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void InfoDocumentoControl_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

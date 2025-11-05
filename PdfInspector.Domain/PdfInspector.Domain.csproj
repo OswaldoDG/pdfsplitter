@@ -46,6 +46,7 @@
     <Compile Include="Models\Auth\TokenConnect.cs" />
     <Compile Include="Models\Auth\UsuarioSesion.cs" />
     <Compile Include="Models\Pdf\DtoArchivo.cs" />
+    <Compile Include="Models\Pdf\DtoEstadisticasUsuario.cs" />
     <Compile Include="Models\Pdf\DtoTipoDoc.cs" />
     <Compile Include="Models\Pdf\DtoFinalizar.cs" />
     <Compile Include="Models\Pdf\DtoParteDocumental.cs" />
