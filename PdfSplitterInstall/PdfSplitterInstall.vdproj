@@ -622,19 +622,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AEC1C5A3F930C7831ED7494FA75456CB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D0375CF6358B447C997255C0DB2687FC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_44F5ED8F470CCF0BC262945FB194B11C"
+        "OwnerKey" = "8:_F900E8472BD2B8C7F71351F1ECB047EC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -646,7 +634,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F900E8472BD2B8C7F71351F1ECB047EC"
+        "OwnerKey" = "8:_44F5ED8F470CCF0BC262945FB194B11C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D0375CF6358B447C997255C0DB2687FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -805,6 +799,12 @@
         "OwnerKey" = "8:_A5921C5DE5E8A4E6F3AA018755BDB7CC"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_AEC1C5A3F930C7831ED7494FA75456CB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -823,6 +823,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -839,6 +847,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -2234,15 +2250,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PdfSplitter"
-        "ProductCode" = "8:{C9277256-8368-441D-A78F-0AC0D31855A7}"
-        "PackageCode" = "8:{6AA40665-DD15-4861-A298-485290CB2974}"
+        "ProductCode" = "8:{16A2616D-EAA6-40A2-AFC9-E33B1CCB28E3}"
+        "PackageCode" = "8:{E8C7D7C7-86E1-487B-BCCC-C2618657C730}"
         "UpgradeCode" = "8:{E72B1CB6-A7BD-4905-AD64-B823FE353CBA}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:Neurofant"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -2768,6 +2784,34 @@
         }
         "ProjectOutput"
         {
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C1C011A1A45D4BB7AA41BA5E248E8D0A"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_405D52D0CC02425D843B452D4769AD50"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:ContentFiles"
+            "OutputProjectGuid" = "8:{9E5FD892-4854-4E98-9742-9B1D24227597}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D0375CF6358B447C997255C0DB2687FC"
             {
             "SourcePath" = "8:..\\PdfInspector\\obj\\Debug\\PDFSplitter.exe"

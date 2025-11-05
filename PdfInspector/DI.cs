@@ -22,7 +22,13 @@ namespace PdfInspector
     {
         public static Container Configure()
         {
-            var settingsPath = Path.Combine(Path.GetTempPath(), "pdfsplitter", "config.json");
+            var tempDir = Path.Combine(Path.GetTempPath(), "pdfsplitter");  
+            var settingsPath = Path.Combine(tempDir, "config.json");
+            if (!Directory.Exists(tempDir))
+            {
+                Directory.CreateDirectory(tempDir);
+            }
+
             if (!File.Exists(settingsPath))
             {
                 var sourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.prod.json");
