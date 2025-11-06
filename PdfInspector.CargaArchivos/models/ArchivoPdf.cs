@@ -2,10 +2,11 @@
 {
     public enum EstadoRevision
     {
-        Pendiente,
-        Procesando,
-        Completado,
-        Error
+        Pendiente = 0,
+        EnCurso = 1,
+        Finalizada = 2,
+        Cancelada = 3,
+        SeparadoEnPdfs = 4
     }
 
     public class ArchivoPdf
