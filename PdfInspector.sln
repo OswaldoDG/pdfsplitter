@@ -14,6 +14,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfInspector.CargaArchivos", "PdfInspector.CargaArchivos\PdfInspector.CargaArchivos.csproj", "{AD7C04C0-A2B5-4C3C-8ECD-C246A15D1AA7}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PdfSplitterInstall", "PdfSplitterInstall\PdfSplitterInstall.vdproj", "{206D2F2B-18C9-21D3-5CF6-37F728C8FF95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfInspector.Separador", "PdfInspector.Separador\PdfInspector.Separador.csproj", "{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +68,14 @@ Global
 		{206D2F2B-18C9-21D3-5CF6-37F728C8FF95}.Debug|x86.ActiveCfg = Debug
 		{206D2F2B-18C9-21D3-5CF6-37F728C8FF95}.Release|Any CPU.ActiveCfg = Release
 		{206D2F2B-18C9-21D3-5CF6-37F728C8FF95}.Release|x86.ActiveCfg = Release
+		{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}.Debug|x86.Build.0 = Debug|Any CPU
+		{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}.Release|x86.ActiveCfg = Release|Any CPU
+		{3BB0BA4B-94BD-4BE0-8FED-1EB17936A098}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
