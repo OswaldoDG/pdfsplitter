@@ -33,16 +33,15 @@
             // 
             // lblDocInfo
             // 
-            this.lblDocInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDocInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblDocInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDocInfo.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.lblDocInfo.Location = new System.Drawing.Point(5, 5);
+            this.lblDocInfo.Location = new System.Drawing.Point(0, 0);
             this.lblDocInfo.Name = "lblDocInfo";
-            this.lblDocInfo.Size = new System.Drawing.Size(140, 40);
+            this.lblDocInfo.Size = new System.Drawing.Size(150, 50);
             this.lblDocInfo.TabIndex = 0;
             this.lblDocInfo.Text = "...";
-            this.lblDocInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblDocInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // InfoDocumentoControl
             // 

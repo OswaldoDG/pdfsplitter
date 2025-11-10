@@ -50,11 +50,11 @@ namespace PdfInspector
             btnComplete.BotonPresionado += BotonDocumento_Click;
             _listaPartes = new List<DtoParteDocumental>();
             this.gdViewer1.SetLicenseNumber(GDILIC);
-
             this.gdViewer1.MouseEnter += GdViewer_MouseEnter;
             this.gdViewer1.PageChanged += GdViewer_PageChanged;
 
             this.timerNotificacion.Tick += new System.EventHandler(this.timerNotificacion_Tick);
+            chart1.PostPaint += chart1_PostPaint;
         }
 
         private void GdViewer_PageChanged()
@@ -79,6 +79,7 @@ namespace PdfInspector
         private async void AppForm_Load(object sender, EventArgs e)
         {
             this.gdViewer1.ZoomMode = GdPicture.ViewerZoomMode.ZoomModeFitToViewer;
+            btnComplete.TeclaAtajo = Keys.Enter;
             int anchoColumna = listViewPartes.ClientSize.Width / 4;
             foreach (ColumnHeader columna in listViewPartes.Columns)
             {
@@ -86,8 +87,35 @@ namespace PdfInspector
             }
             CargarEmailUsuario();
             this.Text = $"Visor de Documentos - {_currentUserEmail}";
+            this.toolStripButton1.ToolTipText = "Actualizar mis estadísticas";
+            lbTotalPag.ActualizarTotal(0);
             await CargarDatosDeArchivos();
             listViewPartes.Items.Clear();
+            chart1.PostPaint += (s, ev) =>
+            {
+                var chart = (Chart)s;
+                var area = chart.ChartAreas[0];
+
+                foreach (var pt in chart.Series[0].Points)
+                {
+                    var posX = (float)area.AxisX.ValueToPixelPosition(pt.XValue);
+                    var posY = (float)area.AxisY.ValueToPixelPosition(pt.YValues[0]);
+                    var yZero = (float)area.AxisY.ValueToPixelPosition(0);
+                    var altura = yZero - posY;
+                    var rect = new RectangleF(posX - 10, posY + altura / 2 - 8, 20, 16);
+
+                    ev.ChartGraphics.Graphics.DrawString(
+                        pt.YValues[0].ToString("0"),
+                        chart1.Font,
+                        Brushes.White,
+                        rect,
+                        new StringFormat
+                        {
+                            Alignment = StringAlignment.Center,
+                            LineAlignment = StringAlignment.Center
+                        });
+                }
+            };
         }
 
         private async Task CargarDatosDeArchivos()
@@ -211,33 +239,6 @@ namespace PdfInspector
             }
         }
 
-
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (this.gdViewer1.PageCount > 0)
-            {
-                if (keyData == Keys.PageDown)
-                {
-                    this.gdViewer1.DisplayPreviousPage();
-                    return true;
-                }
-                if (keyData == Keys.PageUp)
-                {
-                    this.gdViewer1.DisplayNextPage();
-                    return true;
-                }
-            }
-
-            BotonDocumento botonConAtajo = FindBotonDocumentoByShortcut(this, keyData);
-            if (botonConAtajo != null)
-            {
-                botonConAtajo.PerformClick();
-                return true;
-            }
-
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
-
         private async void BotonDocumento_Click(object sender, EventArgs e)
         {
             if (_isProcessing)
@@ -308,6 +309,17 @@ namespace PdfInspector
                 return;
             }
 
+            foreach (var parteExistente in _listaPartes)
+            {
+                bool seTraslapa = (paginaInicial <= parteExistente.PaginaFin) && (paginaFinalActual >= parteExistente.PaginaInicio);
+                if (seTraslapa)
+                {
+                    var tipoDocExistente = _listaGlobalDeArchivos.FirstOrDefault(t => t.Id == parteExistente.TipoDocumentoId)?.Nombre ?? "ID " + parteExistente.TipoDocumentoId;
+                    MostrarNotificacion($"El rango {paginaInicial}-{paginaFinalActual} se traslapa con '{tipoDocExistente}' (Págs: {parteExistente.PaginaInicio}-{parteExistente.PaginaFin}). Elimine la parte anterior para continuar o cancele la captura.", "Error");
+                    return;
+                }
+            }
+
             try
             {
                 Cursor = Cursors.WaitCursor;
@@ -367,7 +379,7 @@ namespace PdfInspector
                 };
 
                 var completar = await Task.Run(() => _completarCasoUso.ExecuteAsync(_archivoPdf.Id, dto));
-
+                ResetDocumentState();
                 _tempParteTemporal = null;
                 _archivoPdf = null;
                 _listaPartes = new List<DtoParteDocumental>();
@@ -486,6 +498,7 @@ namespace PdfInspector
                     {
                         MostrarNotificacion("No hay más documentos por procesar", "Warning");
                         infoDocControl.ActualizarInfo("", 0, 0);
+                        lbTotalPag.ActualizarTotal(this.gdViewer1.PageCount);
                         return;
                     }
 
@@ -503,7 +516,9 @@ namespace PdfInspector
                     _paginaInicioTemporal = 1;
                     infoDocControl.ActualizarInfo("Sin Asignar", 1, 1);
                     Text = $"Visor de Documentos - {pdfPendiente.Nombre}";
+                    lbTotalPag.ActualizarTotal(this.gdViewer1.PageCount);
                     this.gdViewer1.Focus();
+                    inactividadTimer.Start();
                 }
                 else
                 {
@@ -537,6 +552,31 @@ namespace PdfInspector
             }
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (this.gdViewer1.PageCount > 0)
+            {
+                if (keyData == Keys.PageDown)
+                {
+                    this.gdViewer1.DisplayPreviousPage();
+                    return true;
+                }
+                if (keyData == Keys.PageUp)
+                {
+                    this.gdViewer1.DisplayNextPage();
+                    return true;
+                }
+            }
+
+            BotonDocumento botonConAtajo = FindBotonDocumentoByShortcut(this, keyData);
+            if (botonConAtajo != null)
+            {
+                botonConAtajo.PerformClick();
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
         private BotonDocumento FindBotonDocumentoByShortcut(Control container, Keys keyData)
         {
             foreach (Control c in container.Controls)
@@ -557,7 +597,6 @@ namespace PdfInspector
             }
             return null;
         }
-
         private void EliminaElemento()
         {
             if (listViewPartes.SelectedItems.Count == 0)
@@ -694,9 +733,10 @@ namespace PdfInspector
             var serie = new Series("Estadística")
             {
                 ChartType = SeriesChartType.Column,
-                IsValueShownAsLabel = true,
+                IsValueShownAsLabel = false,
                 Color = Color.SteelBlue
             };
+
             chart1.Series.Add(serie);
 
             var estadisticasUsuario = await Task.Run(() => _misEstadisticasCasoUso.ExecuteAsync());
@@ -711,7 +751,83 @@ namespace PdfInspector
             chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
             chart1.ChartAreas[0].AxisX.Title = "Fecha";
             chart1.ChartAreas[0].AxisY.Title = "Conteo";
+
+            chart1.Invalidate();
         }
 
+        private void chart1_PostPaint(object sender, ChartPaintEventArgs e)
+        {
+            var chart = (Chart)sender;
+            var area = chart.ChartAreas[0];
+
+            if (chart.Series.Count == 0)
+                return;
+
+            var series = chart.Series[0];
+            if (series.Points.Count == 0)
+                return;
+
+            int count = series.Points.Count;
+            float xMin = (float)area.AxisX.ValueToPixelPosition(0.5);
+            float xMax = (float)area.AxisX.ValueToPixelPosition(count + 0.5f);
+            float totalWidth = Math.Abs(xMax - xMin);
+            float columnWidth = totalWidth / count * 0.6f;
+
+            for (int p = 0; p < series.Points.Count; p++)
+            {
+                float x = (float)area.AxisX.ValueToPixelPosition(p + 1);
+                float y0 = (float)area.AxisY.ValueToPixelPosition(0);
+                float y1 = (float)area.AxisY.ValueToPixelPosition(series.Points[p].YValues[0]);
+                var rect = new RectangleF(
+                    x - columnWidth / 2,
+                    Math.Min(y0, y1),
+                    columnWidth,
+                    Math.Abs(y0 - y1));
+
+                using (var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                {
+                    e.ChartGraphics.Graphics.DrawString(
+                        series.Points[p].YValues[0].ToString("0"),
+                        chart.Font,
+                        Brushes.White,
+                        rect,
+                        sf);
+                }
+            }
+        }
+
+        private void ResetDocumentState()
+        {
+            inactividadTimer.Stop();
+
+            _archivoPdf = null;
+            _listaPartes.Clear();
+            _tempDocumentoTabla = null;
+            _tempParteTemporal = null;
+            _paginaInicioTemporal = 0;
+            listViewPartes.Items.Clear();
+            this.gdViewer1.CloseDocument();
+            this.gdViewer1.Visible = false;
+            lbTotalPag.ActualizarTotal(0);
+            Text = $"Visor de Documentos - {_currentUserEmail}";
+        }
+
+        private void inactividadTimer_Tick(object sender, EventArgs e)
+        {
+            inactividadTimer.Stop();
+
+            if (_archivoPdf != null)
+            {
+                MostrarNotificacion("Documento cerrado por inactividad (1 hora).", "Info");
+
+                if (checkAuto.Checked)
+                {
+                    checkAuto.Checked = false;
+                }
+
+                ResetDocumentState();
+                infoDocControl.ActualizarInfo("Cerrado por inactividad", 0, 0);
+            }
+        }
     }
 }

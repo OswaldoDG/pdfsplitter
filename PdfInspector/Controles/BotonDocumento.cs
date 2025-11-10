@@ -35,9 +35,22 @@ namespace PdfInspector.Controles
             set
             {
                 _teclaAtajo = value;
-                lbAtajo.Text = $"[{_teclaAtajo}]";
+
+                string teclaTexto;
+
+                if (_teclaAtajo == Keys.Enter)
+                    teclaTexto = "ENTER";
+                else if (_teclaAtajo == Keys.Escape)
+                    teclaTexto = "ESC";
+                else if (_teclaAtajo == Keys.Space)
+                    teclaTexto = "SPACE";
+                else
+                    teclaTexto = _teclaAtajo.ToString();
+
+                lbAtajo.Text = $"[{teclaTexto}]";
             }
         }
+
 
         [Category("Apariencia")]
         [Description("Texto que se mostrará en el botón principal.")]
