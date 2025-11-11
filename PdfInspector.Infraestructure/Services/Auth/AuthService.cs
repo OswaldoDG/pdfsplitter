@@ -47,6 +47,32 @@ namespace PdfInspector.Infraestructure.Services.Auth
             };
         }
 
+        public async Task<TokenConnect> RefreshTokenAsync(string refreshToken)
+        {
+            var form = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string,string>("grant_type", "refresh_token"),
+                new KeyValuePair<string,string>("client_id", "mensajeriamedica-password"),
+                new KeyValuePair<string,string>("refresh_token", refreshToken)
+            });
+
+            var respuesta = await _httpClient.PostAsync(_config.AuthApi.Login, form);
+
+            if (!respuesta.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var json = JObject.Parse(await respuesta.Content.ReadAsStringAsync());
+            return new TokenConnect
+            {
+                access_token = json["access_token"].ToString(),
+                refresh_token = json["refresh_token"].ToString(),
+                expires_in = (int)json["expires_in"],
+                token_type = json["token_type"].ToString()
+            };
+        }
+
         public async Task<bool> RegistroAsync(string email, string password, string code)
         {
             var obj = new { Email = email, Password = password, Code = code };

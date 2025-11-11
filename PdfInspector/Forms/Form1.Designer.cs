@@ -33,9 +33,15 @@
             this.colDoc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colInicio = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colFin = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colGroup = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.tsbDel1 = new System.Windows.Forms.ToolStripButton();
+            this.tsbDelAll = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.btnComplete = new PdfInspector.Controles.BotonDocumento();
             this.btnCancel = new PdfInspector.Controles.BotonDocumento();
             this.btnFin = new PdfInspector.Controles.BotonDocumento();
@@ -49,10 +55,6 @@
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.inactividadTimer = new System.Windows.Forms.Timer(this.components);
-            this.tsbDel1 = new System.Windows.Forms.ToolStripButton();
-            this.tsbDelAll = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.panelSuperior.SuspendLayout();
             this.panelControl.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -85,7 +87,7 @@
             this.btnSig.Location = new System.Drawing.Point(0, 0);
             this.btnSig.Margin = new System.Windows.Forms.Padding(6);
             this.btnSig.Name = "btnSig";
-            this.btnSig.Size = new System.Drawing.Size(374, 50);
+            this.btnSig.Size = new System.Drawing.Size(325, 50);
             this.btnSig.TabIndex = 4;
             this.btnSig.Tag = "Siguiente";
             this.btnSig.TeclaAtajo = System.Windows.Forms.Keys.Tab;
@@ -96,9 +98,9 @@
             this.checkAuto.AutoSize = true;
             this.checkAuto.Dock = System.Windows.Forms.DockStyle.Right;
             this.checkAuto.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkAuto.Location = new System.Drawing.Point(374, 0);
+            this.checkAuto.Location = new System.Drawing.Point(325, 0);
             this.checkAuto.Name = "checkAuto";
-            this.checkAuto.Size = new System.Drawing.Size(109, 50);
+            this.checkAuto.Size = new System.Drawing.Size(158, 50);
             this.checkAuto.TabIndex = 5;
             this.checkAuto.Text = "Automático";
             this.checkAuto.UseVisualStyleBackColor = true;
@@ -111,7 +113,7 @@
             this.flowLayoutPanelArchivos.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelArchivos.Location = new System.Drawing.Point(0, 50);
             this.flowLayoutPanelArchivos.Name = "flowLayoutPanelArchivos";
-            this.flowLayoutPanelArchivos.Size = new System.Drawing.Size(483, 204);
+            this.flowLayoutPanelArchivos.Size = new System.Drawing.Size(483, 194);
             this.flowLayoutPanelArchivos.TabIndex = 1;
             this.flowLayoutPanelArchivos.WrapContents = false;
             // 
@@ -123,7 +125,7 @@
             this.panelControl.Controls.Add(this.btnCancel);
             this.panelControl.Controls.Add(this.btnFin);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelControl.Location = new System.Drawing.Point(0, 254);
+            this.panelControl.Location = new System.Drawing.Point(0, 244);
             this.panelControl.Name = "panelControl";
             this.panelControl.Size = new System.Drawing.Size(483, 360);
             this.panelControl.TabIndex = 3;
@@ -143,19 +145,19 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 27);
+            this.tabControl1.Location = new System.Drawing.Point(0, 29);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(483, 153);
+            this.tabControl1.Size = new System.Drawing.Size(483, 151);
             this.tabControl1.TabIndex = 9;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.listViewPartes);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(475, 124);
+            this.tabPage1.Size = new System.Drawing.Size(475, 118);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Identificacion";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -169,7 +171,8 @@
             this.colId,
             this.colDoc,
             this.colInicio,
-            this.colFin});
+            this.colFin,
+            this.colGroup});
             this.listViewPartes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewPartes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewPartes.FullRowSelect = true;
@@ -178,7 +181,7 @@
             this.listViewPartes.HideSelection = false;
             this.listViewPartes.Location = new System.Drawing.Point(3, 3);
             this.listViewPartes.Name = "listViewPartes";
-            this.listViewPartes.Size = new System.Drawing.Size(469, 118);
+            this.listViewPartes.Size = new System.Drawing.Size(469, 112);
             this.listViewPartes.TabIndex = 7;
             this.listViewPartes.UseCompatibleStateImageBehavior = false;
             this.listViewPartes.View = System.Windows.Forms.View.Details;
@@ -205,13 +208,17 @@
             this.colFin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.colFin.Width = 150;
             // 
+            // colGroup
+            // 
+            this.colGroup.Text = "Grupo";
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.chart1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(475, 124);
+            this.tabPage2.Size = new System.Drawing.Size(475, 118);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Estadísticas";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -229,7 +236,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(469, 118);
+            this.chart1.Size = new System.Drawing.Size(469, 112);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
@@ -242,12 +249,64 @@
             this.tsbDel1,
             this.tsbDelAll,
             this.toolStripButton1,
-            this.toolStripButton2});
+            this.toolStripButton2,
+            this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(483, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(483, 29);
             this.toolStrip1.TabIndex = 8;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // tsbDel1
+            // 
+            this.tsbDel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbDel1.Image = global::PdfInspector.Properties.Resources.delete_icon;
+            this.tsbDel1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDel1.Name = "tsbDel1";
+            this.tsbDel1.Size = new System.Drawing.Size(34, 24);
+            this.tsbDel1.Text = "toolStripButton1";
+            this.tsbDel1.ToolTipText = "Eliminar 1";
+            this.tsbDel1.Click += new System.EventHandler(this.tsbDel1_Click);
+            // 
+            // tsbDelAll
+            // 
+            this.tsbDelAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbDelAll.Image = global::PdfInspector.Properties.Resources.deleteall_icon;
+            this.tsbDelAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDelAll.Name = "tsbDelAll";
+            this.tsbDelAll.Size = new System.Drawing.Size(34, 24);
+            this.tsbDelAll.Text = "toolStripButton2";
+            this.tsbDelAll.ToolTipText = "Eliminar todos";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = global::PdfInspector.Properties.Resources.stats_chart_sharp_icon;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(34, 24);
+            this.toolStripButton1.Text = "Actualizar mis estadísticas";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Image = global::PdfInspector.Properties.Resources.Pictogrammers_Material_Link_variant_plus_48;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(34, 24);
+            this.toolStripButton2.Text = "Vincular documentos";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton3.Image = global::PdfInspector.Properties.Resources.Pictogrammers_Material_Link_variant_remove_48;
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(34, 24);
+            this.toolStripButton3.Text = "Eliminar Vinculos";
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
             // btnComplete
             // 
@@ -300,7 +359,7 @@
             this.panelBotonera.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelBotonera.Location = new System.Drawing.Point(0, 0);
             this.panelBotonera.Name = "panelBotonera";
-            this.panelBotonera.Size = new System.Drawing.Size(483, 614);
+            this.panelBotonera.Size = new System.Drawing.Size(483, 604);
             this.panelBotonera.TabIndex = 8;
             // 
             // panelPdf
@@ -311,7 +370,7 @@
             this.panelPdf.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPdf.Location = new System.Drawing.Point(483, 0);
             this.panelPdf.Name = "panelPdf";
-            this.panelPdf.Size = new System.Drawing.Size(601, 614);
+            this.panelPdf.Size = new System.Drawing.Size(601, 604);
             this.panelPdf.TabIndex = 7;
             // 
             // tableLayoutPanel1
@@ -405,7 +464,7 @@
             this.gdViewer1.ScrollLargeChange = ((short)(50));
             this.gdViewer1.ScrollSmallChange = ((short)(1));
             this.gdViewer1.SilentMode = true;
-            this.gdViewer1.Size = new System.Drawing.Size(601, 614);
+            this.gdViewer1.Size = new System.Drawing.Size(601, 604);
             this.gdViewer1.TabIndex = 0;
             this.gdViewer1.Zoom = 1D;
             this.gdViewer1.ZoomCenterAtMousePosition = false;
@@ -422,63 +481,22 @@
             this.statusStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusStrip2.Location = new System.Drawing.Point(0, 614);
+            this.statusStrip2.Location = new System.Drawing.Point(0, 604);
             this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(1084, 22);
+            this.statusStrip2.Size = new System.Drawing.Size(1084, 32);
             this.statusStrip2.TabIndex = 10;
             this.statusStrip2.Text = "statusStrip2";
             // 
             // statusLabel
             // 
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(90, 17);
+            this.statusLabel.Size = new System.Drawing.Size(139, 25);
             this.statusLabel.Text = "Pdf Splitter V1.0";
             // 
             // inactividadTimer
             // 
             this.inactividadTimer.Interval = 3600000;
             this.inactividadTimer.Tick += new System.EventHandler(this.inactividadTimer_Tick);
-            // 
-            // tsbDel1
-            // 
-            this.tsbDel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbDel1.Image = global::PdfInspector.Properties.Resources.delete_icon;
-            this.tsbDel1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDel1.Name = "tsbDel1";
-            this.tsbDel1.Size = new System.Drawing.Size(24, 24);
-            this.tsbDel1.Text = "toolStripButton1";
-            this.tsbDel1.ToolTipText = "Eliminar 1";
-            this.tsbDel1.Click += new System.EventHandler(this.tsbDel1_Click);
-            // 
-            // tsbDelAll
-            // 
-            this.tsbDelAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbDelAll.Image = global::PdfInspector.Properties.Resources.deleteall_icon;
-            this.tsbDelAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDelAll.Name = "tsbDelAll";
-            this.tsbDelAll.Size = new System.Drawing.Size(24, 24);
-            this.tsbDelAll.Text = "toolStripButton2";
-            this.tsbDelAll.ToolTipText = "Eliminar todos";
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::PdfInspector.Properties.Resources.stats_chart_sharp_icon;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(24, 24);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = global::PdfInspector.Properties.Resources.bx_link_alt_icon;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(24, 24);
-            this.toolStripButton2.Text = "Vincular documentos";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
             // Form1
             // 
@@ -547,5 +565,7 @@
         private Controles.InfoDocumentoControl lbTotalPag;
         private System.Windows.Forms.Timer inactividadTimer;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ColumnHeader colGroup;
     }
 }

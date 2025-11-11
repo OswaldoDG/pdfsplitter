@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using PdfInspector.App.CasosUso.Auth;
+using PdfInspector.Application.CasosUso.Auth;
 using PdfInspector.Application.CasosUso.Pdf;
 using PdfInspector.Domain.Abstractions.Auth;
 using PdfInspector.Domain.Abstractions.Pdf;
@@ -54,6 +55,7 @@ namespace PdfInspector
             container.RegisterSingleton<IPdfService, PdfService>();
 
             container.Register<LoginCasoUso>();
+            container.Register<RefrescarCasoUso>();
             container.Register<RegistroCasoUso>();
             container.Register<ObtieneTipoDocumentosPdfCasoUso>();
             container.Register<CompletarCasoUso>();
