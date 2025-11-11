@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PdfInspector
 {
@@ -828,6 +829,23 @@ namespace PdfInspector
                 ResetDocumentState();
                 infoDocControl.ActualizarInfo("Cerrado por inactividad", 0, 0);
             }
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            // Esto recorre todos los elementos marcados en el ListView
+            foreach (ListViewItem item in this.listViewPartes.CheckedItems)
+            {
+                // Aqui añadimos la logica de agrupamiento    
+            }
+
+
+            // Esto desmarca todos los elementos marcados en el ListView
+            foreach (ListViewItem item in this.listViewPartes.CheckedItems)
+            {
+                item.Checked = false;   
+            }
+            
         }
     }
 }

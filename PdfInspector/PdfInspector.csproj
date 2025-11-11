@@ -188,6 +188,7 @@
     <Content Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\bx-link-alt-icon.png" />
     <None Include="Resources\stats-chart-sharp-icon.png" />
     <None Include="Resources\deleteall-icon.png" />
     <None Include="Resources\delete-icon.png" />
