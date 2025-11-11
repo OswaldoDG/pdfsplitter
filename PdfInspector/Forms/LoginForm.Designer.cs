@@ -35,7 +35,7 @@
             this.label1.Location = new System.Drawing.Point(5, 28);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 17);
+            this.label1.Size = new System.Drawing.Size(60, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Email";
             // 
@@ -46,7 +46,7 @@
             this.label2.Location = new System.Drawing.Point(5, 81);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 17);
+            this.label2.Size = new System.Drawing.Size(114, 25);
             this.label2.TabIndex = 1;
             this.label2.Text = "Contraseña";
             // 
@@ -57,7 +57,7 @@
             this.txtEmail.Location = new System.Drawing.Point(145, 28);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(4);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(467, 19);
+            this.txtEmail.Size = new System.Drawing.Size(467, 28);
             this.txtEmail.TabIndex = 0;
             // 
             // txtPassword
@@ -67,7 +67,7 @@
             this.txtPassword.Location = new System.Drawing.Point(145, 78);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(4);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(421, 19);
+            this.txtPassword.Size = new System.Drawing.Size(421, 28);
             this.txtPassword.TabIndex = 1;
             this.txtPassword.UseSystemPasswordChar = true;
             this.txtPassword.TextChanged += new System.EventHandler(this.txtPassword_TextChanged);
