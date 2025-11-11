@@ -1,6 +1,7 @@
 ﻿using PdfInspector.App.DTOs.Auth;
 using PdfInspector.Domain.Abstractions.Auth;
 using PdfInspector.Domain.Models.Auth;
+using System;
 using System.Threading.Tasks;
 
 namespace PdfInspector.App.CasosUso.Auth
@@ -16,18 +17,26 @@ namespace PdfInspector.App.CasosUso.Auth
             _sesion = sesion;
         }
 
-        public async Task<bool> Ejecutar(string email, string password)
+        public async Task<string> Ejecutar(string username, string password)
         {
-            var tokenData = await _authService.LoginAsync(email, password);
-
-            if (tokenData != null && !string.IsNullOrEmpty(tokenData.access_token))
+            try
             {
-                _sesion.Create(tokenData.access_token, tokenData.expires_in);
-                return true;
+                var tokenConnect = await _authService.LoginAsync(username, password);
+                if (tokenConnect != null)
+                {
+                    _sesion.Create(
+                        tokenConnect.access_token,
+                        tokenConnect.refresh_token,
+                        tokenConnect.expires_in
+                    );
+                    return tokenConnect.access_token;
+                }
+                return null;
             }
-
-            _sesion.Clear();
-            return false;
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

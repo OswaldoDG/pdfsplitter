@@ -188,6 +188,8 @@
     <Content Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Pictogrammers-Material-Link-variant-remove.48.png" />
+    <None Include="Resources\Pictogrammers-Material-Link-variant-plus.48.png" />
     <None Include="Resources\bx-link-alt-icon.png" />
     <None Include="Resources\stats-chart-sharp-icon.png" />
     <None Include="Resources\deleteall-icon.png" />

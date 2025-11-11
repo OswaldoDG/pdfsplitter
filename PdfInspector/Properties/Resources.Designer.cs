@@ -93,6 +93,26 @@ namespace PdfInspector.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Pictogrammers_Material_Link_variant_plus_48 {
+            get {
+                object obj = ResourceManager.GetObject("Pictogrammers-Material-Link-variant-plus.48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Pictogrammers_Material_Link_variant_remove_48 {
+            get {
+                object obj = ResourceManager.GetObject("Pictogrammers-Material-Link-variant-remove.48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap stats_chart_sharp_icon {
             get {
                 object obj = ResourceManager.GetObject("stats-chart-sharp-icon", resourceCulture);

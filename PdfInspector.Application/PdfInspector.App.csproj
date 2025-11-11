@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CasosUso\Auth\LoginCasoUso.cs" />
+    <Compile Include="CasosUso\Auth\RefrescarCasoUso.cs" />
     <Compile Include="CasosUso\Auth\RegistroCasoUso.cs" />
     <Compile Include="CasosUso\Pdf\CompletarCasoUso.cs" />
     <Compile Include="CasosUso\Pdf\MisEstadisticasCasoUso.cs" />

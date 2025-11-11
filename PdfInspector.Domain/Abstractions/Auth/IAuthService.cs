@@ -10,6 +10,7 @@ namespace PdfInspector.Domain.Abstractions.Auth
     public  interface IAuthService
     {
         Task<TokenConnect> LoginAsync(string username, string password);
+        Task<TokenConnect> RefreshTokenAsync(string refreshToken);
         Task<bool> RegistroAsync(string email, string password, string code);
     }
 }

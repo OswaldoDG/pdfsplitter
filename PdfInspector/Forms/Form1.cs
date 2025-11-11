@@ -2,7 +2,9 @@
 using PdfInspector.Application.CasosUso.Pdf;
 using PdfInspector.Application.DTOs.PDF;
 using PdfInspector.Controles;
+using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Domain.Models.Pdf;
+using PdfInspector.Forms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,12 +20,15 @@ namespace PdfInspector
 {
     public partial class Form1 : Form
     {
+        private readonly UsuarioSesion _usuarioSesion;
+        private readonly LoginForm _loginForm;
         private readonly ObtieneTipoDocumentosPdfCasoUso _obtieneTipoDocumentosCasoUso;
         private readonly CompletarCasoUso _completarCasoUso;
         private readonly SiguientePendienteCasoUso _siguientePendienteCasoUso;
         private readonly MisEstadisticasCasoUso _misEstadisticasCasoUso;
         private List<DtoTipoDoc> _listaGlobalDeArchivos;
         private List<DtoParteDocumental> _listaPartes;
+        private List<int> _gruposDocumentos;
         private DtoArchivo _archivoPdf;
         private DtoParteDocumental _tempParteTemporal;
         private TablaDocumento _tempDocumentoTabla;
@@ -37,7 +42,7 @@ namespace PdfInspector
         public bool IsLoggingOut { get; private set; } = false;
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public Form1(ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso)
+        public Form1(ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso, LoginForm loginForm, UsuarioSesion usuarioSesion)
         {
             InitializeComponent();
             KeyPreview = true;
@@ -45,11 +50,14 @@ namespace PdfInspector
             _completarCasoUso = completarCasoUso;
             _siguientePendienteCasoUso = siguientePendienteCasoUso;
             _misEstadisticasCasoUso = misEstadisticasCasoUso;
+            _loginForm = loginForm;
+            _usuarioSesion = usuarioSesion;
             btnSig.BotonPresionado += BotonDocumento_Click;
             btnFin.BotonPresionado += BotonDocumento_Click;
             btnCancel.BotonPresionado += BotonDocumento_Click;
             btnComplete.BotonPresionado += BotonDocumento_Click;
             _listaPartes = new List<DtoParteDocumental>();
+            _gruposDocumentos = new List<int>();
             this.gdViewer1.SetLicenseNumber(GDILIC);
             this.gdViewer1.MouseEnter += GdViewer_MouseEnter;
             this.gdViewer1.PageChanged += GdViewer_PageChanged;
@@ -81,14 +89,13 @@ namespace PdfInspector
         {
             this.gdViewer1.ZoomMode = GdPicture.ViewerZoomMode.ZoomModeFitToViewer;
             btnComplete.TeclaAtajo = Keys.Enter;
-            int anchoColumna = listViewPartes.ClientSize.Width / 4;
+            int anchoColumna = listViewPartes.ClientSize.Width / 5;
             foreach (ColumnHeader columna in listViewPartes.Columns)
             {
                 columna.Width = anchoColumna;
             }
             CargarEmailUsuario();
             this.Text = $"Visor de Documentos - {_currentUserEmail}";
-            this.toolStripButton1.ToolTipText = "Actualizar mis estadísticas";
             lbTotalPag.ActualizarTotal(0);
             await CargarDatosDeArchivos();
             listViewPartes.Items.Clear();
@@ -310,15 +317,15 @@ namespace PdfInspector
                 return;
             }
 
-            foreach (var parteExistente in _listaPartes)
+            foreach (var parteExistente in _listaPartes)
             {
-                bool seTraslapa = (paginaInicial <= parteExistente.PaginaFin) && (paginaFinalActual >= parteExistente.PaginaInicio);
+                bool seTraslapa = (paginaInicial <= parteExistente.PaginaFin) && (paginaFinalActual >= parteExistente.PaginaInicio);
                 if (seTraslapa)
                 {
-                    var tipoDocExistente = _listaGlobalDeArchivos.FirstOrDefault(t => t.Id == parteExistente.TipoDocumentoId)?.Nombre ?? "ID " + parteExistente.TipoDocumentoId;
+                    var tipoDocExistente = _listaGlobalDeArchivos.FirstOrDefault(t => t.Id == parteExistente.TipoDocumentoId)?.Nombre ?? "ID " + parteExistente.TipoDocumentoId;
                     MostrarNotificacion($"El rango {paginaInicial}-{paginaFinalActual} se traslapa con '{tipoDocExistente}' (Págs: {parteExistente.PaginaInicio}-{parteExistente.PaginaFin}). Elimine la parte anterior para continuar o cancele la captura.", "Error");
                     return;
-                }
+                }
             }
 
             try
@@ -332,6 +339,7 @@ namespace PdfInspector
                 item.SubItems.Add(_tempDocumentoTabla.TipoDocumento);
                 item.SubItems.Add(_tempDocumentoTabla.PagInicio.ToString());
                 item.SubItems.Add(_tempDocumentoTabla.PagFinal.ToString());
+                item.SubItems.Add("");
                 listViewPartes.Items.Add(item);
 
                 _listaPartes.Add(_tempParteTemporal);
@@ -340,6 +348,10 @@ namespace PdfInspector
                 infoDocControl.ActualizarInfo("Captura Guardada", _paginaInicioTemporal, paginaFinalActual);
 
                 MostrarNotificacion("Captura realizada", "Success");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ManejarSesionExpirada(ex.Message);
             }
             finally
             {
@@ -403,6 +415,10 @@ namespace PdfInspector
                         await SiguienteAccion();
                     }
                 }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ManejarSesionExpirada(ex.Message);
             }
             catch (Exception ex)
             {
@@ -543,6 +559,10 @@ namespace PdfInspector
                     );
                 }
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                ManejarSesionExpirada(ex.Message);
+            }
             catch (Exception ex)
             {
                 MostrarNotificacion("Error al descargar el archivo: " + ex.Message, "Error");
@@ -602,7 +622,7 @@ namespace PdfInspector
         {
             if (listViewPartes.SelectedItems.Count == 0)
             {
-                MostrarNotificacion("Por favor, selecciona un elemento para eliminar.", "Info");
+                MostrarNotificacion("Por favor, selecciona la fila para eliminar la parte.", "Info");
                 return;
             }
             ListViewItem seleccionado = listViewPartes.SelectedItems[0];
@@ -740,20 +760,31 @@ namespace PdfInspector
 
             chart1.Series.Add(serie);
 
-            var estadisticasUsuario = await Task.Run(() => _misEstadisticasCasoUso.ExecuteAsync());
-
-            foreach (var estadistica in estadisticasUsuario.OrderBy(x => x.Fecha))
+            try
             {
-                string etiqueta = estadistica.Fecha.ToString("dd/MM");
-                serie.Points.AddXY(etiqueta, estadistica.Conteo);
+                var estadisticasUsuario = await Task.Run(() => _misEstadisticasCasoUso.ExecuteAsync());
+
+                foreach (var estadistica in estadisticasUsuario.OrderBy(x => x.Fecha))
+                {
+                    string etiqueta = estadistica.Fecha.ToString("dd/MM");
+                    serie.Points.AddXY(etiqueta, estadistica.Conteo);
+                }
+
+                chart1.ChartAreas[0].AxisX.Interval = 1;
+                chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
+                chart1.ChartAreas[0].AxisX.Title = "Fecha";
+                chart1.ChartAreas[0].AxisY.Title = "Conteo";
+
+                chart1.Invalidate();
             }
-
-            chart1.ChartAreas[0].AxisX.Interval = 1;
-            chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
-            chart1.ChartAreas[0].AxisX.Title = "Fecha";
-            chart1.ChartAreas[0].AxisY.Title = "Conteo";
-
-            chart1.Invalidate();
+            catch (UnauthorizedAccessException ex)
+            {
+                ManejarSesionExpirada(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MostrarNotificacion("Error al cargar estadísticas: " + ex.Message, "Error");
+            }
         }
 
         private void chart1_PostPaint(object sender, ChartPaintEventArgs e)
@@ -833,19 +864,153 @@ namespace PdfInspector
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            // Esto recorre todos los elementos marcados en el ListView
-            foreach (ListViewItem item in this.listViewPartes.CheckedItems)
+            if (this.listViewPartes.CheckedItems.Count == 0)
             {
-                // Aqui añadimos la logica de agrupamiento    
+                MostrarNotificacion("Por favor, marque los elementos que desea agrupar.", "Warning");
+                return;
             }
 
-
-            // Esto desmarca todos los elementos marcados en el ListView
+            string primerTipoDocumento = this.listViewPartes.CheckedItems[0].SubItems[1].Text;
             foreach (ListViewItem item in this.listViewPartes.CheckedItems)
             {
-                item.Checked = false;   
+                if (item.SubItems[1].Text != primerTipoDocumento)
+                {
+                    MostrarNotificacion("Error: Solo puede agrupar elementos que sean del mismo tipo de documento.", "Error");
+                    foreach (ListViewItem itemADesmarcar in this.listViewPartes.CheckedItems)
+                    {
+                        itemADesmarcar.Checked = false;
+                    }
+                    return;
+                }
             }
-            
+
+            if (_gruposDocumentos == null)
+            {
+                _gruposDocumentos = new List<int>();
+            }
+
+            int maxIdExistente = 0;
+            if (_gruposDocumentos.Any())
+            {
+                maxIdExistente = _gruposDocumentos.Max();
+            }
+            else if (_listaPartes.Any(p => p.IdAgrupamiento.HasValue))
+            {
+                var gruposEnListaPartes = _listaPartes.Where(p => p.IdAgrupamiento.HasValue)
+                                                      .Select(p => p.IdAgrupamiento.Value)
+                                                      .Distinct();
+                _gruposDocumentos.AddRange(gruposEnListaPartes);
+
+                if (_gruposDocumentos.Any())
+                {
+                    maxIdExistente = _gruposDocumentos.Max();
+                }
+            }
+
+            int nuevoIdAgrupamiento = maxIdExistente + 1;
+            _gruposDocumentos.Add(nuevoIdAgrupamiento);
+
+            var itemsMarcados = new List<ListViewItem>();
+            foreach (ListViewItem item in this.listViewPartes.CheckedItems)
+            {
+                itemsMarcados.Add(item);
+            }
+
+            int contadorActualizado = 0;
+
+            foreach (ListViewItem item in itemsMarcados)
+            {
+                try
+                {
+                    int parteId = int.Parse(item.SubItems[0].Text);
+
+                    var parteDocumental = _listaPartes.FirstOrDefault(p => p.Id == parteId);
+
+                    if (parteDocumental != null)
+                    {
+                        parteDocumental.IdAgrupamiento = nuevoIdAgrupamiento;
+                        contadorActualizado++;
+
+                        item.SubItems[4].Text = nuevoIdAgrupamiento.ToString();
+                    }
+
+                    item.Checked = false;
+                }
+                catch (Exception ex)
+                {
+                    MostrarNotificacion($"Error al procesar el elemento {item.Text}: {ex.Message}", "Error");
+                }
+            }
+
+            if (contadorActualizado > 0)
+            {
+                MostrarNotificacion($"Se agruparon {contadorActualizado} elementos con el ID de Grupo: {nuevoIdAgrupamiento}", "Success");
+            }
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            if (!_listaPartes.Any(p => p.IdAgrupamiento.HasValue))
+            {
+                MostrarNotificacion("No hay agrupamientos para eliminar.", "Info");
+                return;
+            }
+
+            try
+            {
+                foreach (var parte in _listaPartes)
+                {
+                    parte.IdAgrupamiento = null;
+                }
+
+                foreach (ListViewItem item in this.listViewPartes.Items)
+                {
+                    if (item.SubItems.Count > 4)
+                    {
+                        item.SubItems[4].Text = string.Empty;
+                    }
+                }
+
+                if (_gruposDocumentos != null)
+                {
+                    _gruposDocumentos.Clear();
+                }
+                else
+                {
+                    _gruposDocumentos = new List<int>();
+                }
+
+                MostrarNotificacion("Se eliminaron todos los agrupamientos.", "Success");
+            }
+            catch (Exception ex)
+            {
+                MostrarNotificacion($"Error al eliminar agrupamientos: {ex.Message}", "Error");
+            }
+        }
+
+        private void ManejarSesionExpirada(string mensaje)
+        {
+            Cursor = Cursors.Default;
+            IsLoggingOut = true;
+            _usuarioSesion.Clear();
+            ResetDocumentState();
+
+            MessageBox.Show(mensaje, "Sesión Expirada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            this.Hide();
+            var loginResult = _loginForm.ShowDialog();
+
+            if (loginResult == DialogResult.OK)
+            {
+                this.Text = $"Visor de Documentos - {_currentUserEmail}";
+                this.Show();
+                IsLoggingOut = false;
+                MostrarNotificacion("Sesión reestablecida. Puede continuar.", "Success");
+            }
+            else
+            {
+                System.Windows.Forms.Application.Exit();
+            }
         }
     }
 }
