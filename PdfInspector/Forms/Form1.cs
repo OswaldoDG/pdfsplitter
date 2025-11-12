@@ -14,7 +14,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PdfInspector
 {
@@ -63,7 +62,6 @@ namespace PdfInspector
             this.gdViewer1.PageChanged += GdViewer_PageChanged;
 
             this.timerNotificacion.Tick += new System.EventHandler(this.timerNotificacion_Tick);
-            chart1.PostPaint += chart1_PostPaint;
         }
 
         private void GdViewer_PageChanged()
@@ -99,31 +97,7 @@ namespace PdfInspector
             lbTotalPag.ActualizarTotal(0);
             await CargarDatosDeArchivos();
             listViewPartes.Items.Clear();
-            chart1.PostPaint += (s, ev) =>
-            {
-                var chart = (Chart)s;
-                var area = chart.ChartAreas[0];
-
-                foreach (var pt in chart.Series[0].Points)
-                {
-                    var posX = (float)area.AxisX.ValueToPixelPosition(pt.XValue);
-                    var posY = (float)area.AxisY.ValueToPixelPosition(pt.YValues[0]);
-                    var yZero = (float)area.AxisY.ValueToPixelPosition(0);
-                    var altura = yZero - posY;
-                    var rect = new RectangleF(posX - 10, posY + altura / 2 - 8, 20, 16);
-
-                    ev.ChartGraphics.Graphics.DrawString(
-                        pt.YValues[0].ToString("0"),
-                        chart1.Font,
-                        Brushes.White,
-                        rect,
-                        new StringFormat
-                        {
-                            Alignment = StringAlignment.Center,
-                            LineAlignment = StringAlignment.Center
-                        });
-                }
-            };
+            
         }
 
         private async Task CargarDatosDeArchivos()
@@ -377,8 +351,12 @@ namespace PdfInspector
 
             if (_listaPartes.Count == 0)
             {
-                MostrarNotificacion("Necesita registrar al menos una parte para poder completar.", "Warning");
-                return;
+
+               var respuesta = MessageBox.Show("No tiene documentos registrados en el proceso ¿Desea finalizar la revisión?", "Advertencia", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                 if (respuesta == DialogResult.No)
+                 {
+                    return;
+                }
             }
 
             try
@@ -682,6 +660,7 @@ namespace PdfInspector
 
         private void MostrarNotificacion(string mensaje, string tipo = "Warning")
         {
+            this.timerLabel.Enabled = false;
             if (this.InvokeRequired)
             {
                 this.Invoke(new Action(() => MostrarNotificacion(mensaje, tipo)));
@@ -709,7 +688,7 @@ namespace PdfInspector
             }
 
             statusLabel.Text = mensaje;
-;
+            this.timerLabel.Enabled = true;
         }
    
         private void tsbDel1_Click(object sender, EventArgs e)
@@ -744,38 +723,18 @@ namespace PdfInspector
 
         private async void toolStripButton1_Click(object sender, EventArgs e)
         {
-            chart1.Series.Clear();
-            chart1.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
-            chart1.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
-            chart1.ChartAreas[0].AxisX.MinorGrid.Enabled = false;
-            chart1.ChartAreas[0].AxisY.MinorGrid.Enabled = false;
-            chart1.Legends[0].Enabled = false;
-
-            var serie = new Series("Estadística")
-            {
-                ChartType = SeriesChartType.Column,
-                IsValueShownAsLabel = false,
-                Color = Color.SteelBlue
-            };
-
-            chart1.Series.Add(serie);
-
+         
             try
             {
+                chart1.Series[0].Points.Clear();
                 var estadisticasUsuario = await Task.Run(() => _misEstadisticasCasoUso.ExecuteAsync());
 
                 foreach (var estadistica in estadisticasUsuario.OrderBy(x => x.Fecha))
                 {
                     string etiqueta = estadistica.Fecha.ToString("dd/MM");
-                    serie.Points.AddXY(etiqueta, estadistica.Conteo);
+                    chart1.Series[0].Points.AddXY(etiqueta, estadistica.Conteo);
                 }
-
-                chart1.ChartAreas[0].AxisX.Interval = 1;
-                chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
-                chart1.ChartAreas[0].AxisX.Title = "Fecha";
-                chart1.ChartAreas[0].AxisY.Title = "Conteo";
-
-                chart1.Invalidate();
+ 
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -787,47 +746,7 @@ namespace PdfInspector
             }
         }
 
-        private void chart1_PostPaint(object sender, ChartPaintEventArgs e)
-        {
-            var chart = (Chart)sender;
-            var area = chart.ChartAreas[0];
-
-            if (chart.Series.Count == 0)
-                return;
-
-            var series = chart.Series[0];
-            if (series.Points.Count == 0)
-                return;
-
-            int count = series.Points.Count;
-            float xMin = (float)area.AxisX.ValueToPixelPosition(0.5);
-            float xMax = (float)area.AxisX.ValueToPixelPosition(count + 0.5f);
-            float totalWidth = Math.Abs(xMax - xMin);
-            float columnWidth = totalWidth / count * 0.6f;
-
-            for (int p = 0; p < series.Points.Count; p++)
-            {
-                float x = (float)area.AxisX.ValueToPixelPosition(p + 1);
-                float y0 = (float)area.AxisY.ValueToPixelPosition(0);
-                float y1 = (float)area.AxisY.ValueToPixelPosition(series.Points[p].YValues[0]);
-                var rect = new RectangleF(
-                    x - columnWidth / 2,
-                    Math.Min(y0, y1),
-                    columnWidth,
-                    Math.Abs(y0 - y1));
-
-                using (var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
-                {
-                    e.ChartGraphics.Graphics.DrawString(
-                        series.Points[p].YValues[0].ToString("0"),
-                        chart.Font,
-                        Brushes.White,
-                        rect,
-                        sf);
-                }
-            }
-        }
-
+ 
         private void ResetDocumentState()
         {
             inactividadTimer.Stop();
@@ -1011,6 +930,12 @@ namespace PdfInspector
             {
                 System.Windows.Forms.Application.Exit();
             }
+        }
+
+        private void timerLabel_Tick(object sender, EventArgs e)
+        {
+            this.timerLabel.Stop();
+            statusLabel.Text = "";
         }
     }
 }
