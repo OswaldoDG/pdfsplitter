@@ -23,7 +23,6 @@
             this.panelSuperior = new System.Windows.Forms.Panel();
             this.checkAuto = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanelArchivos = new System.Windows.Forms.FlowLayoutPanel();
-            this.panelControl = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -42,6 +41,7 @@
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.panelBotonera = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panelPdf = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.gdViewer1 = new GdPicture.GdViewer();
@@ -50,14 +50,14 @@
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.inactividadTimer = new System.Windows.Forms.Timer(this.components);
             this.timerLabel = new System.Windows.Forms.Timer(this.components);
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.infoDocControl = new PdfInspector.Controles.InfoDocumentoControl();
             this.lbTotalPag = new PdfInspector.Controles.InfoDocumentoControl();
-            this.btnSig = new PdfInspector.Controles.BotonDocumento();
+            this.btnFin = new PdfInspector.Controles.BotonDocumento();
             this.btnComplete = new PdfInspector.Controles.BotonDocumento();
             this.btnCancel = new PdfInspector.Controles.BotonDocumento();
-            this.btnFin = new PdfInspector.Controles.BotonDocumento();
+            this.btnSig = new PdfInspector.Controles.BotonDocumento();
             this.panelSuperior.SuspendLayout();
-            this.panelControl.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -65,9 +65,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.panelBotonera.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.panelPdf.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.statusStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSuperior
@@ -86,9 +94,9 @@
             this.checkAuto.AutoSize = true;
             this.checkAuto.Dock = System.Windows.Forms.DockStyle.Right;
             this.checkAuto.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkAuto.Location = new System.Drawing.Point(374, 0);
+            this.checkAuto.Location = new System.Drawing.Point(325, 0);
             this.checkAuto.Name = "checkAuto";
-            this.checkAuto.Size = new System.Drawing.Size(109, 50);
+            this.checkAuto.Size = new System.Drawing.Size(158, 50);
             this.checkAuto.TabIndex = 5;
             this.checkAuto.Text = "Automático";
             this.checkAuto.UseVisualStyleBackColor = true;
@@ -99,31 +107,17 @@
             this.flowLayoutPanelArchivos.BackColor = System.Drawing.SystemColors.Control;
             this.flowLayoutPanelArchivos.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelArchivos.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanelArchivos.Location = new System.Drawing.Point(0, 50);
+            this.flowLayoutPanelArchivos.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanelArchivos.Name = "flowLayoutPanelArchivos";
-            this.flowLayoutPanelArchivos.Size = new System.Drawing.Size(483, 204);
+            this.flowLayoutPanelArchivos.Size = new System.Drawing.Size(478, 183);
             this.flowLayoutPanelArchivos.TabIndex = 1;
             this.flowLayoutPanelArchivos.WrapContents = false;
-            // 
-            // panelControl
-            // 
-            this.panelControl.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.panelControl.Controls.Add(this.panel1);
-            this.panelControl.Controls.Add(this.btnComplete);
-            this.panelControl.Controls.Add(this.btnCancel);
-            this.panelControl.Controls.Add(this.btnFin);
-            this.panelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelControl.Location = new System.Drawing.Point(0, 254);
-            this.panelControl.Name = "panelControl";
-            this.panelControl.Size = new System.Drawing.Size(483, 360);
-            this.panelControl.TabIndex = 3;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Controls.Add(this.toolStrip1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 180);
+            this.panel1.Location = new System.Drawing.Point(9, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(483, 180);
             this.panel1.TabIndex = 8;
@@ -133,19 +127,19 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 27);
+            this.tabControl1.Location = new System.Drawing.Point(0, 38);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(483, 153);
+            this.tabControl1.Size = new System.Drawing.Size(483, 142);
             this.tabControl1.TabIndex = 9;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.listViewPartes);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(475, 127);
+            this.tabPage1.Size = new System.Drawing.Size(475, 113);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Identificacion";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -169,7 +163,7 @@
             this.listViewPartes.HideSelection = false;
             this.listViewPartes.Location = new System.Drawing.Point(3, 3);
             this.listViewPartes.Name = "listViewPartes";
-            this.listViewPartes.Size = new System.Drawing.Size(469, 121);
+            this.listViewPartes.Size = new System.Drawing.Size(469, 107);
             this.listViewPartes.TabIndex = 7;
             this.listViewPartes.UseCompatibleStateImageBehavior = false;
             this.listViewPartes.View = System.Windows.Forms.View.Details;
@@ -203,10 +197,10 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.chart1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(475, 127);
+            this.tabPage2.Size = new System.Drawing.Size(475, 113);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Estadísticas";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -235,7 +229,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(469, 121);
+            this.chart1.Size = new System.Drawing.Size(469, 107);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
@@ -252,7 +246,7 @@
             this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(483, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(483, 38);
             this.toolStrip1.TabIndex = 8;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -262,7 +256,7 @@
             this.tsbDel1.Image = global::PdfInspector.Properties.Resources.delete_icon;
             this.tsbDel1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDel1.Name = "tsbDel1";
-            this.tsbDel1.Size = new System.Drawing.Size(24, 24);
+            this.tsbDel1.Size = new System.Drawing.Size(34, 33);
             this.tsbDel1.Text = "toolStripButton1";
             this.tsbDel1.ToolTipText = "Eliminar 1";
             this.tsbDel1.Click += new System.EventHandler(this.tsbDel1_Click);
@@ -273,7 +267,7 @@
             this.tsbDelAll.Image = global::PdfInspector.Properties.Resources.deleteall_icon;
             this.tsbDelAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDelAll.Name = "tsbDelAll";
-            this.tsbDelAll.Size = new System.Drawing.Size(24, 24);
+            this.tsbDelAll.Size = new System.Drawing.Size(34, 33);
             this.tsbDelAll.Text = "toolStripButton2";
             this.tsbDelAll.ToolTipText = "Eliminar todos";
             // 
@@ -283,7 +277,7 @@
             this.toolStripButton1.Image = global::PdfInspector.Properties.Resources.stats_chart_sharp_icon;
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(24, 24);
+            this.toolStripButton1.Size = new System.Drawing.Size(34, 33);
             this.toolStripButton1.Text = "Actualizar mis estadísticas";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -293,7 +287,7 @@
             this.toolStripButton2.Image = global::PdfInspector.Properties.Resources.Pictogrammers_Material_Link_variant_plus_48;
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(24, 24);
+            this.toolStripButton2.Size = new System.Drawing.Size(34, 33);
             this.toolStripButton2.Text = "Vincular documentos";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
@@ -303,21 +297,41 @@
             this.toolStripButton3.Image = global::PdfInspector.Properties.Resources.Pictogrammers_Material_Link_variant_remove_48;
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(24, 24);
+            this.toolStripButton3.Size = new System.Drawing.Size(34, 33);
             this.toolStripButton3.Text = "Eliminar Vinculos";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
             // panelBotonera
             // 
             this.panelBotonera.BackColor = System.Drawing.SystemColors.Window;
-            this.panelBotonera.Controls.Add(this.flowLayoutPanelArchivos);
+            this.panelBotonera.Controls.Add(this.splitContainer1);
             this.panelBotonera.Controls.Add(this.panelSuperior);
-            this.panelBotonera.Controls.Add(this.panelControl);
             this.panelBotonera.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelBotonera.Location = new System.Drawing.Point(0, 0);
             this.panelBotonera.Name = "panelBotonera";
-            this.panelBotonera.Size = new System.Drawing.Size(483, 614);
+            this.panelBotonera.Size = new System.Drawing.Size(483, 604);
             this.panelBotonera.TabIndex = 8;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 50);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.flowLayoutPanelArchivos);
+            this.splitContainer1.Panel1MinSize = 2;
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Panel2MinSize = 100;
+            this.splitContainer1.Size = new System.Drawing.Size(483, 554);
+            this.splitContainer1.SplitterDistance = 168;
+            this.splitContainer1.SplitterWidth = 6;
+            this.splitContainer1.TabIndex = 9;
             // 
             // panelPdf
             // 
@@ -327,7 +341,7 @@
             this.panelPdf.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPdf.Location = new System.Drawing.Point(483, 0);
             this.panelPdf.Name = "panelPdf";
-            this.panelPdf.Size = new System.Drawing.Size(601, 614);
+            this.panelPdf.Size = new System.Drawing.Size(601, 604);
             this.panelPdf.TabIndex = 7;
             // 
             // tableLayoutPanel1
@@ -392,7 +406,7 @@
             this.gdViewer1.ScrollLargeChange = ((short)(50));
             this.gdViewer1.ScrollSmallChange = ((short)(1));
             this.gdViewer1.SilentMode = true;
-            this.gdViewer1.Size = new System.Drawing.Size(601, 614);
+            this.gdViewer1.Size = new System.Drawing.Size(601, 604);
             this.gdViewer1.TabIndex = 0;
             this.gdViewer1.Zoom = 1D;
             this.gdViewer1.ZoomCenterAtMousePosition = false;
@@ -409,16 +423,16 @@
             this.statusStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusStrip2.Location = new System.Drawing.Point(0, 614);
+            this.statusStrip2.Location = new System.Drawing.Point(0, 604);
             this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(1084, 22);
+            this.statusStrip2.Size = new System.Drawing.Size(1084, 32);
             this.statusStrip2.TabIndex = 10;
             this.statusStrip2.Text = "statusStrip2";
             // 
             // statusLabel
             // 
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(90, 17);
+            this.statusLabel.Size = new System.Drawing.Size(139, 25);
             this.statusLabel.Text = "Pdf Splitter V1.5";
             // 
             // inactividadTimer
@@ -430,6 +444,26 @@
             // 
             this.timerLabel.Interval = 5000;
             this.timerLabel.Tick += new System.EventHandler(this.timerLabel_Tick);
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.btnFin);
+            this.splitContainer2.Panel1.Controls.Add(this.btnComplete);
+            this.splitContainer2.Panel1.Controls.Add(this.btnCancel);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.panel1);
+            this.splitContainer2.Size = new System.Drawing.Size(478, 260);
+            this.splitContainer2.SplitterDistance = 207;
+            this.splitContainer2.TabIndex = 0;
             // 
             // infoDocControl
             // 
@@ -460,28 +494,25 @@
             this.lbTotalPag.TipoDocumento = null;
             this.lbTotalPag.TotalPaginas = 0;
             // 
-            // btnSig
+            // btnFin
             // 
-            this.btnSig.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSig.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSig.Location = new System.Drawing.Point(0, 0);
-            this.btnSig.Margin = new System.Windows.Forms.Padding(6);
-            this.btnSig.Name = "btnSig";
-            this.btnSig.Size = new System.Drawing.Size(374, 50);
-            this.btnSig.TabIndex = 4;
-            this.btnSig.Tag = "Siguiente";
-            this.btnSig.TeclaAtajo = System.Windows.Forms.Keys.Tab;
-            this.btnSig.Texto = "Siguiente";
+            this.btnFin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFin.Location = new System.Drawing.Point(3, 6);
+            this.btnFin.Margin = new System.Windows.Forms.Padding(6);
+            this.btnFin.Name = "btnFin";
+            this.btnFin.Size = new System.Drawing.Size(456, 72);
+            this.btnFin.TabIndex = 0;
+            this.btnFin.Tag = "Finalizar";
+            this.btnFin.TeclaAtajo = System.Windows.Forms.Keys.Space;
+            this.btnFin.Texto = "Documento Fin";
             // 
             // btnComplete
             // 
-            this.btnComplete.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnComplete.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnComplete.Location = new System.Drawing.Point(0, 100);
+            this.btnComplete.Location = new System.Drawing.Point(8, 135);
             this.btnComplete.Margin = new System.Windows.Forms.Padding(6);
             this.btnComplete.Name = "btnComplete";
-            this.btnComplete.Size = new System.Drawing.Size(483, 48);
+            this.btnComplete.Size = new System.Drawing.Size(451, 70);
             this.btnComplete.TabIndex = 2;
             this.btnComplete.Tag = "Completar";
             this.btnComplete.TeclaAtajo = System.Windows.Forms.Keys.None;
@@ -489,31 +520,28 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(0, 50);
+            this.btnCancel.Location = new System.Drawing.Point(8, 63);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(483, 45);
+            this.btnCancel.Size = new System.Drawing.Size(451, 65);
             this.btnCancel.TabIndex = 1;
             this.btnCancel.Tag = "Cancelar";
             this.btnCancel.TeclaAtajo = System.Windows.Forms.Keys.Escape;
             this.btnCancel.Texto = "Documento Cancelar";
             // 
-            // btnFin
+            // btnSig
             // 
-            this.btnFin.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFin.Location = new System.Drawing.Point(0, 0);
-            this.btnFin.Margin = new System.Windows.Forms.Padding(6);
-            this.btnFin.Name = "btnFin";
-            this.btnFin.Size = new System.Drawing.Size(483, 50);
-            this.btnFin.TabIndex = 0;
-            this.btnFin.Tag = "Finalizar";
-            this.btnFin.TeclaAtajo = System.Windows.Forms.Keys.Space;
-            this.btnFin.Texto = "Documento Fin";
+            this.btnSig.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSig.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSig.Location = new System.Drawing.Point(0, 0);
+            this.btnSig.Margin = new System.Windows.Forms.Padding(6);
+            this.btnSig.Name = "btnSig";
+            this.btnSig.Size = new System.Drawing.Size(325, 50);
+            this.btnSig.TabIndex = 4;
+            this.btnSig.Tag = "Siguiente";
+            this.btnSig.TeclaAtajo = System.Windows.Forms.Keys.Tab;
+            this.btnSig.Texto = "Siguiente";
             // 
             // Form1
             // 
@@ -530,7 +558,6 @@
             this.Load += new System.EventHandler(this.AppForm_Load);
             this.panelSuperior.ResumeLayout(false);
             this.panelSuperior.PerformLayout();
-            this.panelControl.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -540,10 +567,18 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.panelBotonera.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.panelPdf.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.statusStrip2.ResumeLayout(false);
             this.statusStrip2.PerformLayout();
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -551,7 +586,6 @@
 
         private System.Windows.Forms.Panel panelSuperior;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelArchivos;
-        private System.Windows.Forms.Panel panelControl;
         private Controles.BotonDocumento btnSig;
         private Controles.BotonDocumento btnFin;
         private Controles.BotonDocumento btnCancel;
@@ -585,5 +619,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ColumnHeader colGroup;
         private System.Windows.Forms.Timer timerLabel;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
     }
 }
