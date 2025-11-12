@@ -56,7 +56,8 @@ namespace PdfInspector.Separador
                     ArchivoPdfId = reader.GetInt32("ArchivoPdfId"),
                     TipoDocumentoId = reader.GetInt32("TipoDocumentoId"),
                     PaginaInicio = reader.GetInt32("PaginaInicio"),
-                    PaginaFin = reader.GetInt32("PaginaFin")
+                    PaginaFin = reader.GetInt32("PaginaFin"),
+                    IdAgrupamiento = reader.IsDBNull(reader.GetOrdinal("IdAgrupamiento")) ? (int?)null : reader.GetInt32("IdAgrupamiento")
                 });
             }
             return parts;

@@ -10,7 +10,7 @@ namespace PdfInspector.Separador
 {
     public static class PdfSplitterService
     {
-        public static void SplitPdf(string originalPdfPath, int startPage, int endPage, string outputPdfPath)
+        public static void SplitPdf(string originalPdfPath, List<(int startPage, int endPage)> pageRanges, string outputPdfPath)
         {
             try
             {
@@ -20,11 +20,14 @@ namespace PdfInspector.Separador
                     {
                         newDoc.Info.Title = Path.GetFileNameWithoutExtension(outputPdfPath);
 
-                        for (int i = startPage - 1; i <= endPage - 1; i++)
+                        foreach (var range in pageRanges)
                         {
-                            if (i < originalDoc.PageCount)
+                            for (int i = range.startPage - 1; i <= range.endPage - 1; i++)
                             {
-                                newDoc.AddPage(originalDoc.Pages[i]);
+                                if (i >= 0 && i < originalDoc.PageCount)
+                                {
+                                    newDoc.AddPage(originalDoc.Pages[i]);
+                                }
                             }
                         }
 
@@ -37,7 +40,7 @@ namespace PdfInspector.Separador
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al dividir PDF: {ex.Message}. De {startPage} a {endPage} en {originalPdfPath}");
+                Console.WriteLine($"Error al dividir PDF: {ex.Message}. PDF de origen: {originalPdfPath}");
                 throw;
             }
         }

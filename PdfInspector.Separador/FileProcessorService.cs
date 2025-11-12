@@ -1,4 +1,4 @@
-﻿using PdfInspector.Separador.models;
+﻿    using PdfInspector.Separador.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace PdfInspector.Separador
 
             string tempEncryptedPath = Path.Combine(tempPath, archivo.Nombre);
             string tempDecryptedPath = Path.Combine(tempPath, $"decrypted_{archivo.Nombre}");
-
+            
             try
             {
                 var partes = await DatabaseService.ObtienePartesDocumental(archivo.Id, dbConn);
@@ -50,10 +50,13 @@ namespace PdfInspector.Separador
                 string outputDir = Path.Combine(outputPath, originalFileName);
                 Directory.CreateDirectory(outputDir);
 
-                foreach (var parte in partes)
+                var groups = partes.GroupBy(p => new {p.TipoDocumentoId, p.IdAgrupamiento});
+
+                foreach (var group in groups)
                 {
-                    string tipoNombre = await DatabaseService.ObtieneNombreTipoDocumento(parte.TipoDocumentoId, dbConn);
-                    string basePdfName = $"{originalFileName}_{tipoNombre}";
+                    string tipoNombre = await DatabaseService.ObtieneNombreTipoDocumento(group.Key.TipoDocumentoId, dbConn);
+
+                    string basePdfName = $"{tipoNombre}";
 
                     string outputPdfPath = Path.Combine(outputDir, $"{basePdfName}.pdf");
                     int counter = 1;
@@ -65,10 +68,17 @@ namespace PdfInspector.Separador
                         counter++;
                     }
 
+                    var pageRanges = group
+                        .Select(p => (startPage: p.PaginaInicio, endPage: p.PaginaFin))
+                        .OrderBy(p => p.startPage)
+                        .ToList();
+
+                    string pagesDisplay = string.Join(", ", pageRanges.Select(r => $"{r.startPage}-{r.endPage}"));
+                    Console.WriteLine($" -> Creando grupo: '{Path.GetFileName(outputPdfPath)}' (Páginas: {pagesDisplay})");
+
                     PdfSplitterService.SplitPdf(
                         tempDecryptedPath,
-                        parte.PaginaInicio,
-                        parte.PaginaFin,
+                        pageRanges,
                         outputPdfPath);
                 }
 
