@@ -1,4 +1,4 @@
-﻿using PdfInspector.Separador.models;
+﻿    using PdfInspector.Separador.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace PdfInspector.Separador
 
             string tempEncryptedPath = Path.Combine(tempPath, archivo.Nombre);
             string tempDecryptedPath = Path.Combine(tempPath, $"decrypted_{archivo.Nombre}");
-
+            
             try
             {
                 var partes = await DatabaseService.ObtienePartesDocumental(archivo.Id, dbConn);
@@ -30,6 +30,14 @@ namespace PdfInspector.Separador
                 {
                     Console.WriteLine($"Error: El archivo {archivo.Nombre} no tiene 'partes' definidas. Regresando a 'Finalizada'.");
                     return;
+                }
+
+                var tipoDocumentoIds = partes.Select(p => p.TipoDocumentoId).Distinct().ToList();
+                var nombresTipoDocumento = new Dictionary<int, string>();
+                foreach (var id in tipoDocumentoIds)
+                {
+                    string nombre = await DatabaseService.ObtieneNombreTipoDocumento(id, dbConn);
+                    nombresTipoDocumento[id] = nombre;
                 }
 
                 Directory.CreateDirectory(tempPath);
@@ -50,27 +58,7 @@ namespace PdfInspector.Separador
                 string outputDir = Path.Combine(outputPath, originalFileName);
                 Directory.CreateDirectory(outputDir);
 
-                foreach (var parte in partes)
-                {
-                    string tipoNombre = await DatabaseService.ObtieneNombreTipoDocumento(parte.TipoDocumentoId, dbConn);
-                    string basePdfName = $"{originalFileName}_{tipoNombre}";
-
-                    string outputPdfPath = Path.Combine(outputDir, $"{basePdfName}.pdf");
-                    int counter = 1;
-
-                    while (File.Exists(outputPdfPath))
-                    {
-                        string newFileName = $"{basePdfName} ({counter}).pdf";
-                        outputPdfPath = Path.Combine(outputDir, newFileName);
-                        counter++;
-                    }
-
-                    PdfSplitterService.SplitPdf(
-                        tempDecryptedPath,
-                        parte.PaginaInicio,
-                        parte.PaginaFin,
-                        outputPdfPath);
-                }
+                PdfSplitterService.AgruparYSepararPartes(tempDecryptedPath, outputDir, partes, nombresTipoDocumento);
 
                 if (File.Exists(tempDecryptedPath))
                 {

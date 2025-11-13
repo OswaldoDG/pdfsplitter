@@ -17,5 +17,9 @@ namespace PdfInspector.Separador.models
         public int PaginaFin { get; set; }
 
         public int TipoDocumentoId { get; set; }
+        /// <summary>
+        /// Especifica si el elemento pertenee a un grupo.
+        /// </summary>
+        public int? IdAgrupamiento { get; set; }
     }
 }
