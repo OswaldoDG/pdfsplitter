@@ -40,7 +40,6 @@ namespace PdfInspector
         private string _currentUserEmail = "";
         public bool IsLoggingOut { get; private set; } = false;
         private static readonly HttpClient _httpClient = new HttpClient();
-
         public Form1(ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso, LoginForm loginForm, UsuarioSesion usuarioSesion)
         {
             InitializeComponent();
@@ -97,7 +96,6 @@ namespace PdfInspector
             lbTotalPag.ActualizarTotal(0);
             await CargarDatosDeArchivos();
             listViewPartes.Items.Clear();
-            
         }
 
         private async Task CargarDatosDeArchivos()
@@ -352,9 +350,9 @@ namespace PdfInspector
             if (_listaPartes.Count == 0)
             {
 
-               var respuesta = MessageBox.Show("No tiene documentos registrados en el proceso ¿Desea finalizar la revisión?", "Advertencia", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                 if (respuesta == DialogResult.No)
-                 {
+                var respuesta = MessageBox.Show("No tiene documentos registrados en el proceso ¿Desea finalizar la revisión?", "Advertencia", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (respuesta == DialogResult.No)
+                {
                     return;
                 }
             }
@@ -374,6 +372,7 @@ namespace PdfInspector
                 _tempParteTemporal = null;
                 _archivoPdf = null;
                 _listaPartes = new List<DtoParteDocumental>();
+                _gruposDocumentos = new List<int> { 0 };
                 _paginaInicioTemporal = 0;
                 listViewPartes.Items.Clear();
                 infoDocControl.ActualizarInfo("Completado", 0, 0);
@@ -465,7 +464,6 @@ namespace PdfInspector
                 _tempDocumentoTabla = null;
                 _tempParteTemporal = null;
                 _paginaInicioTemporal = 0;
-                infoDocControl.ActualizarInfo("Cargando...", 0, 0);
                 this.gdViewer1.CloseDocument();
                 var pdfPendiente = await _siguientePendienteCasoUso.SiguientePendiente();
                 _archivoPdf = pdfPendiente;
@@ -557,12 +555,12 @@ namespace PdfInspector
             {
                 if (keyData == Keys.PageDown)
                 {
-                    this.gdViewer1.DisplayPreviousPage();
+                    this.gdViewer1.DisplayNextPage();
                     return true;
                 }
                 if (keyData == Keys.PageUp)
                 {
-                    this.gdViewer1.DisplayNextPage();
+                    this.gdViewer1.DisplayPreviousPage();
                     return true;
                 }
             }
@@ -617,6 +615,30 @@ namespace PdfInspector
                 int idParte = int.Parse(seleccionado.SubItems[0].Text);
                 _listaPartes.Remove(_listaPartes.FirstOrDefault(x => x.Id == idParte));
                 listViewPartes.Items.Remove(seleccionado);
+            }
+        }
+
+        private void EliminaElementos()
+        {
+            if (listViewPartes.Items.Count == 0)
+            {
+                MostrarNotificacion("No hay partes para eliminar.", "Info");
+                return;
+            }
+
+            var confirmacion = MessageBox.Show(
+                "¿Seguro que deseas eliminar TODAS las partes?",
+                "Confirmar eliminación total",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirmacion == DialogResult.Yes)
+            {
+                _listaPartes.Clear();
+                listViewPartes.Items.Clear();
+                _gruposDocumentos.Clear();
+                MostrarNotificacion("Todas las partes han sido eliminadas correctamente.", "Éxito");
             }
         }
 
@@ -678,7 +700,7 @@ namespace PdfInspector
 
                     break;
                 case "info":
-                    statusLabel.BackColor =  Color.LightGray;
+                    statusLabel.BackColor = Color.LightGray;
 
                     break;
                 case "warning":
@@ -690,7 +712,7 @@ namespace PdfInspector
             statusLabel.Text = mensaje;
             this.timerLabel.Enabled = true;
         }
-   
+
         private void tsbDel1_Click(object sender, EventArgs e)
         {
             this.EliminaElemento();
@@ -723,7 +745,7 @@ namespace PdfInspector
 
         private async void toolStripButton1_Click(object sender, EventArgs e)
         {
-         
+
             try
             {
                 chart1.Series[0].Points.Clear();
@@ -734,7 +756,7 @@ namespace PdfInspector
                     string etiqueta = estadistica.Fecha.ToString("dd/MM");
                     chart1.Series[0].Points.AddXY(etiqueta, estadistica.Conteo);
                 }
- 
+
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -746,13 +768,14 @@ namespace PdfInspector
             }
         }
 
- 
+
         private void ResetDocumentState()
         {
             inactividadTimer.Stop();
 
             _archivoPdf = null;
             _listaPartes.Clear();
+            _gruposDocumentos = new List<int> { 0 };
             _tempDocumentoTabla = null;
             _tempParteTemporal = null;
             _paginaInicioTemporal = 0;
@@ -936,6 +959,11 @@ namespace PdfInspector
         {
             this.timerLabel.Stop();
             statusLabel.Text = "";
+        }
+
+        private void tsbDelAll_Click(object sender, EventArgs e)
+        {
+            this.EliminaElementos();
         }
     }
 }
