@@ -42,7 +42,7 @@ namespace PdfInspector.Separador
             await connection.OpenAsync();
 
             var command = new MySqlCommand(
-                "SELECT Id, ArchivoPdfId, TipoDocumentoId, PaginaInicio, PaginaFin FROM parte_documental WHERE ArchivoPdfId = @ArchivoPdfId",
+                "SELECT Id, ArchivoPdfId, TipoDocumentoId, PaginaInicio, PaginaFin, IdAgrupamiento FROM parte_documental WHERE ArchivoPdfId = @ArchivoPdfId",
                 connection);
 
             command.Parameters.AddWithValue("@ArchivoPdfId", archivoPdfId);

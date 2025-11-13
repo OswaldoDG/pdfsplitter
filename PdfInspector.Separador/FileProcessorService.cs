@@ -32,6 +32,14 @@ namespace PdfInspector.Separador
                     return;
                 }
 
+                var tipoDocumentoIds = partes.Select(p => p.TipoDocumentoId).Distinct().ToList();
+                var nombresTipoDocumento = new Dictionary<int, string>();
+                foreach (var id in tipoDocumentoIds)
+                {
+                    string nombre = await DatabaseService.ObtieneNombreTipoDocumento(id, dbConn);
+                    nombresTipoDocumento[id] = nombre;
+                }
+
                 Directory.CreateDirectory(tempPath);
 
                 Console.WriteLine($"Descargando '{archivo.Ruta}' desde Azure...");
@@ -50,37 +58,7 @@ namespace PdfInspector.Separador
                 string outputDir = Path.Combine(outputPath, originalFileName);
                 Directory.CreateDirectory(outputDir);
 
-                var groups = partes.GroupBy(p => new {p.TipoDocumentoId, p.IdAgrupamiento});
-
-                foreach (var group in groups)
-                {
-                    string tipoNombre = await DatabaseService.ObtieneNombreTipoDocumento(group.Key.TipoDocumentoId, dbConn);
-
-                    string basePdfName = $"{tipoNombre}";
-
-                    string outputPdfPath = Path.Combine(outputDir, $"{basePdfName}.pdf");
-                    int counter = 1;
-
-                    while (File.Exists(outputPdfPath))
-                    {
-                        string newFileName = $"{basePdfName} ({counter}).pdf";
-                        outputPdfPath = Path.Combine(outputDir, newFileName);
-                        counter++;
-                    }
-
-                    var pageRanges = group
-                        .Select(p => (startPage: p.PaginaInicio, endPage: p.PaginaFin))
-                        .OrderBy(p => p.startPage)
-                        .ToList();
-
-                    string pagesDisplay = string.Join(", ", pageRanges.Select(r => $"{r.startPage}-{r.endPage}"));
-                    Console.WriteLine($" -> Creando grupo: '{Path.GetFileName(outputPdfPath)}' (Páginas: {pagesDisplay})");
-
-                    PdfSplitterService.SplitPdf(
-                        tempDecryptedPath,
-                        pageRanges,
-                        outputPdfPath);
-                }
+                PdfSplitterService.AgruparYSepararPartes(tempDecryptedPath, outputDir, partes, nombresTipoDocumento);
 
                 if (File.Exists(tempDecryptedPath))
                 {
