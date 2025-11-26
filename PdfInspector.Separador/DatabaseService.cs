@@ -80,11 +80,51 @@ namespace PdfInspector.Separador
             using var connection = new MySqlConnection(connectionString);
             await connection.OpenAsync();
 
-            var command = new MySqlCommand("UPDATE archivo_pdf SET Estado = @Estado WHERE Id = @Id", connection);
+            var command = new MySqlCommand("UPDATE archivo_pdf SET Estado = @Estado, UltimaRevision = @UltimaRevision WHERE Id = @Id", connection);
             command.Parameters.AddWithValue("@Estado", (int)newStatus);
+            command.Parameters.AddWithValue("@UltimaRevision", DateTime.UtcNow);
             command.Parameters.AddWithValue("@Id", archivoPdfId);
 
             await command.ExecuteNonQueryAsync();
+        }
+
+        public static async Task ActualizarFechaInicioRevision(int archivoPdfId, string connectionString)
+        {
+            using var connection = new MySqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            var query = @"UPDATE revision_pdf SET FechaInicioRevision = @FechaInicio WHERE ArchivoPdfId = @archivoPdfId;";
+
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@FechaInicio", DateTime.UtcNow);
+            command.Parameters.AddWithValue("@ArchivoPdfId", archivoPdfId);
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        public static async Task ActualizarFechaFinRevision(int archivoPdfId, string connectionString)
+        {
+            using var connection = new MySqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            var query = @"UPDATE revision_pdf SET FechaFinRevision = @FechaFin WHERE ArchivoPdfId = @archivoPdfId;";
+
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@FechaFin", DateTime.UtcNow);
+            command.Parameters.AddWithValue("@ArchivoPdfId", archivoPdfId);
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        public static async Task EliminaZombies(string connectionString)
+        {
+            using var conn = new MySqlConnection(connectionString);
+            await conn.OpenAsync();
+
+            var query = @"UPDATE archivo_pdf SET Estado = 2 WHERE Estado = 5 AND UltimaRevision <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 HOUR);";
+
+            using var cmd = new MySqlCommand(query, conn);
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }

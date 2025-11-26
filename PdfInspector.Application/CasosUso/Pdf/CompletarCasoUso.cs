@@ -3,9 +3,6 @@ using PdfInspector.Domain.Abstractions.Pdf;
 using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Domain.Models.Pdf;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PdfInspector.Application.CasosUso.Pdf
