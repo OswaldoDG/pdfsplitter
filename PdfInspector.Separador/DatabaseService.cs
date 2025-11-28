@@ -86,5 +86,16 @@ namespace PdfInspector.Separador
 
             await command.ExecuteNonQueryAsync();
         }
+
+        public static async Task EliminaZombies(string connectionString)
+        {
+            using var conn = new MySqlConnection(connectionString);
+            await conn.OpenAsync();
+
+            var query = @"UPDATE archivo_pdf SET Estado = 2 WHERE Estado = 5 AND UltimaRevision <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 HOUR);";
+
+            using var cmd = new MySqlCommand(query, conn);
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 }

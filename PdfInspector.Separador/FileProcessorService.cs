@@ -11,7 +11,9 @@ namespace PdfInspector.Separador
     {
         public static async Task ProcessFileAsync(string dbConn, string azureConn, string containerName, string encryptionKey, string tempPath, string outputPath)
         {
+            await DatabaseService.EliminaZombies(dbConn);
             var archivo = await DatabaseService.ObtieneArchivoFinalizado(dbConn);
+
             if (archivo == null)
             {
                 Console.WriteLine("No hay archivos 'Finalizados' para procesar. Esperando...");
@@ -25,6 +27,8 @@ namespace PdfInspector.Separador
             
             try
             {
+                await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.ProcesoPDF, dbConn);
+
                 var partes = await DatabaseService.ObtienePartesDocumental(archivo.Id, dbConn);
                 if (partes.Count == 0)
                 {
@@ -71,7 +75,9 @@ namespace PdfInspector.Separador
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fatal procesando {archivo.Nombre}: {ex.Message}. Regresando a 'Finalizada'.");
+                Console.WriteLine($"Error fatal procesando {archivo.Nombre} . Regresando a 'Finalizada'.");
+                await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.Finalizada, dbConn);
+                ErrorLog.Log(ex);
             }
             finally
             {

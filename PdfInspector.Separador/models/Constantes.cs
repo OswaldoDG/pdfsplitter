@@ -12,6 +12,7 @@ namespace PdfInspector.Separador.models
         EnCurso = 1,
         Finalizada = 2,
         Cancelada = 3,
-        SeparadoEnPdfs = 4
+        SeparadoEnPdfs = 4,
+        ProcesoPDF = 5
     }
 }
