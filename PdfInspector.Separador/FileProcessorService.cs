@@ -28,7 +28,6 @@ namespace PdfInspector.Separador
             try
             {
                 await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.ProcesoPDF, dbConn);
-                await DatabaseService.ActualizarFechaInicioRevision(archivo.Id, dbConn);
 
                 var partes = await DatabaseService.ObtienePartesDocumental(archivo.Id, dbConn);
                 if (partes.Count == 0)
@@ -72,14 +71,12 @@ namespace PdfInspector.Separador
                 }
 
                 await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.SeparadoEnPdfs, dbConn);
-                await DatabaseService.ActualizarFechaFinRevision(archivo.Id, dbConn);
                 Console.WriteLine($"Separación completado para: {archivo.Nombre}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fatal procesando {archivo.Nombre} . Regresando a 'Finalizada'.");
                 await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.Finalizada, dbConn);
-                await DatabaseService.ActualizarFechaFinRevision(archivo.Id, dbConn);
                 ErrorLog.Log(ex);
             }
             finally
