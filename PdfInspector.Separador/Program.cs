@@ -24,11 +24,12 @@ public class Program
         Console.WriteLine($"Buscando archivos 'Finalizados' cada {loopDelay / 1000} segundos.");
         Console.WriteLine($"Salida de PDFs divididos en: {outputPath}");
 
+        bool pendientes = true;
         while (true)
         {
             try
             {
-                await FileProcessorService.ProcessFileAsync(
+                pendientes = await FileProcessorService.ProcessFileAsync(
                     dbConn,
                     azureConn,
                     containerName,
@@ -42,7 +43,11 @@ public class Program
                 Console.WriteLine($"Ocurrió un error inesperado en el bucle principal: {ex.Message}");
             }
 
-            await Task.Delay(loopDelay);
+            if(!pendientes)
+            {
+                await Task.Delay(loopDelay);
+            }
+                
         }
     }
 }

@@ -1,15 +1,11 @@
-﻿    using PdfInspector.Separador.models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PdfInspector.Separador.models;
+
 
 namespace PdfInspector.Separador
 {
     public static class FileProcessorService
     {
-        public static async Task ProcessFileAsync(string dbConn, string azureConn, string containerName, string encryptionKey, string tempPath, string outputPath)
+        public static async Task<bool> ProcessFileAsync(string dbConn, string azureConn, string containerName, string encryptionKey, string tempPath, string outputPath)
         {
             await DatabaseService.EliminaZombies(dbConn);
             var archivo = await DatabaseService.ObtieneArchivoFinalizado(dbConn);
@@ -17,7 +13,7 @@ namespace PdfInspector.Separador
             if (archivo == null)
             {
                 Console.WriteLine("No hay archivos 'Finalizados' para procesar. Esperando...");
-                return;
+                return false;
             }
 
             Console.WriteLine($"Iniciando procesamiento para: {archivo.Nombre} (ID: {archivo.Id})");
@@ -31,26 +27,26 @@ namespace PdfInspector.Separador
 
                 var partes = await DatabaseService.ObtienePartesDocumental(archivo.Id, dbConn);
 
-
-                Directory.CreateDirectory(tempPath);
-
-                Console.WriteLine($"Descargando '{archivo.Ruta}' desde Azure...");
-                await AzureBlobService.DownloadBlobAsync(archivo.Ruta, tempEncryptedPath, azureConn, containerName);
-
+                               
                 if (partes.Count == 0)
                 {
                     Console.WriteLine("El archivo no contiene partes definidas por lo que se exportará el archivo original. ");
-                    string outputDir = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(archivo.Nombre));
-                    Directory.CreateDirectory(outputDir);
-                    string outPutDirFile = Path.Combine(outputDir, archivo.Nombre);
-                    EncryptionService.DecryptFile(tempEncryptedPath, outPutDirFile, encryptionKey);
+                    await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.SinPartes, dbConn);
+                    return true;
                 }
                 else
                 {
+
+                    Directory.CreateDirectory(tempPath);
+
+                    Console.WriteLine($"Descargando '{archivo.Ruta}' desde Azure...");
+
+                    await AzureBlobService.DownloadBlobAsync(archivo.Ruta, tempEncryptedPath, azureConn, containerName);
+
                     Console.WriteLine("Desencriptando archivo...");
                     EncryptionService.DecryptFile(tempEncryptedPath, tempDecryptedPath, encryptionKey);
                     string originalFileName = Path.GetFileNameWithoutExtension(archivo.Nombre);
-                    string outputDir = Path.Combine(outputPath, originalFileName);
+                    string outputDir = Path.Combine(outputPath, $"{originalFileName}" );
                     Directory.CreateDirectory(outputDir);
 
                     var tipoDocumentoIds = partes.Select(p => p.TipoDocumentoId).Distinct().ToList();
@@ -78,17 +74,20 @@ namespace PdfInspector.Separador
 
                 await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.SeparadoEnPdfs, dbConn);
                 Console.WriteLine($"Exportación completado para: {archivo.Nombre}");
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fatal procesando {archivo.Nombre} . Regresando a 'Finalizada'.");
                 await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.Finalizada, dbConn);
                 ErrorLog.Log(ex);
+                return true;
             }
             finally
             {
                 if (File.Exists(tempEncryptedPath)) File.Delete(tempEncryptedPath);
                 if (File.Exists(tempDecryptedPath)) File.Delete(tempDecryptedPath);
+               
             }
         }
     }
