@@ -121,7 +121,7 @@ namespace PdfInspector
             flowLayoutPanelArchivos.Controls.Clear();
             if (_listaGlobalDeArchivos == null) return;
 
-            Keys[] teclasDisponibles = new[] { Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y };
+            Keys[] teclasAlternas = new[] { Keys.A, Keys.S, Keys.D, Keys.F, Keys.G, Keys.H, Keys.J, Keys.K, Keys.L };
             int indice = 0;
 
             foreach (var archivo in _listaGlobalDeArchivos)
@@ -133,9 +133,73 @@ namespace PdfInspector
                     Tag = archivo,
                 };
 
-                if (indice < teclasDisponibles.Length)
-                    nuevoBoton.TeclaAtajo = teclasDisponibles[indice];
 
+                Keys? key = null;
+                if (archivo.Tecla!= null)
+                {
+                    switch (archivo.Tecla.ToUpper())
+                    {
+                        case "Q":
+                            key = Keys.Q;
+                            break;
+
+                        case "W":
+                            key = Keys.W;
+                            break;
+
+                        case "E":
+                            key = Keys.E;
+                            break;
+
+                        case "R":
+                            key = Keys.R;
+                            break;
+
+                        case "T":
+                            key = Keys.T;
+                            break;
+
+                        case "Y":
+                            key = Keys.Y;
+                            break;
+
+                        case "U":
+                            key = Keys.U;
+                            break;
+
+                        case "I":
+                            key = Keys.I;
+                            break;
+
+                        case "O":
+                            key = Keys.O;
+                            break;
+
+                        case "P":
+                            key = Keys.P;
+                            break;
+
+                        default:
+                            MessageBox.Show($"El documento {archivo.Nombre} not tiene tecla asociadae en la base de datos.");
+                            
+                            break;
+                    }
+                }
+                
+                if (key == null)
+                {
+                    if (indice < teclasAlternas.Length)
+                    {
+                        key = teclasAlternas[indice];
+                        indice++; 
+                    }
+                }
+                else
+                {
+                    nuevoBoton.TeclaAtajo = key.Value;
+                }
+
+                    
                 nuevoBoton.BotonPresionado += BotonArchivo_Click;
                 flowLayoutPanelArchivos.Controls.Add(nuevoBoton);
                 indice++;

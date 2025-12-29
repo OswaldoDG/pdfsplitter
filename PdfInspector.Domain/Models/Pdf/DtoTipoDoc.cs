@@ -14,5 +14,10 @@
         /// Nombre del archivo.
         /// </summary>
         public string Nombre { get; set; }
+
+        /// <summary>
+        /// Tecla asociada al documento en la UI
+        /// </summary>
+        public string Tecla { get; set; }
     }
 }
