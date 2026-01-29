@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\Auth\IAuthService.cs" />
+    <Compile Include="Abstractions\Bitacora\IBitacora.cs" />
     <Compile Include="Abstractions\Pdf\IPdfService.cs" />
     <Compile Include="Models\Auth\TokenConnect.cs" />
     <Compile Include="Models\Auth\UsuarioSesion.cs" />
