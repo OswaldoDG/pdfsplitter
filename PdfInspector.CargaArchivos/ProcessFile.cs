@@ -50,7 +50,8 @@ public static class FileProcessor
 
         using (var memoryStream = new MemoryStream(data))
         {
-            await containerClient.UploadBlobAsync(blobFullPath, memoryStream);
+            var blobClient = containerClient.GetBlobClient(blobFullPath);
+            await blobClient.UploadAsync(memoryStream, overwrite: true);
         }
     }
 
