@@ -1,11 +1,8 @@
-﻿using PdfInspector.Separador.models;
+﻿using Azure.Core.GeoJson;
+using PdfInspector.Separador.models;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace PdfInspector.Separador
 {
@@ -15,6 +12,13 @@ namespace PdfInspector.Separador
         {
             try
             {
+                if (File.Exists(outputPdfPath))
+                {
+                    return;
+                }
+
+
+
                 using (PdfDocument originalDoc = PdfReader.Open(originalPdfPath, PdfDocumentOpenMode.Import))
                 {
                     using (PdfDocument newDoc = new PdfDocument())
@@ -45,44 +49,89 @@ namespace PdfInspector.Separador
             }
         }
 
-        public static void AgruparYSepararPartes(string pdfOrigen, string outputDir, List<ParteDocumental> partes, Dictionary<int, string> nombresTipoDocumento)
+        private static string GetHash(string ruta)
+        {
+            using (FileStream stream = File.OpenRead(ruta))
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(stream);
+
+                // Convert to Base64 string
+                string base64Hash = Convert.ToBase64String(hashBytes);
+
+                return base64Hash;
+            }
+        }
+
+        public static void AgruparYSepararPartes(string pdfOrigen, string outputDir, List<ParteDocumental> partes, Dictionary<int, string> nombresTipoDocumento, string connString)
         {
             try
             {
-                var grupos = new Dictionary<int, List<ParteDocumental>>();
-                var sinGrupo = new List<ParteDocumental>();
 
-                foreach (var parte in partes)
+                List<int> agrupamientos = [];
+
+                if(partes.Any(p => p.IdAgrupamiento != null))
                 {
-                    if (parte.IdAgrupamiento == null)
-                        sinGrupo.Add(parte);
+                    agrupamientos = partes.Where(p => p.IdAgrupamiento != null).Select(p => p.IdAgrupamiento!.Value).Distinct().ToList();
+                }
+
+                List<int> tipos = partes.Where(p => p.IdAgrupamiento == null).Distinct().Select(p => p.TipoDocumentoId).ToList(); 
+                foreach(var tipo in tipos)
+                {
+                    var partesTipo = partes.Where(p => p.TipoDocumentoId == tipo && p.IdAgrupamiento == null).ToList();
+                    if(partesTipo.Count > 1)
+                    {
+                        // procesa partes duplicadas sin agrupar
+                        int index = 1;
+                        foreach (var parte in partesTipo)
+                        {
+                            string nombreArchivo = nombresTipoDocumento[tipo];
+                            string precheck = Path.Combine(outputDir, $"{nombreArchivo}.pdf");
+                            if(File.Exists(precheck))
+                            {
+                                File.Delete(precheck);
+                            }
+                            string outputPath = Path.Combine(outputDir, $"{nombreArchivo}-{index.ToString().PadLeft(3, '0')}.pdf");
+
+                            if (File.Exists(outputPath))
+                            {
+                                File.Delete(outputPath);
+                            }
+
+                            var pageRanges = new List<(int startPage, int endPage)> { (parte.PaginaInicio, parte.PaginaFin) } ;
+                            SplitPdf(pdfOrigen, pageRanges, outputPath);
+                            DatabaseService.ActualizaRutaParte(parte.Id, outputPath, connString); 
+                            index ++; 
+                        }
+                    }
                     else
                     {
-                        int gid = parte.IdAgrupamiento.Value;
-                        if (!grupos.ContainsKey(gid))
-                            grupos[gid] = new List<ParteDocumental>();
-                        grupos[gid].Add(parte);
+                        var parte = partesTipo[0];
+                        string nombreArchivo = nombresTipoDocumento[parte.TipoDocumentoId];
+                            string outputPath = Path.Combine(outputDir, $"{nombreArchivo}.pdf");
+                            var rango = new List<(int startPage, int endPage)> { (parte.PaginaInicio, parte.PaginaFin) };
+                            SplitPdf(pdfOrigen, rango, outputPath);
+                        DatabaseService.ActualizaRutaParte(parte.Id, outputPath, connString);
+
                     }
-                }
+                }   
 
-                foreach (var kvp in grupos)
+                if(agrupamientos.Count > 0)
                 {
-                    var partesGrupo = kvp.Value.OrderBy(p => p.PaginaInicio).ToList();
-                    int tipoId = partesGrupo[0].TipoDocumentoId;
-                    string nombreArchivo = nombresTipoDocumento.ContainsKey(tipoId) ? nombresTipoDocumento[tipoId] : $"Grupo_{kvp.Key}";
-                    string outputPath = Path.Combine(outputDir, $"{nombreArchivo}.pdf");
-
-                    var pageRanges = partesGrupo.Select(p => (p.PaginaInicio, p.PaginaFin)).ToList();
-                    SplitPdf(pdfOrigen, pageRanges, outputPath);
-                }
-
-                foreach (var parte in sinGrupo)
-                {
-                    string nombreArchivo = nombresTipoDocumento.ContainsKey(parte.TipoDocumentoId) ? nombresTipoDocumento[parte.TipoDocumentoId] : $"Documento_{parte.PaginaInicio}-{parte.PaginaFin}";
-                    string outputPath = Path.Combine(outputDir, $"{nombreArchivo}.pdf");
-                    var rango = new List<(int startPage, int endPage)> { (parte.PaginaInicio, parte.PaginaFin) };
-                    SplitPdf(pdfOrigen, rango, outputPath);
-                }
+                    foreach(var id in agrupamientos)
+                    {
+                        var partesGrupo = partes.Where(p => p.IdAgrupamiento == id).OrderBy(p => p.PaginaInicio).ToList(); 
+                        int tipoId = partesGrupo[0].TipoDocumentoId;
+                        string nombreArchivo =  nombresTipoDocumento[tipoId];
+                        string outputPath = Path.Combine(outputDir, $"{nombreArchivo}.pdf");
+                        var pageRanges = partesGrupo.Select(p => (p.PaginaInicio, p.PaginaFin)).ToList();
+                        SplitPdf(pdfOrigen, pageRanges, outputPath);
+                        foreach(var parte in partesGrupo)
+                        {
+                            DatabaseService.ActualizaRutaParte(parte.Id, outputPath, connString);
+                        }
+                    }
+                } 
             }
             catch (Exception ex)
             {

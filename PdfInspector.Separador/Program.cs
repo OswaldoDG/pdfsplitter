@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using PdfInspector.Separador;
+using System.Collections.Specialized;
 
 public class Program
 {
@@ -25,6 +26,14 @@ public class Program
         Console.WriteLine($"Salida de PDFs divididos en: {outputPath}");
 
         bool pendientes = true;
+        var tipos = await DatabaseService.ObtieneTiposDocumento(dbConn);
+        if(!Directory.Exists(tempPath))
+        {
+            Directory.CreateDirectory(tempPath);
+        }
+
+        string ProcId = $"T{DateTime.Now.Ticks}";
+
         while (true)
         {
             try
@@ -35,7 +44,9 @@ public class Program
                     containerName,
                     HardcodedEncryptionKey,
                     tempPath,
-                    outputPath
+                    outputPath,
+                    ProcId,
+                    tipos
                 );
             }
             catch (Exception ex)

@@ -15,5 +15,7 @@ namespace PdfInspector.Separador.models
         required public string Ruta { get; set; }
 
         public EstadoRevision Estado { get; set; }
+
+        public string? IdProceso { get; set; }
     }
 }

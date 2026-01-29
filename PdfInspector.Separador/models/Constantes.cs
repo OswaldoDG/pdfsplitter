@@ -14,6 +14,11 @@ namespace PdfInspector.Separador.models
         Cancelada = 3,
         SeparadoEnPdfs = 4,
         ProcesoPDF = 5,
-        SinPartes = 6
+        SinPartes = 6,
+        Excluido = 10,
+        Reproceso = 11,
+        SinPDF = 12,
+        FinalizadaConErrores = 13
+
     }
 }
