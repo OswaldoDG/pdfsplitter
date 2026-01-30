@@ -3,11 +3,13 @@ using PdfInspector.App.CasosUso.Auth;
 using PdfInspector.Application.CasosUso.Auth;
 using PdfInspector.Application.CasosUso.Pdf;
 using PdfInspector.Domain.Abstractions.Auth;
+using PdfInspector.Domain.Abstractions.Bitacora;
 using PdfInspector.Domain.Abstractions.Pdf;
 using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Forms;
 using PdfInspector.Infraestructure.Config;
 using PdfInspector.Infraestructure.Services.Auth;
+using PdfInspector.Infraestructure.Services.Bitacora;
 using PdfInspector.Infraestructure.Services.Pdf;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
@@ -53,6 +55,7 @@ namespace PdfInspector
 
             container.RegisterSingleton<IAuthService, AuthService>();
             container.RegisterSingleton<IPdfService, PdfService>();
+            container.RegisterSingleton<IBitacora, Bitacora>();
 
             container.Register<LoginCasoUso>();
             container.Register<RefrescarCasoUso>();

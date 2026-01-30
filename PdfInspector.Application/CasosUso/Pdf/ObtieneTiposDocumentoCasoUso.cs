@@ -1,4 +1,5 @@
 ﻿using PdfInspector.Application.CasosUso.Auth;
+using PdfInspector.Domain.Abstractions.Bitacora;
 using PdfInspector.Domain.Abstractions.Pdf;
 using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Domain.Models.Pdf;
@@ -12,12 +13,14 @@ namespace PdfInspector.Application.CasosUso.Pdf
 {
     public class ObtieneTipoDocumentosPdfCasoUso
     {
+        private readonly IBitacora _bitacora;
         private readonly IPdfService _pdfService;
         private readonly UsuarioSesion _usuarioSesion;
         private readonly RefrescarCasoUso _refrescarSesion;
 
-        public ObtieneTipoDocumentosPdfCasoUso(IPdfService pdfService, UsuarioSesion usuarioSesion, RefrescarCasoUso refrescarCasoUso)
+        public ObtieneTipoDocumentosPdfCasoUso(IBitacora bitacora,IPdfService pdfService, UsuarioSesion usuarioSesion, RefrescarCasoUso refrescarCasoUso)
         {
+            _bitacora = bitacora;
             _pdfService = pdfService;
             _usuarioSesion = usuarioSesion;
             _refrescarSesion = refrescarCasoUso;
@@ -25,12 +28,35 @@ namespace PdfInspector.Application.CasosUso.Pdf
 
         public async Task<List<DtoTipoDoc>> ExecuteAsync()
         {
+            _bitacora.LogInfo("Inicio caso de uso ObtieneTipoDocumentosPdfCasoUso");
             bool sesionValida = await _refrescarSesion.EjecutarSiNecesarioAsync();
             if (!sesionValida)
             {
+                _bitacora.LogError("Sesión expirada", new UnauthorizedAccessException());
                 throw new UnauthorizedAccessException("Sesión expirada. Por favor, inicie sesión de nuevo.");
             }
-            return await _pdfService.ObtieneTipoDocumentosAsync();
+
+
+            var respuesta =  await _pdfService.ObtieneTipoDocumentosAsync();
+
+            if (!respuesta.Ok)
+            {
+                _bitacora.LogError(
+                    $"Error en API PDF. HttpCode={respuesta.HttpCode}. Mensaje={respuesta.Error?.Mensaje}",
+                    new Exception(respuesta.Error?.Mensaje)
+                );
+                throw new Exception("No fue posible obtener el los tipos de documento");
+            }
+
+            if (respuesta.Payload == null)
+            {
+                _bitacora.LogInfo("No hay tipos de documento en la base de datos");
+                return null;
+            }
+
+            _bitacora.LogInfo($"Tipos de documentos obtenidos correctamente.");
+
+            return respuesta.Payload;
         }
 
     }
