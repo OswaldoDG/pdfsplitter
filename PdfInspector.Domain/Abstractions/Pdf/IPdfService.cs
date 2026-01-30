@@ -1,4 +1,5 @@
-﻿using PdfInspector.Domain.Models.Pdf;
+﻿using PdfInspector.Domain.Comunes;
+using PdfInspector.Domain.Models.Pdf;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,12 +8,12 @@ namespace PdfInspector.Domain.Abstractions.Pdf
     public interface IPdfService
     {
 
-        Task<bool> FinalizarPorIdAsync(int id, DtoFinalizar dtoFinalizar);
+        Task<RespuestaBoolean> FinalizarPorIdAsync(int id, DtoFinalizar dtoFinalizar);
 
-        Task<List<DtoTipoDoc>> ObtieneTipoDocumentosAsync();
+        Task<RespuestaPayload<List<DtoTipoDoc>>> ObtieneTipoDocumentosAsync();
 
-        Task<DtoArchivo> SiguientePendiente();
+        Task<RespuestaPayload<DtoArchivo>> SiguientePendiente();
 
-        Task<List<DtoEstadisticasUsuario>> EstadisticasUsuarioAsync();
+        Task<RespuestaPayload<List<DtoEstadisticasUsuario>>> EstadisticasUsuarioAsync();
     }
 }

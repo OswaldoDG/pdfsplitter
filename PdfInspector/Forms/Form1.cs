@@ -2,6 +2,7 @@
 using PdfInspector.Application.CasosUso.Pdf;
 using PdfInspector.Application.DTOs.PDF;
 using PdfInspector.Controles;
+using PdfInspector.Domain.Abstractions.Bitacora;
 using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Domain.Models.Pdf;
 using PdfInspector.Forms;
@@ -13,12 +14,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PdfInspector
 {
     public partial class Form1 : Form
     {
+        private readonly IBitacora _bitacora;
         private readonly UsuarioSesion _usuarioSesion;
         private readonly LoginForm _loginForm;
         private readonly ObtieneTipoDocumentosPdfCasoUso _obtieneTipoDocumentosCasoUso;
@@ -40,10 +41,11 @@ namespace PdfInspector
         private string _currentUserEmail = "";
         public bool IsLoggingOut { get; private set; } = false;
         private static readonly HttpClient _httpClient = new HttpClient();
-        public Form1(ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso, LoginForm loginForm, UsuarioSesion usuarioSesion)
+        public Form1(IBitacora bitacora, ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso, LoginForm loginForm, UsuarioSesion usuarioSesion)
         {
             InitializeComponent();
             KeyPreview = true;
+            _bitacora = bitacora;
             _obtieneTipoDocumentosCasoUso = obtieneTipoDocumentosCasoUso;
             _completarCasoUso = completarCasoUso;
             _siguientePendienteCasoUso = siguientePendienteCasoUso;
@@ -100,6 +102,7 @@ namespace PdfInspector
 
         private async Task CargarDatosDeArchivos()
         {
+            _bitacora.LogInfo("CargarDatosDeArchivos");
             try
             {
                 Cursor = Cursors.WaitCursor;
@@ -108,6 +111,7 @@ namespace PdfInspector
             }
             catch (Exception ex)
             {
+                _bitacora.LogError("Error inesperado en cargar los documentos", ex);
                 MostrarNotificacion("No se pudieron cargar los documentos: " + ex.Message, "Error");
             }
             finally
@@ -274,6 +278,7 @@ namespace PdfInspector
             }
             catch (Exception ex)
             {
+                _bitacora.LogError("Error inesperado en el botón de tipo de Archivo.",ex);
                 MostrarNotificacion("Error al procesar el documento: " + ex.Message, "Error");
             }
             finally
@@ -387,7 +392,12 @@ namespace PdfInspector
             }
             catch (UnauthorizedAccessException ex)
             {
+                _bitacora.LogError("Sesion expirada",ex);
                 ManejarSesionExpirada(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _bitacora.LogError("Ocurrió un error inesperado en el botón de Finalizar.", ex);
             }
             finally
             {
@@ -459,10 +469,12 @@ namespace PdfInspector
             }
             catch (UnauthorizedAccessException ex)
             {
+                _bitacora.LogError("Sesion expirada",ex);
                 ManejarSesionExpirada(ex.Message);
             }
             catch (Exception ex)
             {
+                _bitacora.LogError("Ocurrió un error inesperado en el botón completar.",ex);
                 MostrarNotificacion($"Error al procesar el documento: {ex.Message}", "Error");
             }
             finally
@@ -497,6 +509,7 @@ namespace PdfInspector
             }
             catch (Exception ex)
             {
+                _bitacora.LogError("Ocurrió un error inesperado en el botón Cancelar.", ex);
                 MostrarNotificacion("Error al procesar el documento: " + ex.Message, "Error");
             }
             finally
@@ -590,7 +603,6 @@ namespace PdfInspector
                     catch
                     {
                     }
-
                     MessageBox.Show(
                         mensajeDetallado,
                         "Error de Descarga",
@@ -601,10 +613,12 @@ namespace PdfInspector
             }
             catch (UnauthorizedAccessException ex)
             {
+                _bitacora.LogError("Sesión expirada al obtener PDF pendiente", ex);
                 ManejarSesionExpirada(ex.Message);
             }
             catch (Exception ex)
             {
+                _bitacora.LogError("Ocurrió un error inesperado en el botón Siguiente.", ex);
                 MostrarNotificacion("Error al descargar el archivo: " + ex.Message, "Error");
             }
             finally
@@ -802,8 +816,7 @@ namespace PdfInspector
             }
             catch (Exception ex)
             {
-                _currentUserEmail = "Error al cargar email";
-                Console.WriteLine("Error al cargar email: " + ex.Message);
+                _bitacora.LogError("Ocurrió un error algo cargar el email del usuario...",ex);
             }
         }
 
@@ -824,10 +837,12 @@ namespace PdfInspector
             }
             catch (UnauthorizedAccessException ex)
             {
+                _bitacora.LogError("Sesión expirada",ex);
                 ManejarSesionExpirada(ex.Message);
             }
             catch (Exception ex)
             {
+                _bitacora.LogError("Ocurrió un error inesperado en el boton de las estadísticas.",ex);
                 MostrarNotificacion("Error al cargar estadísticas: " + ex.Message, "Error");
             }
         }
@@ -944,6 +959,7 @@ namespace PdfInspector
                 }
                 catch (Exception ex)
                 {
+                    _bitacora.LogError("Ocurrió un error inesperado en el agrupamiento de partes",ex);
                     MostrarNotificacion($"Error al procesar el elemento {item.Text}: {ex.Message}", "Error");
                 }
             }
@@ -990,6 +1006,7 @@ namespace PdfInspector
             }
             catch (Exception ex)
             {
+                _bitacora.LogError("Ocurrió un error al intentar eliminar agrupamientos", ex);
                 MostrarNotificacion($"Error al eliminar agrupamientos: {ex.Message}", "Error");
             }
         }
