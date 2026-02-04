@@ -81,10 +81,6 @@ namespace PdfInspector.Separador
                 if(File.Exists(tempEncryptedPath) )
                 {
                     Console.WriteLine("Desencriptando archivo...");
-                    EncryptionService.DecryptFile(tempEncryptedPath, tempDecryptedPath, encryptionKey);
-                    string originalFileName = Path.GetFileNameWithoutExtension(archivo.Nombre);
-                    string outputDir = Path.Combine(outputPath, $"{originalFileName}");
-                    Directory.CreateDirectory(outputDir);
 
 
                     var partes = await DatabaseService.ObtienePartesDocumental(archivo.Id, dbConn);
@@ -93,16 +89,15 @@ namespace PdfInspector.Separador
                     if (partes.Count == 0)
                     {
                         Console.WriteLine("El archivo no contiene partes definidas por lo que se exportará el archivo original. ");
-                        await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.SeparadoEnPdfs, dbConn, ProcesoId);
-                        File.Copy(tempDecryptedPath, Path.Combine(outputDir, archivo.Nombre), true);
-                        if (File.Exists(tempEncryptedPath)) File.Delete(tempEncryptedPath);
-                        if (File.Exists(tempDecryptedPath)) File.Delete(tempDecryptedPath);
+                        await DatabaseService.ActualizaEstadoArchivo(archivo.Id, EstadoRevision.SinPartes, dbConn, ProcesoId);
                         return true;
                     }
                     else
                     {
-
-
+                        EncryptionService.DecryptFile(tempEncryptedPath, tempDecryptedPath, encryptionKey);
+                        string originalFileName = Path.GetFileNameWithoutExtension(archivo.Nombre);
+                        string outputDir = Path.Combine(outputPath, $"{originalFileName}");
+                        Directory.CreateDirectory(outputDir);
                         var tipoDocumentoIds = partes.Select(p => p.TipoDocumentoId).Distinct().ToList();
                         var nombresTipoDocumento = new Dictionary<int, string>();
                         foreach (var id in tipoDocumentoIds)
