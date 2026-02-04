@@ -21,6 +21,7 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panelSuperior = new System.Windows.Forms.Panel();
+            this.btnSig = new PdfInspector.Controles.BotonDocumento();
             this.checkAuto = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanelArchivos = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -43,20 +44,19 @@
             this.panelBotonera = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.btnFin = new PdfInspector.Controles.BotonDocumento();
+            this.btnComplete = new PdfInspector.Controles.BotonDocumento();
+            this.btnCancel = new PdfInspector.Controles.BotonDocumento();
             this.panelPdf = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.infoDocControl = new PdfInspector.Controles.InfoDocumentoControl();
+            this.lbTotalPag = new PdfInspector.Controles.InfoDocumentoControl();
             this.gdViewer1 = new GdPicture.GdViewer();
             this.timerNotificacion = new System.Windows.Forms.Timer(this.components);
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.inactividadTimer = new System.Windows.Forms.Timer(this.components);
             this.timerLabel = new System.Windows.Forms.Timer(this.components);
-            this.infoDocControl = new PdfInspector.Controles.InfoDocumentoControl();
-            this.lbTotalPag = new PdfInspector.Controles.InfoDocumentoControl();
-            this.btnFin = new PdfInspector.Controles.BotonDocumento();
-            this.btnComplete = new PdfInspector.Controles.BotonDocumento();
-            this.btnCancel = new PdfInspector.Controles.BotonDocumento();
-            this.btnSig = new PdfInspector.Controles.BotonDocumento();
             this.panelSuperior.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -88,6 +88,19 @@
             this.panelSuperior.Name = "panelSuperior";
             this.panelSuperior.Size = new System.Drawing.Size(483, 50);
             this.panelSuperior.TabIndex = 0;
+            // 
+            // btnSig
+            // 
+            this.btnSig.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSig.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSig.Location = new System.Drawing.Point(0, 0);
+            this.btnSig.Margin = new System.Windows.Forms.Padding(6);
+            this.btnSig.Name = "btnSig";
+            this.btnSig.Size = new System.Drawing.Size(374, 50);
+            this.btnSig.TabIndex = 4;
+            this.btnSig.Tag = "Siguiente";
+            this.btnSig.TeclaAtajo = System.Windows.Forms.Keys.Tab;
+            this.btnSig.Texto = "Siguiente";
             // 
             // checkAuto
             // 
@@ -201,7 +214,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(475, 127);
+            this.tabPage2.Size = new System.Drawing.Size(471, 134);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Estadísticas";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -230,7 +243,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(469, 121);
+            this.chart1.Size = new System.Drawing.Size(465, 128);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
@@ -356,6 +369,42 @@
             this.splitContainer2.SplitterDistance = 193;
             this.splitContainer2.TabIndex = 0;
             // 
+            // btnFin
+            // 
+            this.btnFin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFin.Location = new System.Drawing.Point(3, 6);
+            this.btnFin.Margin = new System.Windows.Forms.Padding(6);
+            this.btnFin.Name = "btnFin";
+            this.btnFin.Size = new System.Drawing.Size(456, 72);
+            this.btnFin.TabIndex = 0;
+            this.btnFin.Tag = "Finalizar";
+            this.btnFin.TeclaAtajo = System.Windows.Forms.Keys.Space;
+            this.btnFin.Texto = "Documento Fin";
+            // 
+            // btnComplete
+            // 
+            this.btnComplete.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnComplete.Location = new System.Drawing.Point(8, 135);
+            this.btnComplete.Margin = new System.Windows.Forms.Padding(6);
+            this.btnComplete.Name = "btnComplete";
+            this.btnComplete.Size = new System.Drawing.Size(451, 70);
+            this.btnComplete.TabIndex = 2;
+            this.btnComplete.Tag = "Completar";
+            this.btnComplete.TeclaAtajo = System.Windows.Forms.Keys.None;
+            this.btnComplete.Texto = "Completar Separación";
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.Location = new System.Drawing.Point(8, 63);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(451, 65);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Tag = "Cancelar";
+            this.btnCancel.TeclaAtajo = System.Windows.Forms.Keys.Escape;
+            this.btnCancel.Texto = "Documento Cancelar";
+            // 
             // panelPdf
             // 
             this.panelPdf.BackColor = System.Drawing.SystemColors.Control;
@@ -382,6 +431,35 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(601, 50);
             this.tableLayoutPanel1.TabIndex = 6;
+            // 
+            // infoDocControl
+            // 
+            this.infoDocControl.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.infoDocControl.Dock = System.Windows.Forms.DockStyle.Right;
+            this.infoDocControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.infoDocControl.Location = new System.Drawing.Point(306, 6);
+            this.infoDocControl.Margin = new System.Windows.Forms.Padding(6);
+            this.infoDocControl.Name = "infoDocControl";
+            this.infoDocControl.PaginaActual = 0;
+            this.infoDocControl.PaginaInicio = 0;
+            this.infoDocControl.Size = new System.Drawing.Size(289, 38);
+            this.infoDocControl.TabIndex = 4;
+            this.infoDocControl.TipoDocumento = "";
+            this.infoDocControl.TotalPaginas = 0;
+            // 
+            // lbTotalPag
+            // 
+            this.lbTotalPag.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.lbTotalPag.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lbTotalPag.Location = new System.Drawing.Point(4, 4);
+            this.lbTotalPag.Margin = new System.Windows.Forms.Padding(4);
+            this.lbTotalPag.Name = "lbTotalPag";
+            this.lbTotalPag.PaginaActual = 0;
+            this.lbTotalPag.PaginaInicio = 0;
+            this.lbTotalPag.Size = new System.Drawing.Size(292, 42);
+            this.lbTotalPag.TabIndex = 5;
+            this.lbTotalPag.TipoDocumento = null;
+            this.lbTotalPag.TotalPaginas = 0;
             // 
             // gdViewer1
             // 
@@ -456,7 +534,7 @@
             // 
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(99, 17);
-            this.statusLabel.Text = "Pdf Splitter V1.5.2";
+            this.statusLabel.Text = "Pdf Splitter V1.5.3";
             // 
             // inactividadTimer
             // 
@@ -467,84 +545,6 @@
             // 
             this.timerLabel.Interval = 5000;
             this.timerLabel.Tick += new System.EventHandler(this.timerLabel_Tick);
-            // 
-            // infoDocControl
-            // 
-            this.infoDocControl.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.infoDocControl.Dock = System.Windows.Forms.DockStyle.Right;
-            this.infoDocControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoDocControl.Location = new System.Drawing.Point(306, 6);
-            this.infoDocControl.Margin = new System.Windows.Forms.Padding(6);
-            this.infoDocControl.Name = "infoDocControl";
-            this.infoDocControl.PaginaActual = 0;
-            this.infoDocControl.PaginaInicio = 0;
-            this.infoDocControl.Size = new System.Drawing.Size(289, 38);
-            this.infoDocControl.TabIndex = 4;
-            this.infoDocControl.TipoDocumento = "";
-            this.infoDocControl.TotalPaginas = 0;
-            // 
-            // lbTotalPag
-            // 
-            this.lbTotalPag.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.lbTotalPag.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lbTotalPag.Location = new System.Drawing.Point(4, 4);
-            this.lbTotalPag.Margin = new System.Windows.Forms.Padding(4);
-            this.lbTotalPag.Name = "lbTotalPag";
-            this.lbTotalPag.PaginaActual = 0;
-            this.lbTotalPag.PaginaInicio = 0;
-            this.lbTotalPag.Size = new System.Drawing.Size(292, 42);
-            this.lbTotalPag.TabIndex = 5;
-            this.lbTotalPag.TipoDocumento = null;
-            this.lbTotalPag.TotalPaginas = 0;
-            // 
-            // btnFin
-            // 
-            this.btnFin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFin.Location = new System.Drawing.Point(3, 6);
-            this.btnFin.Margin = new System.Windows.Forms.Padding(6);
-            this.btnFin.Name = "btnFin";
-            this.btnFin.Size = new System.Drawing.Size(456, 72);
-            this.btnFin.TabIndex = 0;
-            this.btnFin.Tag = "Finalizar";
-            this.btnFin.TeclaAtajo = System.Windows.Forms.Keys.Space;
-            this.btnFin.Texto = "Documento Fin";
-            // 
-            // btnComplete
-            // 
-            this.btnComplete.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnComplete.Location = new System.Drawing.Point(8, 135);
-            this.btnComplete.Margin = new System.Windows.Forms.Padding(6);
-            this.btnComplete.Name = "btnComplete";
-            this.btnComplete.Size = new System.Drawing.Size(451, 70);
-            this.btnComplete.TabIndex = 2;
-            this.btnComplete.Tag = "Completar";
-            this.btnComplete.TeclaAtajo = System.Windows.Forms.Keys.None;
-            this.btnComplete.Texto = "Completar Separación";
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(8, 63);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(451, 65);
-            this.btnCancel.TabIndex = 1;
-            this.btnCancel.Tag = "Cancelar";
-            this.btnCancel.TeclaAtajo = System.Windows.Forms.Keys.Escape;
-            this.btnCancel.Texto = "Documento Cancelar";
-            // 
-            // btnSig
-            // 
-            this.btnSig.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSig.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSig.Location = new System.Drawing.Point(0, 0);
-            this.btnSig.Margin = new System.Windows.Forms.Padding(6);
-            this.btnSig.Name = "btnSig";
-            this.btnSig.Size = new System.Drawing.Size(374, 50);
-            this.btnSig.TabIndex = 4;
-            this.btnSig.Tag = "Siguiente";
-            this.btnSig.TeclaAtajo = System.Windows.Forms.Keys.Tab;
-            this.btnSig.Texto = "Siguiente";
             // 
             // Form1
             // 
