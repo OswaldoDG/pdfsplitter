@@ -15,6 +15,7 @@ namespace PdfInspector.Infraestructure.Services.Bitacora
             string contenido = ex != null ? $"{mensaje}{Environment.NewLine}{ex}" : mensaje;
 
             EscribirArchivo("ERROR", contenido);
+
         }
 
         public void LogInfo(string mensaje)

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PdfInspector.Domain.Abstractions.Bitacora;
 using PdfInspector.Domain.Abstractions.Pdf;
 using PdfInspector.Domain.Comunes;
 using PdfInspector.Domain.Models.Auth;
@@ -24,12 +25,15 @@ namespace PdfInspector.Infraestructure.Services.Pdf
         private readonly HttpClient _httpClient;
         private readonly EndpointConfig _config;
         private readonly UsuarioSesion _sesion;
+        private readonly IBitacora _bitacora;
 
-        public PdfService(EndpointConfig config, HttpClient httpClient, UsuarioSesion sesion)
+
+        public PdfService(EndpointConfig config, HttpClient httpClient, UsuarioSesion sesion, IBitacora bitacora)
         {
             _config = config;
             _httpClient = httpClient;
             _sesion = sesion;
+            _bitacora = bitacora;
         }
 
         public async Task<RespuestaPayload<DtoArchivo>> SiguientePorId(int id)
@@ -37,6 +41,8 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             RespuestaPayload<DtoArchivo> respuestaPayload = new RespuestaPayload<DtoArchivo>();
             try
             {
+                _bitacora.LogInfo($"Descargando PDF por ID: {id}"); 
+
                 var endpoint = _config.PdfApi.DescargarPorId.Replace("{id}", id.ToString());
                 var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint));
 
@@ -50,6 +56,8 @@ namespace PdfInspector.Infraestructure.Services.Pdf
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
+
+                    _bitacora.LogError($"PDF no localizado ID: {id} {request.RequestUri.PathAndQuery}", null);
                     respuestaPayload.Payload = null;
                     respuestaPayload.HttpCode = HttpStatusCode.OK;
                     return respuestaPayload;
@@ -62,6 +70,9 @@ namespace PdfInspector.Infraestructure.Services.Pdf
                         Mensaje = $"Error HTTP {response.StatusCode}",
                         HttpCode = response.StatusCode
                     };
+
+
+                    _bitacora.LogError($"Error en descarga PDF: {id} {response.StatusCode}", null);
                     return respuestaPayload;
                 }
 

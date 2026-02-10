@@ -7,6 +7,7 @@ using PdfInspector.Domain.Comunes;
 using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Domain.Models.Pdf;
 using PdfInspector.Forms;
+using PdfInspector.Infraestructure.Services.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -596,6 +597,7 @@ namespace PdfInspector
 
                 if (pdfPendiente == null)
                 {
+                    _bitacora.LogError("No hay más documentos pendientes de revisión.", null);
                     MostrarNotificacion("No hay más documentos pendientes de revisión.", "Info");
                     infoDocControl.ActualizarInfo("", 0, 0);
                     return;
@@ -603,19 +605,25 @@ namespace PdfInspector
 
                 if (string.IsNullOrEmpty(pdfPendiente.TokenSAS))
                 {
-                    MostrarNotificacion("Se asignó un documento pero no se recibió una URL de acceso.", "Warning");
+                    string err = $"Se asignó un documento pero no se recibió una URL de acceso para {pdfPendiente.Id}.";
+                    _bitacora.LogError(err, null);
+                    MostrarNotificacion(err, "Warning");
                     infoDocControl.ActualizarInfo("", 0, 0);
                     return;
                 }
 
+                _bitacora.LogInfo($"Descargando PDF pendiente con Id={pdfPendiente.Id} desde {_archivoPdf.TokenSAS.Split('?')[0]}");
+
                 var response = await _httpClient.GetAsync(pdfPendiente.TokenSAS);
                 if (response.IsSuccessStatusCode)
                 {
+
                     var encryptedStream = await response.Content.ReadAsStreamAsync();
 
                     if (encryptedStream == null || encryptedStream.Length == 0)
                     {
                         MostrarNotificacion("No hay más documentos por procesar", "Warning");
+                        _bitacora.LogError("El stream descargado está vacío.", null);   
                         infoDocControl.ActualizarInfo("", 0, 0);
                         lbTotalPag.ActualizarTotal(this.gdViewer1.PageCount);
                         return;
@@ -632,6 +640,7 @@ namespace PdfInspector
 
                     if (status != GdPictureStatus.OK)
                     {
+
                         _bitacora.LogError(
                             $"Error GDViewer al abrir documento. Status: {status}. Documento: {pdfPendiente?.Nombre}", null);
 
@@ -639,6 +648,26 @@ namespace PdfInspector
                             "No se pudo visualizar el documento.",
                             "Error");
 
+                        try
+                        {
+                            // Save stream to file
+                            string ruta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "BitacoraSperto", $"pdf-{pdfPendiente.Id}.pdf");
+                            _bitacora.LogError($"PDF no valido guardando muestra en {ruta}", null);
+
+                            decryptedStream.Position = 0;
+                            var fileStream = new FileStream(ruta, FileMode.Create, FileAccess.Write);
+                            await decryptedStream.CopyToAsync(fileStream);
+                            decryptedStream.Close();
+                            decryptedStream.Dispose();
+                            fileStream.Close();
+                            fileStream.Dispose();
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+
+                        MostrarNotificacion($"Error al cargar PDF en visor: {status}", "Error");
                         return;
                     }
 
@@ -654,16 +683,18 @@ namespace PdfInspector
                 else
                 {
                     string codigoError = response.StatusCode.ToString();
-                    string mensajeDetallado = $"Error al descargar el archivo. El servidor respondió con:\n\n{codigoError} ({(int)response.StatusCode})";
+                    string mensajeDetallado = $"Error al descargar el archivo {_archivoPdf.Id}. El servidor respondió con:\n\n{codigoError} ({(int)response.StatusCode})";
+                    string responseBody = string.Empty;
                     try
                     {
-                        string errorBody = await response.Content.ReadAsStringAsync();
-                        string detalle = errorBody.Substring(0, Math.Min(errorBody.Length, 300));
-                        mensajeDetallado += $"\n\nDetalle del servidor:\n{detalle}";
+                        responseBody = await response.Content.ReadAsStringAsync();
                     }
                     catch
                     {
                     }
+
+                    _bitacora.LogError(mensajeDetallado + " " + responseBody, null);
+
                     MessageBox.Show(
                         mensajeDetallado,
                         "Error de Descarga",
