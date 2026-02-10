@@ -10,9 +10,11 @@ namespace PdfInspector.Infraestructure.Services.Bitacora
         private const int DIAS_LOG = 7;
         private readonly string _baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "BitacoraSperto");
 
-        public void LogError(string mensaje, Exception ex)
+        public void LogError(string mensaje, Exception ex = null)
         {
-            EscribirArchivo("ERROR", $"{mensaje}{Environment.NewLine}{ex}");
+            string contenido = ex != null ? $"{mensaje}{Environment.NewLine}{ex}" : mensaje;
+
+            EscribirArchivo("ERROR", contenido);
         }
 
         public void LogInfo(string mensaje)

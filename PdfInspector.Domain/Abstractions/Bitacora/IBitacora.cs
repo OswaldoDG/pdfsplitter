@@ -7,7 +7,7 @@ namespace PdfInspector.Domain.Abstractions.Bitacora
     /// </summary>
     public interface IBitacora
     {
-        void LogError(string mensaje, Exception exception);
+        void LogError(string mensaje, Exception exception = null);
         void LogInfo(string mensaje);
     }
 }
