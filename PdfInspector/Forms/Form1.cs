@@ -3,6 +3,7 @@ using PdfInspector.Application.CasosUso.Pdf;
 using PdfInspector.Application.DTOs.PDF;
 using PdfInspector.Controles;
 using PdfInspector.Domain.Abstractions.Bitacora;
+using PdfInspector.Domain.Comunes;
 using PdfInspector.Domain.Models.Auth;
 using PdfInspector.Domain.Models.Pdf;
 using PdfInspector.Forms;
@@ -483,6 +484,54 @@ namespace PdfInspector
             }
         }
 
+        private async Task CompletarPdfInvalidoAsync()
+        {
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                _bitacora.LogInfo($"Documento marcado como PdfInvalido. DocumentoId: {_archivoPdf?.Id}");
+
+                var dto = new DtoFinalizar
+                {
+                    TotalPaginas = 0,
+                    Partes = new List<DtoParteDocumental>(),
+                    EstadoRevision = EstadoRevision.PdfInvalido
+                };
+
+                await _completarCasoUso.ExecuteAsync(_archivoPdf.Id, dto);
+
+                ResetDocumentState();
+                _tempParteTemporal = null;
+                _archivoPdf = null;
+                _listaPartes.Clear();
+                _gruposDocumentos = new List<int> { 0 };
+                _paginaInicioTemporal = 0;
+                listViewPartes.Items.Clear();
+
+                this.gdViewer1.CloseDocument();
+                this.gdViewer1.Visible = false;
+
+                infoDocControl.ActualizarInfo("PDF inválido", 0, 0);
+
+                MostrarNotificacion("El documento no se pudo abrir y fue marcado como PDF inválido.", "Warning");
+
+                await Task.Delay(300);
+                await SiguienteAccion();
+            }
+            catch (Exception ex)
+            {
+                _bitacora.LogError("Error al completar PDF inválido.", ex);
+                MostrarNotificacion(
+                    "Error al marcar el documento como PDF inválido.",
+                    "Error");
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
+        }
+
+
         private async Task CancelarAccion()
         {
             if (_tempParteTemporal == null)
@@ -575,9 +624,21 @@ namespace PdfInspector
                     var decryptedStream = DesencriptarStream(encryptedStream);
                     var status = this.gdViewer1.DisplayFromStream(decryptedStream);
 
+                    if (status == GdPictureStatus.PdfCanNotOpenFile)
+                    {
+                        await CompletarPdfInvalidoAsync();
+                        return;
+                    }
+
                     if (status != GdPictureStatus.OK)
                     {
-                        MostrarNotificacion($"Error al cargar PDF en visor: {status}", "Error");
+                        _bitacora.LogError(
+                            $"Error GDViewer al abrir documento. Status: {status}. Documento: {pdfPendiente?.Nombre}", null);
+
+                        MostrarNotificacion(
+                            "No se pudo visualizar el documento.",
+                            "Error");
+
                         return;
                     }
 
