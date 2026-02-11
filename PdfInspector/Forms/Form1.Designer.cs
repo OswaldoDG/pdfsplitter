@@ -534,7 +534,7 @@
             // 
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(99, 17);
-            this.statusLabel.Text = "Pdf Splitter V1.5.5";
+            this.statusLabel.Text = "Pdf Splitter V1.5.6";
             // 
             // inactividadTimer
             // 

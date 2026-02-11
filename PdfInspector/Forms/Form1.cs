@@ -570,6 +570,13 @@ namespace PdfInspector
 
         private async Task SiguienteAccion()
         {
+
+            if (_archivoPdf != null) 
+            {
+                MostrarNotificacion("Debe completar la revisión del documento actual antes de continuar con un nuevo documento.", "Warning");
+                return;
+            }
+
             if (_listaPartes.Any() || _tempParteTemporal != null)
             {
                 var result = MessageBox.Show(
