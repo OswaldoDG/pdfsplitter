@@ -568,12 +568,42 @@ namespace PdfInspector
             }
         }
 
+        private async Task GuardarPdfInvalidoAsync(Stream decryptedStream, DtoArchivo pdfPendiente)
+        {
+            try
+            {
+                string baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "BitacoraSperto");
+
+                if (!Directory.Exists(baseDir)) Directory.CreateDirectory(baseDir);
+
+                string ruta = Path.Combine(baseDir, $"pdf-error-{pdfPendiente.Id}.pdf");
+
+                decryptedStream.Position = 0;
+
+                using (var fileStream = new FileStream(ruta, FileMode.Create, FileAccess.Write))
+                {
+                    await decryptedStream.CopyToAsync(fileStream);
+                }
+
+                _bitacora.LogInfo($"PDF inválido guardado en: {ruta}");
+            }
+            catch (Exception ex)
+            {
+                _bitacora.LogError("No se pudo guardar el PDF inválido.", ex);
+            }
+        }
+
         private async Task SiguienteAccion()
         {
+            if (_archivoPdf != null) 
+            {
+                MostrarNotificacion("Debe completar la revisión del documento actual antes de continuar con un nuevo documento.", "Warning");
+                return;
+            }
+
             if (_listaPartes.Any() || _tempParteTemporal != null)
             {
-                var result = MessageBox.Show(
-                    "Tiene cambios sin 'Completar'. ¿Desea descartarlos y cargar el siguiente documento?",
+                var result = MessageBox.Show("Tiene cambios sin 'Completar'. ¿Desea descartarlos y cargar el siguiente documento?",
                     "Cambios sin guardar",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning);
@@ -631,43 +661,15 @@ namespace PdfInspector
 
                     var decryptedStream = DesencriptarStream(encryptedStream);
                     var status = this.gdViewer1.DisplayFromStream(decryptedStream);
-
-                    if (status == GdPictureStatus.PdfCanNotOpenFile)
-                    {
-                        await CompletarPdfInvalidoAsync();
-                        return;
-                    }
-
+                    
                     if (status != GdPictureStatus.OK)
                     {
+                        _bitacora.LogError($"Error GDViewer al abrir documento. Status: {status}. Documento: {_archivoPdf?.Nombre}");
 
-                        _bitacora.LogError(
-                            $"Error GDViewer al abrir documento. Status: {status}. Documento: {pdfPendiente?.Nombre}", null);
+                        await GuardarPdfInvalidoAsync(decryptedStream, _archivoPdf);
 
-                        MostrarNotificacion(
-                            "No se pudo visualizar el documento.",
-                            "Error");
+                        await CompletarPdfInvalidoAsync();
 
-                        try
-                        {
-                            // Save stream to file
-                            string ruta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "BitacoraSperto", $"pdf-{pdfPendiente.Id}.pdf");
-                            _bitacora.LogError($"PDF no valido guardando muestra en {ruta}", null);
-
-                            decryptedStream.Position = 0;
-                            var fileStream = new FileStream(ruta, FileMode.Create, FileAccess.Write);
-                            await decryptedStream.CopyToAsync(fileStream);
-                            decryptedStream.Close();
-                            decryptedStream.Dispose();
-                            fileStream.Close();
-                            fileStream.Dispose();
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-
-                        MostrarNotificacion($"Error al cargar PDF en visor: {status}", "Error");
                         return;
                     }
 
