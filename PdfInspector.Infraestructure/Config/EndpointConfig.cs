@@ -22,5 +22,6 @@
         public string FinalizarPorId { get; set; }
         public string ObtieneTipoDocumentos { get; set; }
         public string MisEstadisticas { get; set; }
+        public string ValidacionId { get; set; }
     }
 }

@@ -11,7 +11,8 @@
       "Siguiente": "revision/siguiente",
       "FinalizarPorId": "revision/finalizar/{id}",
       "ObtieneTipoDocumentos": "revision/tiposDocumento",
-      "MisEstadisticas": "revision/misestadisticas"
+      "MisEstadisticas": "revision/misestadisticas",
+      "validaccionId": "revision/validacion/{id}"
     }
   }
 }

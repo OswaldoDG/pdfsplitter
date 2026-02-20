@@ -15,5 +15,6 @@ namespace PdfInspector.Domain.Abstractions.Pdf
         Task<RespuestaPayload<DtoArchivo>> SiguientePendiente();
 
         Task<RespuestaPayload<List<DtoEstadisticasUsuario>>> EstadisticasUsuarioAsync();
+        Task<RespuestaBoolean> ValidacionAsignacionAsync(int archivoId);
     }
 }
