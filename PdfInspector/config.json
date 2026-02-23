@@ -12,7 +12,7 @@
       "FinalizarPorId": "revision/finalizar/{id}",
       "ObtieneTipoDocumentos": "revision/tiposDocumento",
       "MisEstadisticas": "revision/misestadisticas",
-      "validaccionId": "revision/validacion/{id}"
+      "ValidacionId": "revision/validacion/{id}"
     }
   }
 }

@@ -213,6 +213,7 @@ namespace PdfInspector.Infraestructure.Services.Pdf
                 {
                     respuestaPayload.Payload = null;
                     respuestaPayload.HttpCode = HttpStatusCode.OK;
+                    respuestaPayload.Ok = true;
                     return respuestaPayload;
                 }
 
@@ -228,7 +229,7 @@ namespace PdfInspector.Infraestructure.Services.Pdf
 
                 var dto = JsonConvert.DeserializeObject<DtoArchivo>(body);
                 respuestaPayload.Payload = dto;
-
+                respuestaPayload.Ok = true;
                 return respuestaPayload;
             }
             catch (Exception ex)
