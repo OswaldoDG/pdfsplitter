@@ -44,10 +44,10 @@ namespace PdfInspector
                 .AddJsonFile(settingsPath, optional: false, reloadOnChange: true);
             var configuration = builder.Build();
 
-            var settings = new EndpointConfig();
-            configuration.GetSection("Endpoints").Bind(settings);
+            var appConfig = new AppConfig();
+            configuration.Bind(appConfig);
 
-            container.RegisterInstance(settings);
+            container.RegisterInstance(appConfig);
 
             container.RegisterSingleton<UsuarioSesion>();
 

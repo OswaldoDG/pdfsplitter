@@ -1,5 +1,11 @@
 ﻿namespace PdfInspector.Infraestructure.Config
 {
+    public class AppConfig
+    {
+        public EndpointConfig Endpoints { get; set; }
+        public string VersionFe { get; set; }
+    }
+
     public class EndpointConfig
     {
         public AuthApiConfig AuthApi { get; set; }

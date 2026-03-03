@@ -13,6 +13,7 @@
       "ObtieneTipoDocumentos": "revision/tiposDocumento",
       "MisEstadisticas": "revision/misestadisticas",
       "ValidacionId": "revision/validacion/{id}"
-    }
+    },
+    "VersionFe": "1.5.6"
   }
 }

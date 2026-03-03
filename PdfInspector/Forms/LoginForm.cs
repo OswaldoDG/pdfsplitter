@@ -48,7 +48,7 @@ namespace PdfInspector.Forms
             {
                 var token = await _loginCasoUso.Ejecutar(username, password);
 
-                if (token != null)
+                if (token.Ok)
                 {
                     GuardarUltimoUsuario(username);
                     this.DialogResult = DialogResult.OK;
@@ -56,7 +56,7 @@ namespace PdfInspector.Forms
                 }
                 else
                 {
-                    MessageBox.Show("Credenciales inválidas. Intente nuevamente.");
+                    MessageBox.Show(token.Mensaje ?? "Credenciales inválidas. Intente nuevamente.", "Error de login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
