@@ -25,17 +25,19 @@ namespace PdfInspector
     {
         public static Container Configure()
         {
-            var tempDir = Path.Combine(Path.GetTempPath(), "pdfsplitter");  
+            var tempDir = Path.Combine(Path.GetTempPath(), "pdfsplitter");
             var settingsPath = Path.Combine(tempDir, "config.json");
+            var sourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.prod.json");
+
             if (!Directory.Exists(tempDir))
             {
                 Directory.CreateDirectory(tempDir);
             }
 
-            if (!File.Exists(settingsPath))
+            if (!File.Exists(settingsPath) ||
+                File.GetLastWriteTime(sourcePath) > File.GetLastWriteTime(settingsPath))
             {
-                var sourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.prod.json");
-                File.Copy(sourcePath, settingsPath);
+                File.Copy(sourcePath, settingsPath, true);
             }
 
             var container = new Container();
