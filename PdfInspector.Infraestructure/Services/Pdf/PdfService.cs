@@ -297,8 +297,8 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             RespuestaBoolean respuestaBoolean = new RespuestaBoolean();
             try
             {
-                var endpoint = _config.PdfApi.ValidacionId.Replace("{id}", archivoId.ToString());
-                var requestUri = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint);
+                var endpoint = _config.Endpoints.PdfApi.ValidacionId.Replace("{id}", archivoId.ToString());
+                var requestUri = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
 
                 var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
