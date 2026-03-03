@@ -20,7 +20,7 @@ namespace PdfInspector.App.CasosUso.Auth
             _sesion = sesion;
         }
 
-        public async Task<string> Ejecutar(string username, string password)
+        public async Task<(bool Ok, string Mensaje)> Ejecutar(string username, string password)
         {
             _bitacora.LogInfo("Inicio Caso de Uso Login");
 
@@ -32,13 +32,13 @@ namespace PdfInspector.App.CasosUso.Auth
                     $"Error en login. HttpCode={respuesta.HttpCode}. Mensaje={respuesta.Error?.Mensaje}",
                     new Exception(respuesta.Error?.Mensaje)
                 );
-                return null;
+                return (false, respuesta.Error?.Mensaje);
             }
 
             if (respuesta.Payload == null)
             {
                 _bitacora.LogInfo("Login sin token (credenciales inválidas)");
-                return null;
+                return (false, respuesta.Error?.Mensaje);
             }
 
             _sesion.Create(
@@ -48,7 +48,7 @@ namespace PdfInspector.App.CasosUso.Auth
             );
 
             _bitacora.LogInfo("Login exitoso");
-            return respuesta.Payload.access_token;
+            return (true, null);
         }
     }
 }

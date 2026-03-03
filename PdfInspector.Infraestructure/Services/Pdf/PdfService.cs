@@ -23,12 +23,12 @@ namespace PdfInspector.Infraestructure.Services.Pdf
     public class PdfService : IPdfService
     {
         private readonly HttpClient _httpClient;
-        private readonly EndpointConfig _config;
+        private readonly AppConfig _config;
         private readonly UsuarioSesion _sesion;
         private readonly IBitacora _bitacora;
 
 
-        public PdfService(EndpointConfig config, HttpClient httpClient, UsuarioSesion sesion, IBitacora bitacora)
+        public PdfService(AppConfig config, HttpClient httpClient, UsuarioSesion sesion, IBitacora bitacora)
         {
             _config = config;
             _httpClient = httpClient;
@@ -43,8 +43,8 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             {
                 _bitacora.LogInfo($"Descargando PDF por ID: {id}"); 
 
-                var endpoint = _config.PdfApi.DescargarPorId.Replace("{id}", id.ToString());
-                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint));
+                var endpoint = _config.Endpoints.PdfApi.DescargarPorId.Replace("{id}", id.ToString());
+                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint));
 
                 if (_sesion.IsAuthenticated)
                 {
@@ -98,8 +98,8 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             RespuestaPayload<List<DtoTipoDoc>> respuestaPayload = new RespuestaPayload<List<DtoTipoDoc>>();
             try
             {
-                var endpoint = _config.PdfApi.ObtieneTipoDocumentos;
-                var fullUrl = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint);
+                var endpoint = _config.Endpoints.PdfApi.ObtieneTipoDocumentos;
+                var fullUrl = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
                 var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
 
                 if (_sesion.IsAuthenticated)
@@ -148,8 +148,8 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             RespuestaBoolean respuestaBoolean = new RespuestaBoolean();
             try
             {
-                var endpoint = _config.PdfApi.FinalizarPorId.Replace("{id}", id.ToString());
-                var requestUri = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint);
+                var endpoint = _config.Endpoints.PdfApi.FinalizarPorId.Replace("{id}", id.ToString());
+                var requestUri = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
 
                 var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
 
@@ -197,8 +197,8 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             RespuestaPayload<DtoArchivo> respuestaPayload = new RespuestaPayload<DtoArchivo>();
             try
             {
-                var endpoint = _config.PdfApi.Siguiente;
-                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint));
+                var endpoint = _config.Endpoints.PdfApi.Siguiente;
+                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint));
 
                 if (_sesion.IsAuthenticated)
                 {
@@ -247,8 +247,8 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             RespuestaPayload<List<DtoEstadisticasUsuario>> respuestaPayload = new RespuestaPayload<List<DtoEstadisticasUsuario>>();
             try
             {
-                var endpoint = _config.PdfApi.MisEstadisticas;
-                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint));
+                var endpoint = _config.Endpoints.PdfApi.MisEstadisticas;
+                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint));
 
                 if (_sesion.IsAuthenticated)
                 {

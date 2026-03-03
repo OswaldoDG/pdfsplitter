@@ -12,6 +12,7 @@
       "FinalizarPorId": "revision/finalizar/{id}",
       "ObtieneTipoDocumentos": "revision/tiposDocumento",
       "MisEstadisticas": "revision/misestadisticas"
-    }
+    },
+    "VersionFe": "1.5.6"
   }
 }

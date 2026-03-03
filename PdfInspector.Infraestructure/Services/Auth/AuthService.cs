@@ -17,12 +17,12 @@ namespace PdfInspector.Infraestructure.Services.Auth
 {
     public class AuthService : IAuthService
     {
-        private readonly EndpointConfig _config;
+        private readonly AppConfig _config;
         private readonly HttpClient _httpClient;
-        public AuthService(EndpointConfig config)
+        public AuthService(AppConfig config)
         {
             _config = config;
-            _httpClient = new HttpClient { BaseAddress = new Uri(_config.AuthApi.BaseUrl) };
+            _httpClient = new HttpClient { BaseAddress = new Uri(_config.Endpoints.AuthApi.BaseUrl) };
         }
 
         public async Task<RespuestaPayload<TokenConnect>> LoginAsync(string username, string password)
@@ -36,18 +36,32 @@ namespace PdfInspector.Infraestructure.Services.Auth
                     new KeyValuePair<string,string>("client_id","mensajeriamedica-password"),
                     new KeyValuePair<string,string>("username", username),
                     new KeyValuePair<string,string>("password", password),
-                    new KeyValuePair<string,string>("scope","offline_access")
+                    new KeyValuePair<string,string>("scope","offline_access"),
+                    new KeyValuePair<string,string>("app_version", _config.VersionFe)
                 });
 
-                var respuesta = await _httpClient.PostAsync(_config.AuthApi.Login, form);
-                
+                var respuesta = await _httpClient.PostAsync(_config.Endpoints.AuthApi.Login, form);
+                var contenido = await respuesta.Content.ReadAsStringAsync();
+
                 if (!respuesta.IsSuccessStatusCode)
                 {
+                    string mensajeError = "Login fallido";
+
+                    try
+                    {
+                        var jsonError = JObject.Parse(contenido);
+                        mensajeError = jsonError["error_description"]?.ToString()
+                                    ?? jsonError["error"]?.ToString()
+                                    ?? mensajeError;
+                    }
+                    catch { mensajeError = contenido; }
+
                     respuestaPayload.Error = new ErrorProceso
                     {
                         HttpCode = respuesta.StatusCode,
-                        Mensaje = $"Login fallido: {respuesta.ReasonPhrase}"
+                        Mensaje = mensajeError
                     };
+
                     return respuestaPayload;
                 }
 
@@ -86,7 +100,7 @@ namespace PdfInspector.Infraestructure.Services.Auth
                     new KeyValuePair<string,string>("refresh_token", refreshToken)
                 });
 
-                var respuesta = await _httpClient.PostAsync(_config.AuthApi.Login, form);
+                var respuesta = await _httpClient.PostAsync(_config.Endpoints.AuthApi.Login, form);
 
                 if (!respuesta.IsSuccessStatusCode)
                 {
@@ -127,7 +141,7 @@ namespace PdfInspector.Infraestructure.Services.Auth
                 var obj = new { Email = email, Password = password, Code = code };
                 var json = JsonConvert.SerializeObject(obj);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var respuesta = await _httpClient.PostAsync(_config.AuthApi.Register, content);
+                var respuesta = await _httpClient.PostAsync(_config.Endpoints.AuthApi.Register, content);
                 if (respuesta.IsSuccessStatusCode)
                 {
                     respuestaBoolean.Resultado = true;
