@@ -112,4 +112,11 @@ namespace PdfInspector.Domain.Comunes
             }
         }
     }
+
+    public enum ResultadoValidacion
+    {
+        Exito,
+        ConflictoConcurrencia,
+        ErrorCritico
+    }
 }

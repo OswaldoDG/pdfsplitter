@@ -213,6 +213,7 @@ namespace PdfInspector.Infraestructure.Services.Pdf
                 {
                     respuestaPayload.Payload = null;
                     respuestaPayload.HttpCode = HttpStatusCode.OK;
+                    respuestaPayload.Ok = true;
                     return respuestaPayload;
                 }
 
@@ -228,7 +229,7 @@ namespace PdfInspector.Infraestructure.Services.Pdf
 
                 var dto = JsonConvert.DeserializeObject<DtoArchivo>(body);
                 respuestaPayload.Payload = dto;
-
+                respuestaPayload.Ok = true;
                 return respuestaPayload;
             }
             catch (Exception ex)
@@ -289,6 +290,52 @@ namespace PdfInspector.Infraestructure.Services.Pdf
                 };
                 return respuestaPayload;
             }
+        }
+
+        public async Task<RespuestaBoolean> ValidacionAsignacionAsync(int archivoId)
+        {
+            RespuestaBoolean respuestaBoolean = new RespuestaBoolean();
+            try
+            {
+                var endpoint = _config.PdfApi.ValidacionId.Replace("{id}", archivoId.ToString());
+                var requestUri = new Uri(new Uri(_config.PdfApi.BaseUrl), endpoint);
+
+                var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+
+                if (_sesion.IsAuthenticated)
+                {
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
+                }
+
+                var response = await _httpClient.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    respuestaBoolean.Resultado = true;
+                    respuestaBoolean.Ok = true;
+                    respuestaBoolean.HttpCode = HttpStatusCode.OK;
+                }
+                else
+                {
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    respuestaBoolean.Resultado = false;
+                    respuestaBoolean.Error = new ErrorProceso
+                    {
+                        HttpCode = response.StatusCode,
+                        Mensaje = $"Error al Validar la asignación de PDF (ID: {archivoId}). Servidor respondió: {response.StatusCode} - {errorBody}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                respuestaBoolean.Resultado = false;
+                respuestaBoolean.Error = new ErrorProceso
+                {
+                    HttpCode = HttpStatusCode.InternalServerError,
+                    Mensaje = ex.Message
+                };
+            }
+            return respuestaBoolean;
         }
     }
 }

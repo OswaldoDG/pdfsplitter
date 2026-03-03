@@ -51,6 +51,7 @@
     <Compile Include="CasosUso\Pdf\MisEstadisticasCasoUso.cs" />
     <Compile Include="CasosUso\Pdf\SiguientePendienteCasoUso.cs" />
     <Compile Include="CasosUso\Pdf\ObtieneTiposDocumentoCasoUso.cs" />
+    <Compile Include="CasosUso\Pdf\ValidacionArchivoIdCasoUso.cs" />
     <Compile Include="DTOs\Auth\LoginRequest.cs" />
     <Compile Include="DTOs\Auth\RegistroRequest.cs" />
     <Compile Include="DTOs\PDF\TablaDocumento.cs" />

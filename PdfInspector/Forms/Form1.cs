@@ -28,6 +28,7 @@ namespace PdfInspector
         private readonly CompletarCasoUso _completarCasoUso;
         private readonly SiguientePendienteCasoUso _siguientePendienteCasoUso;
         private readonly MisEstadisticasCasoUso _misEstadisticasCasoUso;
+        private readonly ValidacionArchivoIdCasoUso _validacionArchivoIdCasoUso;
         private List<DtoTipoDoc> _listaGlobalDeArchivos;
         private List<DtoParteDocumental> _listaPartes;
         private List<int> _gruposDocumentos;
@@ -43,7 +44,7 @@ namespace PdfInspector
         private string _currentUserEmail = "";
         public bool IsLoggingOut { get; private set; } = false;
         private static readonly HttpClient _httpClient = new HttpClient();
-        public Form1(IBitacora bitacora, ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso, LoginForm loginForm, UsuarioSesion usuarioSesion)
+        public Form1(IBitacora bitacora, ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso, ValidacionArchivoIdCasoUso validacionArchivoIdCasoUso,LoginForm loginForm, UsuarioSesion usuarioSesion)
         {
             InitializeComponent();
             KeyPreview = true;
@@ -52,6 +53,7 @@ namespace PdfInspector
             _completarCasoUso = completarCasoUso;
             _siguientePendienteCasoUso = siguientePendienteCasoUso;
             _misEstadisticasCasoUso = misEstadisticasCasoUso;
+            _validacionArchivoIdCasoUso = validacionArchivoIdCasoUso;
             _loginForm = loginForm;
             _usuarioSesion = usuarioSesion;
             btnSig.BotonPresionado += BotonDocumento_Click;
@@ -622,7 +624,35 @@ namespace PdfInspector
                 _tempParteTemporal = null;
                 _paginaInicioTemporal = 0;
                 this.gdViewer1.CloseDocument();
-                var pdfPendiente = await _siguientePendienteCasoUso.SiguientePendiente();
+                DtoArchivo pdfPendiente = null;
+                bool asignacionExitosa = false;
+
+                while (!asignacionExitosa)
+                {
+                    pdfPendiente = await _siguientePendienteCasoUso.SiguientePendiente();
+
+                    if (pdfPendiente == null)
+                    {
+                        break;
+                    }
+
+                    var resultadoValidacion = await _validacionArchivoIdCasoUso.ExecuteAsync(pdfPendiente.Id);
+
+                    if (resultadoValidacion == ResultadoValidacion.Exito)
+                    {
+                        asignacionExitosa = true;
+                    }
+                    else if (resultadoValidacion == ResultadoValidacion.ConflictoConcurrencia)
+                    {
+                        await Task.Delay(300);
+                    }
+                    else
+                    {
+                        pdfPendiente = null;
+                        break;
+                    }
+                }
+
                 _archivoPdf = pdfPendiente;
 
                 if (pdfPendiente == null)
