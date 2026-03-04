@@ -4,6 +4,7 @@ namespace PdfInspector.Domain.Models.Auth
 {
     public class UsuarioSesion
     {
+        public const int MARGEN_RELOJ = 5;
         public string Token { get; private set; }
         public string RefreshToken { get; private set; }
         public DateTime Expiration { get; private set; }
@@ -14,13 +15,14 @@ namespace PdfInspector.Domain.Models.Auth
         {
             Token = token;
             RefreshToken = refreshToken;
-            Expiration = DateTime.UtcNow.AddSeconds(expiresInSeconds - 60);
+            Expiration = DateTime.UtcNow.AddSeconds(
+                        Math.Max(0, expiresInSeconds - MARGEN_RELOJ));
         }
 
         public bool NeedsRefresh()
         {
             if (string.IsNullOrEmpty(RefreshToken)) return false;
-            return DateTime.UtcNow >= Expiration.AddMinutes(-5);
+            return DateTime.UtcNow >= Expiration.AddSeconds(-MARGEN_RELOJ);
         }
 
         public void Clear()

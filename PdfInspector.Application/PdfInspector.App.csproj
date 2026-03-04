@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CasosUso\Auth\AuthenticatedHttpHandler.cs" />
     <Compile Include="CasosUso\Auth\LoginCasoUso.cs" />
     <Compile Include="CasosUso\Auth\RefrescarCasoUso.cs" />
     <Compile Include="CasosUso\Auth\RegistroCasoUso.cs" />

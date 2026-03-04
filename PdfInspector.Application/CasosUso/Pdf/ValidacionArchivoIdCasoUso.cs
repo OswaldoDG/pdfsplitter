@@ -16,22 +16,16 @@ namespace PdfInspector.Application.CasosUso.Pdf
     {
         private readonly IBitacora _bitacora;
         private readonly IPdfService _pdfService;
-        private readonly UsuarioSesion _usuarioSesion;
-        private readonly RefrescarCasoUso _refrescarCasoUso;
 
-        public ValidacionArchivoIdCasoUso(IBitacora bitacora, IPdfService pdfService, UsuarioSesion usuarioSesion, RefrescarCasoUso refrescarCasoUso) 
+        public ValidacionArchivoIdCasoUso(IBitacora bitacora, IPdfService pdfService) 
         {
             _bitacora = bitacora;
             _pdfService = pdfService;
-            _usuarioSesion = usuarioSesion;
-            _refrescarCasoUso = refrescarCasoUso;
         }
 
         public async Task<ResultadoValidacion> ExecuteAsync(int archivoId)
         {
             _bitacora.LogInfo($"Inicio caso de uso ValidacionArchivoId para ID: {archivoId}");
-
-            bool sesionValida = await _refrescarCasoUso.EjecutarSiNecesarioAsync();
 
             var respuesta = await _pdfService.ValidacionAsignacionAsync(archivoId);
 

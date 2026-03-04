@@ -13,26 +13,16 @@ namespace PdfInspector.Application.CasosUso.Pdf
     {
         private readonly IBitacora _bitacora;
         private readonly IPdfService _pdfService;
-        private readonly UsuarioSesion _usuarioSesion;
-        private readonly RefrescarCasoUso _refrescarSesion;
 
-        public MisEstadisticasCasoUso(IBitacora bitacora, IPdfService pdfService, UsuarioSesion usuarioSesion, RefrescarCasoUso refrescarCasoUso)
+        public MisEstadisticasCasoUso(IBitacora bitacora, IPdfService pdfService)
         {
             _bitacora = bitacora;
             _pdfService = pdfService;
-            _usuarioSesion = usuarioSesion;
-            _refrescarSesion = refrescarCasoUso;
         }
 
         public async Task<List<DtoEstadisticasUsuario>> ExecuteAsync() 
         {
             _bitacora.LogInfo("Inicio caso de uso MisEstadisticasCasoUso");
-            bool sesionValida = await _refrescarSesion.EjecutarSiNecesarioAsync();
-            if (!sesionValida)
-            {
-                _bitacora.LogError("Sesión expirada", new UnauthorizedAccessException());
-                throw new UnauthorizedAccessException("Sesión expirada. Por favor, inicie sesión de nuevo.");
-            }
 
             var respuesta = await _pdfService.EstadisticasUsuarioAsync();
 
