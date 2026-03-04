@@ -17,6 +17,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace PdfInspector
@@ -42,6 +43,7 @@ namespace PdfInspector
 
             var container = new Container();
             container.Options.EnableAutoVerification = false;
+
             var builder = new ConfigurationBuilder()
                 .AddJsonFile(settingsPath, optional: false, reloadOnChange: true);
             var configuration = builder.Build();
@@ -52,25 +54,57 @@ namespace PdfInspector
             container.RegisterInstance(appConfig);
 
             container.RegisterSingleton<UsuarioSesion>();
-
-            container.RegisterSingleton<HttpClient>(() => new HttpClient());
-
-            container.RegisterSingleton<IAuthService, AuthService>();
-            container.RegisterSingleton<IPdfService, PdfService>();
             container.RegisterSingleton<IBitacora, Bitacora>();
 
-            container.Register<LoginCasoUso>();
+            container.RegisterSingleton<IAuthService>(() =>
+            {
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri(appConfig.Endpoints.AuthApi.BaseUrl),
+                    Timeout = Timeout.InfiniteTimeSpan
+                };
+                return new AuthService(appConfig, client);
+            });
+
+
             container.Register<RefrescarCasoUso>();
+
+            container.RegisterSingleton<HttpClient>(() =>
+            {
+                var sesion = container.GetInstance<UsuarioSesion>();
+                var refrescarCasoUso = container.GetInstance<RefrescarCasoUso>();
+
+                var handler = new AuthenticatedHttpHandler(refrescarCasoUso, sesion)
+                {
+                    InnerHandler = new HttpClientHandler()
+                };
+
+                var client = new HttpClient(handler)
+                {
+                    Timeout = Timeout.InfiniteTimeSpan
+                };
+
+                return client;
+            });
+
+
+            container.RegisterSingleton<IPdfService, PdfService>();
+
+            container.Register<LoginCasoUso>();
             container.Register<RegistroCasoUso>();
             container.Register<ObtieneTipoDocumentosPdfCasoUso>();
             container.Register<CompletarCasoUso>();
             container.Register<SiguientePendienteCasoUso>();
             container.Register<MisEstadisticasCasoUso>();
             container.Register<ValidacionArchivoIdCasoUso>();
+
             container.Register<LoginForm>();
             container.Register<RegistroForm>();
             container.Register<Form1>();
+
             return container;
         }
+
+
     }
 }

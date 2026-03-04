@@ -5,17 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PdfInspector.Application.CasosUso.Auth
 {
     public class RefrescarCasoUso
     {
+        private static readonly SemaphoreSlim _refreshSemaphore = new SemaphoreSlim(1, 1);
         private readonly IBitacora _bitacora;
         private readonly IAuthService _authService;
         private readonly UsuarioSesion _usuarioSesion;
-        private static readonly object _refreshLock = new object();
-        private static bool _isRefreshing = false;
 
         public RefrescarCasoUso(IBitacora bitacora,IAuthService authService, UsuarioSesion usuarioSesion)
         {
@@ -35,14 +35,13 @@ namespace PdfInspector.Application.CasosUso.Auth
                 return false;
             }
 
-            lock (_refreshLock)
-            {
-                if (_isRefreshing) return true;
-                _isRefreshing = true;
-            }
+            await _refreshSemaphore.WaitAsync();
 
             try
             {
+                if (_usuarioSesion.IsAuthenticated && !_usuarioSesion.NeedsRefresh())
+                    return true;
+
                 var respuesta = await _authService.RefreshTokenAsync(_usuarioSesion.RefreshToken);
 
                 if (!respuesta.Ok || respuesta.Payload == null)
@@ -61,7 +60,7 @@ namespace PdfInspector.Application.CasosUso.Auth
             }
             finally
             {
-                _isRefreshing = false;
+                _refreshSemaphore.Release();
             }
         }
     }

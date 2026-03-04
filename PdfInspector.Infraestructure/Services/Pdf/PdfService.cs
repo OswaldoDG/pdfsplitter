@@ -24,17 +24,15 @@ namespace PdfInspector.Infraestructure.Services.Pdf
     {
         private readonly HttpClient _httpClient;
         private readonly AppConfig _config;
-        private readonly UsuarioSesion _sesion;
         private readonly IBitacora _bitacora;
 
-
-        public PdfService(AppConfig config, HttpClient httpClient, UsuarioSesion sesion, IBitacora bitacora)
+        public PdfService(AppConfig config, HttpClient httpClient, IBitacora bitacora)
         {
             _config = config;
             _httpClient = httpClient;
-            _sesion = sesion;
             _bitacora = bitacora;
         }
+
 
         public async Task<RespuestaPayload<DtoArchivo>> SiguientePorId(int id)
         {
@@ -44,20 +42,15 @@ namespace PdfInspector.Infraestructure.Services.Pdf
                 _bitacora.LogInfo($"Descargando PDF por ID: {id}"); 
 
                 var endpoint = _config.Endpoints.PdfApi.DescargarPorId.Replace("{id}", id.ToString());
-                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint));
+                var requestUri = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
 
-                if (_sesion.IsAuthenticated)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
-                }
-
-                var response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.GetAsync(requestUri);
                 var body = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
 
-                    _bitacora.LogError($"PDF no localizado ID: {id} {request.RequestUri.PathAndQuery}", null);
+                    _bitacora.LogError($"PDF no localizado ID: {id} {requestUri.PathAndQuery}", null);
                     respuestaPayload.Payload = null;
                     respuestaPayload.HttpCode = HttpStatusCode.OK;
                     return respuestaPayload;
@@ -99,15 +92,9 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             try
             {
                 var endpoint = _config.Endpoints.PdfApi.ObtieneTipoDocumentos;
-                var fullUrl = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
-                var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+                var requestUri = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
 
-                if (_sesion.IsAuthenticated)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
-                }
-
-                var response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.GetAsync(requestUri);
                 var body = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -151,17 +138,10 @@ namespace PdfInspector.Infraestructure.Services.Pdf
                 var endpoint = _config.Endpoints.PdfApi.FinalizarPorId.Replace("{id}", id.ToString());
                 var requestUri = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
 
-                var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
-
-                if (_sesion.IsAuthenticated)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
-                }
-
                 var json = JsonConvert.SerializeObject(dto);
-                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.PostAsync(requestUri, content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -198,14 +178,9 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             try
             {
                 var endpoint = _config.Endpoints.PdfApi.Siguiente;
-                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint));
+                var requestUri = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
 
-                if (_sesion.IsAuthenticated)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
-                }
-
-                var response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.GetAsync(requestUri);
 
                 var body = await response.Content.ReadAsStringAsync();
 
@@ -249,14 +224,10 @@ namespace PdfInspector.Infraestructure.Services.Pdf
             try
             {
                 var endpoint = _config.Endpoints.PdfApi.MisEstadisticas;
-                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint));
+                var requestUri = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
+                
+                var response = await _httpClient.GetAsync(requestUri);
 
-                if (_sesion.IsAuthenticated)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
-                }
-
-                var response = await _httpClient.SendAsync(request);
                 var body = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -300,14 +271,7 @@ namespace PdfInspector.Infraestructure.Services.Pdf
                 var endpoint = _config.Endpoints.PdfApi.ValidacionId.Replace("{id}", archivoId.ToString());
                 var requestUri = new Uri(new Uri(_config.Endpoints.PdfApi.BaseUrl), endpoint);
 
-                var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-
-                if (_sesion.IsAuthenticated)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _sesion.Token);
-                }
-
-                var response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.GetAsync(requestUri);
 
                 if (response.IsSuccessStatusCode)
                 {

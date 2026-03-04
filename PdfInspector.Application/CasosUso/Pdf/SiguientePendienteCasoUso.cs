@@ -12,27 +12,16 @@ namespace PdfInspector.Application.CasosUso.Pdf
     {
         private readonly IBitacora _bitacora;
         private readonly IPdfService _pdfService;
-        private readonly UsuarioSesion _usuarioSesion;
-        private readonly RefrescarCasoUso _refrescarSesion;
 
-        public SiguientePendienteCasoUso(IBitacora bitacora, IPdfService pdfService, UsuarioSesion usuarioSesion, RefrescarCasoUso refrescarCasoUso)
+        public SiguientePendienteCasoUso(IBitacora bitacora, IPdfService pdfService)
         {
             _bitacora = bitacora;
             _pdfService = pdfService;
-            _usuarioSesion = usuarioSesion;
-            _refrescarSesion = refrescarCasoUso;
         }
 
         public async Task<DtoArchivo> SiguientePendiente()
         {
             _bitacora.LogInfo("Inicio caso de uso SiguientePendiente");
-
-            bool sesionValida = await _refrescarSesion.EjecutarSiNecesarioAsync();
-            if (!sesionValida)
-            {
-                _bitacora.LogError("Sesión expirada", new UnauthorizedAccessException());
-                throw new UnauthorizedAccessException("Sesión expirada. Por favor, inicie sesión de nuevo.");
-            }
 
             var respuesta = await _pdfService.SiguientePendiente();
 
@@ -56,4 +45,5 @@ namespace PdfInspector.Application.CasosUso.Pdf
             return respuesta.Payload;
         }
     }
+
 }

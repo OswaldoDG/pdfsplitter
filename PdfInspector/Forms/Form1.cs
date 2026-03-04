@@ -22,7 +22,6 @@ namespace PdfInspector
     public partial class Form1 : Form
     {
         private readonly IBitacora _bitacora;
-        private readonly UsuarioSesion _usuarioSesion;
         private readonly LoginForm _loginForm;
         private readonly ObtieneTipoDocumentosPdfCasoUso _obtieneTipoDocumentosCasoUso;
         private readonly CompletarCasoUso _completarCasoUso;
@@ -44,7 +43,7 @@ namespace PdfInspector
         private string _currentUserEmail = "";
         public bool IsLoggingOut { get; private set; } = false;
         private static readonly HttpClient _httpClient = new HttpClient();
-        public Form1(IBitacora bitacora, ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso, ValidacionArchivoIdCasoUso validacionArchivoIdCasoUso,LoginForm loginForm, UsuarioSesion usuarioSesion)
+        public Form1(IBitacora bitacora, ObtieneTipoDocumentosPdfCasoUso obtieneTipoDocumentosCasoUso, CompletarCasoUso completarCasoUso, SiguientePendienteCasoUso siguientePendienteCasoUso, MisEstadisticasCasoUso misEstadisticasCasoUso, ValidacionArchivoIdCasoUso validacionArchivoIdCasoUso,LoginForm loginForm)
         {
             InitializeComponent();
             KeyPreview = true;
@@ -55,7 +54,6 @@ namespace PdfInspector
             _misEstadisticasCasoUso = misEstadisticasCasoUso;
             _validacionArchivoIdCasoUso = validacionArchivoIdCasoUso;
             _loginForm = loginForm;
-            _usuarioSesion = usuarioSesion;
             btnSig.BotonPresionado += BotonDocumento_Click;
             btnFin.BotonPresionado += BotonDocumento_Click;
             btnCancel.BotonPresionado += BotonDocumento_Click;
@@ -394,11 +392,6 @@ namespace PdfInspector
 
                 MostrarNotificacion("Captura realizada", "Success");
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                _bitacora.LogError("Sesion expirada",ex);
-                ManejarSesionExpirada(ex.Message);
-            }
             catch (Exception ex)
             {
                 _bitacora.LogError("Ocurrió un error inesperado en el botón de Finalizar.", ex);
@@ -470,11 +463,6 @@ namespace PdfInspector
                         await SiguienteAccion();
                     }
                 }
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                _bitacora.LogError("Sesion expirada",ex);
-                ManejarSesionExpirada(ex.Message);
             }
             catch (Exception ex)
             {
@@ -714,6 +702,16 @@ namespace PdfInspector
                 }
                 else
                 {
+                    ResetDocumentState();
+                    _tempParteTemporal = null;
+                    _archivoPdf = null;
+                    _listaPartes.Clear();
+                    _gruposDocumentos = new List<int> { 0 };
+                    _paginaInicioTemporal = 0;
+                    listViewPartes.Items.Clear();
+
+                    this.gdViewer1.CloseDocument();
+                    this.gdViewer1.Visible = false;
                     string codigoError = response.StatusCode.ToString();
                     string mensajeDetallado = $"Error al descargar el archivo {_archivoPdf.Id}. El servidor respondió con:\n\n{codigoError} ({(int)response.StatusCode})";
                     string responseBody = string.Empty;
@@ -726,7 +724,6 @@ namespace PdfInspector
                     }
 
                     _bitacora.LogError(mensajeDetallado + " " + responseBody, null);
-
                     MessageBox.Show(
                         mensajeDetallado,
                         "Error de Descarga",
@@ -734,11 +731,6 @@ namespace PdfInspector
                         MessageBoxIcon.Warning
                     );
                 }
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                _bitacora.LogError("Sesión expirada al obtener PDF pendiente", ex);
-                ManejarSesionExpirada(ex.Message);
             }
             catch (Exception ex)
             {
@@ -959,11 +951,6 @@ namespace PdfInspector
                 }
 
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                _bitacora.LogError("Sesión expirada",ex);
-                ManejarSesionExpirada(ex.Message);
-            }
             catch (Exception ex)
             {
                 _bitacora.LogError("Ocurrió un error inesperado en el boton de las estadísticas.",ex);
@@ -1132,31 +1119,6 @@ namespace PdfInspector
             {
                 _bitacora.LogError("Ocurrió un error al intentar eliminar agrupamientos", ex);
                 MostrarNotificacion($"Error al eliminar agrupamientos: {ex.Message}", "Error");
-            }
-        }
-
-        private void ManejarSesionExpirada(string mensaje)
-        {
-            Cursor = Cursors.Default;
-            IsLoggingOut = true;
-            _usuarioSesion.Clear();
-            ResetDocumentState();
-
-            MessageBox.Show(mensaje, "Sesión Expirada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-            this.Hide();
-            var loginResult = _loginForm.ShowDialog();
-
-            if (loginResult == DialogResult.OK)
-            {
-                this.Text = $"Visor de Documentos - {_currentUserEmail}";
-                this.Show();
-                IsLoggingOut = false;
-                MostrarNotificacion("Sesión reestablecida. Puede continuar.", "Success");
-            }
-            else
-            {
-                System.Windows.Forms.Application.Exit();
             }
         }
 

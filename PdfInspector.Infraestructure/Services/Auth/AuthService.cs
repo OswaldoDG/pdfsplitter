@@ -19,11 +19,13 @@ namespace PdfInspector.Infraestructure.Services.Auth
     {
         private readonly AppConfig _config;
         private readonly HttpClient _httpClient;
-        public AuthService(AppConfig config)
-        {
+        public AuthService(AppConfig config, HttpClient httpClient)
+        {   
             _config = config;
-            _httpClient = new HttpClient { BaseAddress = new Uri(_config.Endpoints.AuthApi.BaseUrl) };
+            _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(_config.Endpoints.AuthApi.BaseUrl);
         }
+
 
         public async Task<RespuestaPayload<TokenConnect>> LoginAsync(string username, string password)
         {
@@ -97,7 +99,8 @@ namespace PdfInspector.Infraestructure.Services.Auth
                 {
                     new KeyValuePair<string,string>("grant_type", "refresh_token"),
                     new KeyValuePair<string,string>("client_id", "mensajeriamedica-password"),
-                    new KeyValuePair<string,string>("refresh_token", refreshToken)
+                    new KeyValuePair<string,string>("refresh_token", refreshToken),
+                    new KeyValuePair<string,string>("app_version", _config.VersionFe)
                 });
 
                 var respuesta = await _httpClient.PostAsync(_config.Endpoints.AuthApi.Login, form);
